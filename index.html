@@ -37,8 +37,8 @@
                         pop: { '0%': { transform: 'scale(0.9)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } },
                         shake: {
                             '0%, 100%': { transform: 'translateX(0)' },
-                            '25%, 75%': { transform: 'translateX(-8px)' },
-                            '50%': { transform: 'translateX(8px)' }
+                            '20%, 60%': { transform: 'translateX(-3px)' },
+                            '40%, 80%': { transform: 'translateX(3px)' }
                         },
                         slideUp: { '0%': { transform: 'translateY(20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
                         slideDown: { '0%': { transform: 'translateY(-20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
@@ -75,6 +75,11 @@
 
     <div id="app-container">
         
+        <!-- Sticky Search Button (Pojok Kanan Atas) -->
+        <button id="btn-sticky-search" onclick="scrollToSearch()" class="hidden absolute top-[72px] right-6 z-40 bg-brand-primary text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center animate-pop btn-press border-2 border-white">
+            <i class="ph-bold ph-magnifying-glass text-lg"></i>
+        </button>
+
         <!-- HEADER -->
         <header class="px-6 py-4 flex justify-between items-center bg-white/80 backdrop-blur-md z-20 rounded-b-3xl shadow-sm shrink-0 border-b border-slate-100">
             <div class="flex items-center gap-2">
@@ -220,9 +225,9 @@
                             <div class="flex items-center gap-2">
                                 <button onclick="toggleInfinityTime()" id="btn-setting-time-inf" class="w-7 h-7 flex items-center justify-center bg-brand-primary text-white rounded-lg shadow-sm btn-press"><i class="ph-bold ph-infinity"></i></button>
                                 <div id="time-adjust-container" class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-1 opacity-50 pointer-events-none shadow-sm transition-all">
-                                    <button onclick="adjustSetting('time', -5)" class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-brand-primary font-bold btn-press">-</button>
+                                    <button onclick="adjustSetting('time', -1)" class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-brand-primary font-bold btn-press">-</button>
                                     <span id="display-setting-time" class="text-xs font-bold text-slate-700 w-5 text-center">10</span>
-                                    <button onclick="adjustSetting('time', 5)" class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-brand-primary font-bold btn-press">+</button>
+                                    <button onclick="adjustSetting('time', 1)" class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-brand-primary font-bold btn-press">+</button>
                                 </div>
                             </div>
                         </div>
@@ -289,9 +294,9 @@
                 <div class="bg-white rounded-3xl p-5 shadow-xl shadow-slate-200/50 flex flex-col items-center justify-center border border-slate-100 text-center h-full relative overflow-hidden">
                     
                     <!-- Feedback Toast Modal untuk Jawaban Salah -->
-                    <div id="quiz-feedback" class="hidden absolute top-4 left-4 right-4 bg-rose-500 text-white p-3 rounded-2xl shadow-xl flex items-center gap-3 z-[60] animate-slide-down border-2 border-white">
-                        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center shrink-0"><i class="ph-bold ph-x text-xl"></i></div>
-                        <p id="quiz-feedback-text" class="text-xs font-bold leading-snug text-left"></p>
+                    <div id="quiz-feedback" class="hidden absolute top-4 left-1/2 transform -translate-x-1/2 w-max max-w-[90%] bg-rose-500 text-white p-2.5 rounded-xl shadow-lg flex items-center gap-2 z-[60] animate-slide-down border border-white">
+                        <div class="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center shrink-0"><i class="ph-bold ph-x text-sm"></i></div>
+                        <p id="quiz-feedback-text" class="text-[11px] font-bold leading-snug text-left"></p>
                     </div>
 
                     <div id="question-header" class="mb-6 w-full flex flex-col items-center justify-center relative z-10 shrink-0"></div>
@@ -677,7 +682,31 @@
         }
 
         // Navigasi
-        window.onload = async () => { history.replaceState({ view: 'quiz-menu' }, ''); await fetchCountries(); populateCatalog(); renderView('quiz-menu'); };
+        window.onload = async () => { 
+            history.replaceState({ view: 'quiz-menu' }, ''); 
+            await fetchCountries(); 
+            populateCatalog(); 
+            renderView('quiz-menu'); 
+
+            // Listener untuk Sticky Search Button di Katalog
+            document.getElementById('main-scroll').addEventListener('scroll', function() {
+                const searchInput = document.getElementById('catalog-search');
+                const stickyBtn = document.getElementById('btn-sticky-search');
+                if (searchInput && stickyBtn && !document.getElementById('view-explore-catalog').classList.contains('hidden')) {
+                    const rect = searchInput.getBoundingClientRect();
+                    // Jika kolom search sudah melewati tinggi header ke atas
+                    if (rect.top < 60) stickyBtn.classList.remove('hidden');
+                    else stickyBtn.classList.add('hidden');
+                }
+            });
+        };
+
+        function scrollToSearch() {
+            const mainScroll = document.getElementById('main-scroll');
+            mainScroll.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => document.getElementById('catalog-search').focus(), 300);
+        }
+
         window.onpopstate = (e) => { if (e.state && e.state.view) renderView(e.state.view, false); };
 
         function navigate(viewId) { history.pushState({ view: viewId }, ''); renderView(viewId, true); }
@@ -685,6 +714,7 @@
             stopTimer(); isCompareMode = (viewId === 'quiz-compare');
             Object.values(views).forEach(v => v.classList.add('hidden')); toast.classList.add('hidden'); 
             document.getElementById('modal-gameover').classList.add('hidden');
+            document.getElementById('btn-sticky-search').classList.add('hidden'); // Sembunyikan selalu saat pindah menu
             
             if (views[viewId]) views[viewId].classList.remove('hidden');
 
@@ -711,7 +741,8 @@
                 quizSettingLives = Math.max(1, Math.min(10, quizSettingLives + amount));
                 document.getElementById('display-setting-lives').innerText = quizSettingLives;
             } else if (type === 'time') {
-                quizTimeTemp = Math.max(5, Math.min(60, quizTimeTemp + amount));
+                // Minimum diubah menjadi 3, kelipatan 1
+                quizTimeTemp = Math.max(3, Math.min(60, quizTimeTemp + amount));
                 document.getElementById('display-setting-time').innerText = quizTimeTemp;
                 quizSettingTime = quizTimeTemp;
             }
@@ -784,7 +815,7 @@
 
         function nextQuestion() {
             stopTimer(); if(lives <= 0) return gameOver();
-            document.getElementById('quiz-feedback').classList.add('hidden'); // Sembunyikan toast quiz jika ada
+            document.getElementById('quiz-feedback').classList.add('hidden'); // Reset feedback toast
             const container = document.getElementById('options-container'); container.innerHTML = '';
             
             let qType = activeQuizType === 'mixed' ? ['capital', 'flagToCountry', 'countryToFlag'][Math.floor(Math.random() * 3)] : activeQuizType;
@@ -833,14 +864,14 @@
                     if (type === 'text-capital') {
                         fdbkText.innerText = `${cObj.capital[0]} adalah ibukota dari ${cObj.name.common}`;
                     } else if (type === 'text-country') {
-                        fdbkText.innerText = `Itu adalah bendera milik ${currentCorrectAnswer.name.common}, bukan ${cObj.name.common}`;
+                        fdbkText.innerText = `Ini adalah bendera ${currentCorrectAnswer.name.common}`;
                     } else if (type === 'image-flag') {
                         fdbkText.innerText = `Ini adalah bendera milik negara ${cObj.name.common}`;
                     }
                     fdbk.classList.remove('hidden');
                     
                     document.querySelector('#options-container button[data-correct="true"]').classList.add('bg-brand-success/20', 'border-brand-success', 'border-dashed'); 
-                    setTimeout(nextQuestion, 2200); // Waktu jeda diperlama agar user sempat membaca notifikasi feedback
+                    setTimeout(nextQuestion, 2200); 
                 }
             };
             container.appendChild(btn);
@@ -1043,8 +1074,10 @@
         }
 
         function openDetail(c) {
-            // Perbaikan agar selalu auto-scroll ke paling atas setiap membuka detail baru
-            document.getElementById('modal-country-scroll').scrollTop = 0;
+            document.getElementById('modal-country-detail').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('modal-country-scroll').scrollTop = 0;
+            }, 10);
 
             document.getElementById('detail-flag').src = c.flags.svg;
             const coatImg = document.getElementById('detail-coat');
@@ -1101,7 +1134,7 @@
             if(c.idd && c.idd.root) phoneCode = c.idd.root + (c.idd.suffixes && c.idd.suffixes.length === 1 ? c.idd.suffixes[0] : "");
             document.getElementById('detail-idd').innerText = phoneCode;
 
-            // Peta Peta Daratan Utama
+            // Peta Daratan Utama
             const shapeSection = document.getElementById('detail-shape-section');
             const shapeImg = document.getElementById('detail-shape');
             
@@ -1112,8 +1145,6 @@
             } else {
                 shapeSection.classList.add('hidden');
             }
-
-            document.getElementById('modal-country-detail').classList.remove('hidden');
         }
 
         // --- FITUR RELASI (RELATED LIST MODAL) ---
