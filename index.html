@@ -59,8 +59,8 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .btn-press:active { transform: scale(0.96); }
-        .bg-img-blur { position: absolute; inset: 0; background-size: cover; background-position: center; filter: blur(25px) brightness(0.35); z-index: 0; }
-        /* Timer bar styling */
+        /* Style baru untuk background compare agar lebih ringan dari blur */
+        .bg-comp-gradient { position: absolute; inset: 0; background: linear-gradient(135deg, #1e293b, #0f172a); z-index: 0; }
         #timer-bar { transition: width 1s linear; }
     </style>
 </head>
@@ -81,10 +81,8 @@
             </div>
         </header>
 
-        <!-- TOAST NOTIFICATION (Dipindah ke bawah agar tidak nutupi soal) -->
-        <div id="feedback-toast" class="hidden absolute bottom-24 left-4 right-4 z-50 rounded-2xl p-4 shadow-2xl font-bold text-center text-sm transform transition-all animate-pop">
-            Pesan Feedback
-        </div>
+        <!-- TOAST NOTIFICATION (Minimalis Icon Saja di Tengah) -->
+        <div id="feedback-toast" class="hidden"></div>
 
         <!-- MAIN AREA -->
         <main class="flex-1 relative overflow-y-auto no-scrollbar pb-24" id="main-scroll">
@@ -236,7 +234,7 @@
                 </div>
             </div>
 
-            <!-- PLAY KUIS ADU STATISTIK (HIGHER / LOWER) - Revamp -->
+            <!-- PLAY KUIS ADU STATISTIK (HIGHER / LOWER) - Revamp Tanpa Blur -->
             <div id="view-quiz-compare" class="hidden absolute inset-0 z-[15] flex flex-col bg-slate-900 animate-fadeIn">
                 <!-- Petunjuk Cara Main (sementara) -->
                 <div id="compare-hint" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[30] bg-black/60 text-white px-4 py-2 rounded-full backdrop-blur-sm font-bold text-xs pointer-events-none animate-pulse">
@@ -244,38 +242,42 @@
                 </div>
 
                 <!-- Negara Atas (Option 1) -->
-                <button onclick="handleCompareAnswer('A')" id="compare-top" class="flex-1 relative flex flex-col items-center justify-center text-center p-6 text-white overflow-hidden transition-all duration-500 hover:brightness-110 active:scale-95 group border-b-2 border-white/20">
-                    <div id="comp-bg-a" class="bg-img-blur transition-all duration-[2s]"></div>
+                <button onclick="handleCompareAnswer('A')" id="compare-top" class="flex-1 relative flex flex-col items-center justify-center text-center p-6 text-white overflow-hidden transition-all duration-500 hover:brightness-110 active:scale-95 group border-b border-white/10">
+                    <div class="bg-comp-gradient"></div>
+                    <!-- Overlay bayangan halus agar warna tidak terlalu flat -->
+                    <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
                     <div class="relative z-10 flex flex-col items-center justify-center w-full">
-                        <img id="comp-flag-a" src="" class="w-24 h-16 sm:w-32 sm:h-20 object-contain rounded shadow-2xl drop-shadow-lg mb-3 bg-white/10 p-1">
-                        <h2 id="comp-name-a" class="text-2xl sm:text-3xl font-black mb-0 leading-tight drop-shadow-md">Negara A</h2>
-                        <p id="comp-sub-a" class="text-xs font-bold uppercase tracking-widest text-white/70 mb-3 drop-shadow">Subregion</p>
+                        <img id="comp-flag-a" src="" class="w-24 h-16 sm:w-32 sm:h-20 object-contain rounded shadow-xl mb-3 bg-white/5 p-1 border border-white/10">
+                        <h2 id="comp-name-a" class="text-2xl sm:text-3xl font-black mb-0 leading-tight text-white drop-shadow-md">Negara A</h2>
+                        <p id="comp-sub-a" class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-3 drop-shadow">Subregion</p>
                         
-                        <p class="text-sm font-medium opacity-80 mb-1">Memiliki <span id="comp-type-a">populasi</span></p>
-                        <h1 id="comp-val-a" class="text-4xl sm:text-5xl font-black tracking-tighter text-amber-300 drop-shadow-lg">1.000.000</h1>
+                        <p class="text-sm font-medium opacity-80 mb-1 text-slate-200">Memiliki <span id="comp-type-a">populasi</span></p>
+                        <h1 id="comp-val-a" class="text-4xl sm:text-5xl font-black tracking-tighter text-amber-400 drop-shadow-lg">1.000.000</h1>
                     </div>
                 </button>
 
                 <!-- Lencana VS -->
-                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(0,0,0,0.5)] z-20 font-black text-brand-primary text-lg pointer-events-none">VS</div>
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(0,0,0,0.5)] z-20 font-black text-brand-primary text-lg pointer-events-none border-4 border-slate-900">VS</div>
 
                 <!-- Negara Bawah (Option 2) -->
                 <button onclick="handleCompareAnswer('B')" id="compare-bottom" class="flex-1 relative flex flex-col items-center justify-center text-center p-6 text-white overflow-hidden transition-all duration-500 hover:brightness-110 active:scale-95 group">
-                    <div id="comp-bg-b" class="bg-img-blur transition-all duration-[2s]"></div>
+                    <div class="bg-comp-gradient" style="background: linear-gradient(135deg, #0f172a, #1e293b);"></div>
+                    <!-- Overlay bayangan halus -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
                     <div class="relative z-10 flex flex-col items-center justify-center w-full">
-                        <img id="comp-flag-b" src="" class="w-24 h-16 sm:w-32 sm:h-20 object-contain rounded shadow-2xl drop-shadow-lg mb-3 bg-white/10 p-1">
-                        <h2 id="comp-name-b" class="text-2xl sm:text-3xl font-black mb-0 leading-tight drop-shadow-md">Negara B</h2>
-                        <p id="comp-sub-b" class="text-xs font-bold uppercase tracking-widest text-white/70 mb-3 drop-shadow">Subregion</p>
+                        <img id="comp-flag-b" src="" class="w-24 h-16 sm:w-32 sm:h-20 object-contain rounded shadow-xl mb-3 bg-white/5 p-1 border border-white/10">
+                        <h2 id="comp-name-b" class="text-2xl sm:text-3xl font-black mb-0 leading-tight text-white drop-shadow-md">Negara B</h2>
+                        <p id="comp-sub-b" class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-3 drop-shadow">Subregion</p>
                         
                         <!-- Hasil Awal: Tersembunyi Tanda Tanya -->
                         <div id="comp-guess-b" class="flex flex-col items-center group-hover:scale-105 transition-transform">
-                            <p class="text-sm font-medium opacity-80 mb-1">Pilih jika lebih besar!</p>
-                            <h1 class="text-5xl font-black tracking-tighter text-white drop-shadow-lg animate-pulse">???</h1>
+                            <p class="text-sm font-medium opacity-80 mb-1 text-slate-200">Pilih jika lebih besar!</p>
+                            <h1 class="text-5xl font-black tracking-tighter text-slate-400 drop-shadow-lg animate-pulse">???</h1>
                         </div>
 
                         <!-- Hasil Akhir: Angka Asli -->
                         <div id="comp-result-b" class="hidden flex-col items-center">
-                            <p class="text-sm font-medium opacity-80 mb-1">Memiliki <span id="comp-type-b">populasi</span></p>
+                            <p class="text-sm font-medium opacity-80 mb-1 text-slate-200">Memiliki <span id="comp-type-b">populasi</span></p>
                             <h1 id="comp-val-b" class="text-4xl sm:text-5xl font-black tracking-tighter text-brand-success drop-shadow-lg">Hasil</h1>
                         </div>
                     </div>
@@ -321,6 +323,68 @@
             </button>
         </nav>
         
+    </div>
+
+    <!-- MODAL DETAIL NEGARA (Lengkap & Bisa Scroll Teks Panjang) -->
+    <div id="modal-country-detail" class="hidden absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-6 transition-all">
+        <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm h-[85vh] sm:h-auto sm:max-h-[85vh] shadow-2xl relative animate-slide-up flex flex-col">
+            <button onclick="closeCountryDetail()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 text-slate-500 rounded-full flex items-center justify-center btn-press z-10">
+                <i class="ph-bold ph-x"></i>
+            </button>
+
+            <!-- Header Modal -->
+            <div class="p-6 bg-slate-50 rounded-t-3xl border-b border-slate-200 flex flex-col items-center text-center shrink-0">
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2">Ketuk bendera untuk perbesar</p>
+                <img id="detail-flag" src="" onclick="openFlagZoom(this.src)" class="w-24 h-16 object-cover rounded shadow-md mb-3 border border-slate-200 cursor-zoom-in active:scale-95 transition-transform">
+                <h2 id="detail-name-common" class="text-2xl font-black text-slate-800 leading-tight">Nama</h2>
+                <p id="detail-name-official" class="text-xs text-slate-500 font-medium mt-1">Resmi</p>
+            </div>
+
+            <!-- Area Data Scrollable -->
+            <div class="p-6 flex-1 overflow-y-auto flex flex-col gap-4 text-sm text-slate-600 pb-10 no-scrollbar">
+                <div class="flex justify-between items-start border-b border-slate-100 pb-3 gap-2">
+                    <span class="flex items-center gap-2 text-slate-400 whitespace-nowrap"><i class="ph-bold ph-buildings"></i> Ibukota</span>
+                    <span id="detail-capital" class="font-bold text-slate-800 text-right">Mendata...</span>
+                </div>
+                <div class="flex justify-between items-start border-b border-slate-100 pb-3 gap-2">
+                    <span class="flex items-center gap-2 text-slate-400 whitespace-nowrap"><i class="ph-bold ph-map-pin"></i> Benua</span>
+                    <span id="detail-region" class="font-bold text-slate-800 text-right">Mendata...</span>
+                </div>
+                <div class="flex justify-between items-start border-b border-slate-100 pb-3 gap-2">
+                    <span class="flex items-center gap-2 text-slate-400 whitespace-nowrap"><i class="ph-bold ph-map-trifold"></i> Sub-Benua</span>
+                    <span id="detail-subregion" class="font-bold text-slate-800 text-right">Mendata...</span>
+                </div>
+                <div class="flex justify-between items-start border-b border-slate-100 pb-3 gap-2">
+                    <span class="flex items-center gap-2 text-slate-400 whitespace-nowrap"><i class="ph-bold ph-users"></i> Populasi</span>
+                    <span id="detail-population" class="font-bold text-slate-800 text-right">Mendata...</span>
+                </div>
+                <div class="flex justify-between items-start border-b border-slate-100 pb-3 gap-2">
+                    <span class="flex items-center gap-2 text-slate-400 whitespace-nowrap"><i class="ph-bold ph-bounding-box"></i> Luas Wilayah</span>
+                    <span id="detail-area" class="font-bold text-slate-800 text-right">Mendata...</span>
+                </div>
+                <div class="flex justify-between items-start border-b border-slate-100 pb-3 gap-4">
+                    <span class="flex items-center gap-2 text-slate-400 whitespace-nowrap mt-0.5"><i class="ph-bold ph-money"></i> Mata Uang</span>
+                    <span id="detail-currencies" class="font-bold text-brand-primary text-right leading-snug">Mendata...</span>
+                </div>
+                <div class="flex justify-between items-start border-b border-slate-100 pb-3 gap-4">
+                    <span class="flex items-center gap-2 text-slate-400 whitespace-nowrap mt-0.5"><i class="ph-bold ph-translate"></i> Bahasa Resmi</span>
+                    <span id="detail-languages" class="font-bold text-slate-800 text-right leading-snug">Mendata...</span>
+                </div>
+                <div class="flex justify-between items-start pt-1 gap-4">
+                    <span class="flex items-center gap-2 text-slate-400 whitespace-nowrap mt-0.5"><i class="ph-bold ph-arrows-merge"></i> Tetangga</span>
+                    <span id="detail-borders" class="font-bold text-brand-warning text-right leading-snug">Mendata...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL FOKUS BENDERA (Zoom Besar) -->
+    <div id="modal-flag-zoom" class="hidden absolute inset-0 bg-black/95 z-[60] flex flex-col items-center justify-center p-4 transition-opacity animate-fadeIn">
+        <button onclick="closeFlagZoom()" class="absolute top-6 right-6 w-10 h-10 bg-white/10 text-white rounded-full flex items-center justify-center text-xl btn-press">
+            <i class="ph-bold ph-x"></i>
+        </button>
+        <img id="zoomed-flag" src="" class="max-w-full max-h-[80vh] object-contain rounded shadow-2xl">
+        <p class="text-white/50 text-sm mt-6 font-medium">Ketuk X untuk menutup</p>
     </div>
 
     <!-- MODAL GAME OVER -->
@@ -373,7 +437,6 @@
         const statusHeader = document.getElementById('game-status');
         const toast = document.getElementById('feedback-toast');
         const bottomNav = document.getElementById('bottom-nav');
-        // Define appContainer here
         const appContainer = document.getElementById('app-container');
 
         // Fetch Data dengan membuang yang "undefined" ibukotanya
@@ -519,9 +582,14 @@
             appContainer.classList.add('animate-shake'); setTimeout(() => appContainer.classList.remove('animate-shake'), 400);
             lives--; updateStatsDisplay();
             
-            let corStr = currentSpecificQuestionType === 'capital' ? currentCorrectAnswer.capital[0] : currentCorrectAnswer.name.common;
-            showToast(`⏰ Waktu Habis! Jawabannya: <b>${corStr}</b>`, "error");
-            setTimeout(() => nextQuestion(), 2500);
+            showToast(false);
+            // Tampilkan opsi yang benar dengan border hijau
+            allBtns.forEach(b => {
+                if(b.dataset.correct === "true") {
+                    b.classList.add('bg-brand-success/20', 'border-brand-success', 'border-dashed');
+                }
+            });
+            setTimeout(() => nextQuestion(), 1500);
         }
 
         // --- LOGIKA KUIS KLASIK ---
@@ -585,7 +653,8 @@
             } else {
                 qHeader.innerHTML = `
                     <span class="text-sm font-bold text-slate-500 mb-1">Pilih bendera dari</span>
-                    <span class="text-brand-primary font-black text-2xl text-center leading-tight">${currentCorrectAnswer.name.common}</span>
+                    <span class="text-brand-primary font-black text-2xl text-center leading-tight mb-2">${currentCorrectAnswer.name.common}</span>
+                    <span class="text-[10px] uppercase font-bold text-slate-400 tracking-widest bg-slate-100 px-2 py-1 rounded-md">${currentCorrectAnswer.subregion || '-'}</span>
                 `;
                 options.forEach(c => createOptBtn(c, 'image-flag', container));
             }
@@ -596,31 +665,39 @@
 
         function createOptBtn(cObj, type, container) {
             const btn = document.createElement('button');
+            const isCorrect = (cObj === currentCorrectAnswer);
+            btn.dataset.correct = isCorrect; // Tanda opsi yang benar
             btn.className = "w-full bg-white border-2 border-slate-100 hover:border-brand-primary/50 text-slate-700 font-bold p-2 sm:p-3 rounded-2xl transition-all btn-press flex flex-col items-center justify-center group relative overflow-hidden min-h-[90px] shadow-sm";
             if (type === 'text-capital') btn.innerHTML = `<span class="text-sm text-center leading-tight w-full px-1">${cObj.capital[0]}</span>`;
             else if (type === 'text-country') btn.innerHTML = `<span class="text-sm text-center leading-tight w-full px-1">${cObj.name.common}</span>`;
             else btn.innerHTML = `<img src="${cObj.flags.svg}" class="w-full h-full max-h-[70px] object-contain p-1 drop-shadow-sm">`;
-            btn.onclick = () => handleClassicAns(btn, cObj, cObj === currentCorrectAnswer);
+            btn.onclick = () => handleClassicAns(btn, cObj, isCorrect);
             container.appendChild(btn);
         }
 
         function handleClassicAns(btn, cObj, isCorrect) {
             stopTimer(); // Hentikan timer karena sudah jawab
-            document.querySelectorAll('#options-container button').forEach(b => b.onclick = null);
+            const allBtns = document.querySelectorAll('#options-container button');
+            allBtns.forEach(b => b.onclick = null);
             
             if (isCorrect) {
-                btn.classList.add('bg-brand-success/10', 'border-brand-success', 'ring-4', 'ring-brand-success/30');
-                showToast("🎉 Tepat Sekali!", "success");
+                btn.classList.add('bg-brand-success/20', 'border-brand-success', 'ring-4', 'ring-brand-success/30');
+                showToast(true);
                 score += 10; updateStatsDisplay(); setTimeout(nextQuestion, 1000);
             } else {
-                btn.classList.add('bg-brand-secondary/10', 'border-brand-secondary');
+                btn.classList.add('bg-brand-secondary/20', 'border-brand-secondary');
                 appContainer.classList.add('animate-shake'); setTimeout(() => appContainer.classList.remove('animate-shake'), 400);
                 lives--; updateStatsDisplay();
+                showToast(false);
                 
-                // Beri tahu jawaban yang benar
-                let corStr = currentSpecificQuestionType === 'capital' ? currentCorrectAnswer.capital[0] : currentCorrectAnswer.name.common;
-                showToast(`❌ Salah! Jawaban yang benar: <b>${corStr}</b>`, "error");
-                setTimeout(nextQuestion, 2500);
+                // Tampilkan opsi yang benar dengan border hijau
+                allBtns.forEach(b => {
+                    if(b.dataset.correct === "true") {
+                        b.classList.add('bg-brand-success/20', 'border-brand-success', 'border-dashed');
+                    }
+                });
+                
+                setTimeout(nextQuestion, 1500);
             }
         }
 
@@ -653,7 +730,6 @@
 
         function renderCompareUI() {
             // Render A (Top)
-            document.getElementById('comp-bg-a').style.backgroundImage = `url(${countryA.flags.svg})`;
             document.getElementById('comp-flag-a').src = countryA.flags.svg;
             document.getElementById('comp-name-a').innerText = countryA.name.common;
             document.getElementById('comp-sub-a').innerText = countryA.subregion || '-';
@@ -661,7 +737,6 @@
             document.getElementById('comp-val-a').innerText = compareProperty === 'population' ? countryA.population.toLocaleString('id-ID') : countryA.area.toLocaleString('id-ID') + " km²";
             
             // Render B (Bottom - Sembunyikan Angka)
-            document.getElementById('comp-bg-b').style.backgroundImage = `url(${countryB.flags.svg})`;
             document.getElementById('comp-flag-b').src = countryB.flags.svg;
             document.getElementById('comp-name-b').innerText = countryB.name.common;
             document.getElementById('comp-sub-b').innerText = countryB.subregion || '-';
@@ -694,10 +769,7 @@
             const valA = countryA[compareProperty];
             const valB = countryB[compareProperty];
             
-            // Logic: Winner is the one with LARGER value. If tie, both are correct.
-            let winnerObj = valA >= valB ? countryA : countryB; 
-            if(valA === valB) winnerObj = chosenArea === 'A' ? countryA : countryB; // safety
-
+            // Logic: Is it correct?
             const isCorrect = (chosenArea === 'A' && valA >= valB) || (chosenArea === 'B' && valB >= valA);
 
             // Tampilkan isi data B
@@ -708,43 +780,42 @@
             if(isCorrect) {
                 valText.className = "text-4xl sm:text-5xl font-black tracking-tighter text-brand-success drop-shadow-lg";
                 score += 15; updateStatsDisplay();
-                showToast("🎉 Hebat! Anda benar.", "success");
-                
-                setTimeout(() => {
-                    // King of the Hill: Negara yg angkanya LEBIH BESAR (winnerObj) akan naik/tetap di posisi A.
-                    countryA = winnerObj;
-                    const validData = countriesData.filter(c => typeof c[compareProperty] === 'number' && c[compareProperty] > 0);
-                    countryB = getNextCompare(countryA, validData);
-                    renderCompareUI();
-                }, 1800);
+                showToast(true);
 
             } else {
                 valText.className = "text-4xl sm:text-5xl font-black tracking-tighter text-brand-secondary drop-shadow-lg";
                 appContainer.classList.add('animate-shake'); setTimeout(() => appContainer.classList.remove('animate-shake'), 400);
                 lives--; updateStatsDisplay();
-                showToast("❌ Salah! Ternyata lebih kecil.", "error");
-                
-                setTimeout(() => {
-                    if(lives <= 0) { gameOver(); } 
-                    else {
-                        // Lanjut main, jadikan yg menang sebagai A
-                        countryA = winnerObj;
-                        const validData = countriesData.filter(c => typeof c[compareProperty] === 'number' && c[compareProperty] > 0);
-                        countryB = getNextCompare(countryA, validData);
-                        renderCompareUI();
-                    }
-                }, 2500);
+                showToast(false);
             }
+
+            // Setelah waktu jeda, negara B (Penantang/Baru Masuk) SELALU naik ke posisi A, dan A (Lama) menghilang.
+            setTimeout(() => {
+                if(lives <= 0 && !isCorrect) { 
+                    gameOver(); 
+                } else {
+                    countryA = countryB; // Negara baru pindah ke atas
+                    const validData = countriesData.filter(c => typeof c[compareProperty] === 'number' && c[compareProperty] > 0);
+                    countryB = getNextCompare(countryA, validData);
+                    renderCompareUI();
+                }
+            }, 1200); 
         }
 
-        // --- SISTEM UTILITY ---
-        function showToast(msg, type) {
-            toast.innerHTML = msg; 
-            toast.classList.remove('hidden', 'bg-brand-success', 'bg-brand-secondary');
-            toast.classList.add(type === 'success' ? 'bg-brand-success' : 'bg-brand-secondary', 'text-white');
-            // Re-trigger animasi
-            toast.classList.remove('animate-pop'); void toast.offsetWidth; toast.classList.add('animate-pop');
+        // --- SISTEM UTILITY (TOAST ICON SAJA) ---
+        function showToast(isCorrect) {
+            toast.innerHTML = isCorrect 
+                ? '<i class="ph-bold ph-check text-6xl text-white drop-shadow-md"></i>' 
+                : '<i class="ph-bold ph-x text-6xl text-white drop-shadow-md"></i>';
+            
+            toast.className = `absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[100] rounded-full w-28 h-28 shadow-2xl flex items-center justify-center animate-pop backdrop-blur-md ${isCorrect ? 'bg-brand-success/90' : 'bg-brand-secondary/90'}`;
+
+            // Hilangkan setelah 1 detik
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 1000);
         }
+
         function updateStatsDisplay() {
             document.getElementById('score-display').innerText = score;
             document.getElementById('lives-display').innerText = lives;
@@ -775,18 +846,43 @@
             else if(sortVal === 'area-desc') sorted.sort((a,b) => (b.area || 0) - (a.area || 0));
             else if(sortVal === 'area-asc') sorted.sort((a,b) => (a.area || 0) - (b.area || 0));
 
-            // Tampilkan hanya 30 teratas agar tidak berat (bisa diatur)
+            // Tampilkan hanya 50 teratas agar tidak berat (bisa diatur)
             sorted.slice(0, 50).forEach((c) => {
                 const card = document.createElement('div');
-                card.className = "bg-white p-3 rounded-2xl shadow-sm border border-slate-50 flex flex-col items-center text-center btn-press";
+                card.className = "bg-white p-3 rounded-2xl shadow-sm border border-slate-50 flex flex-col items-center text-center btn-press cursor-pointer hover:border-brand-primary/30 transition-colors";
+                card.onclick = () => openDetail(c);
                 card.innerHTML = `
-                    <img src="${c.flags.svg}" class="w-full h-16 object-contain rounded mb-2 bg-slate-50">
+                    <img src="${c.flags.svg}" class="w-full h-16 object-contain rounded mb-2 bg-slate-50 p-1 border border-slate-100">
                     <span class="font-bold text-xs leading-tight text-slate-700">${c.name.common}</span>
                     <span class="text-[10px] font-medium text-slate-400">${c.capital ? c.capital[0] : '-'}</span>
                 `;
                 grid.appendChild(card);
             });
         }
+
+        // Fungsi untuk menangani klik kartu katalog
+        function openDetail(c) {
+            document.getElementById('detail-flag').src = c.flags.svg;
+            document.getElementById('detail-name-common').innerText = c.name.common;
+            document.getElementById('detail-name-official').innerText = c.name.official || "-";
+            document.getElementById('detail-capital').innerText = c.capital ? c.capital[0] : "-";
+            document.getElementById('detail-region').innerText = c.region || "-";
+            document.getElementById('detail-subregion').innerText = c.subregion || "-";
+            document.getElementById('detail-population').innerText = c.population ? c.population.toLocaleString('id-ID') + " Jiwa" : "-";
+            document.getElementById('detail-area').innerText = c.area ? c.area.toLocaleString('id-ID') + " km²" : "-";
+            document.getElementById('detail-currencies').innerText = c.currencies ? Object.values(c.currencies).map(x => `${x.name} (${x.symbol})`).join(', ') : "-";
+            document.getElementById('detail-languages').innerText = c.languages ? Object.values(c.languages).join(', ') : "-";
+            document.getElementById('detail-borders').innerText = getBorderNames(c.borders);
+            document.getElementById('modal-country-detail').classList.remove('hidden');
+        }
+
+        function closeCountryDetail() { document.getElementById('modal-country-detail').classList.add('hidden'); }
+
+        function openFlagZoom(url) {
+            document.getElementById('zoomed-flag').src = url;
+            document.getElementById('modal-flag-zoom').classList.remove('hidden');
+        }
+        function closeFlagZoom() { document.getElementById('modal-flag-zoom').classList.add('hidden'); }
 
         let myGlobe = null;
         function initGlobe() {
