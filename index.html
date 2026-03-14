@@ -120,7 +120,12 @@
                     </button>
                     <button onclick="navigate('explore-catalog')" class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm btn-press flex items-center gap-4 hover:border-brand-primary/30">
                         <div class="bg-indigo-50 p-4 rounded-2xl text-indigo-500"><i class="ph-fill ph-cards text-4xl"></i></div>
-                        <div><h3 class="font-bold text-xl text-slate-700">Katalog Negara</h3><p class="text-sm text-slate-400 mt-1">Ensiklopedia berdasar abjad</p></div>
+                        <div><h3 class="font-bold text-xl text-slate-700">Katalog Dunia</h3><p class="text-sm text-slate-400 mt-1">Ensiklopedia negara dunia</p></div>
+                    </button>
+                    <!-- Tombol Baru: Negara Bagian AS -->
+                    <button onclick="navigate('explore-states')" class="bg-rose-500 p-6 rounded-3xl text-left text-white shadow-xl shadow-rose-500/30 btn-press flex items-center gap-4">
+                        <div class="bg-white/20 p-4 rounded-2xl"><i class="ph-fill ph-flag-banner text-4xl"></i></div>
+                        <div><h3 class="font-bold text-xl">Negara Bagian AS</h3><p class="text-sm text-rose-100 mt-1">Jelajahi 50 wilayah Amerika</p></div>
                     </button>
                     <button onclick="navigate('explore-continents')" class="bg-amber-500 p-6 rounded-3xl text-left text-white shadow-xl shadow-amber-500/30 btn-press flex items-center gap-4">
                         <div class="bg-white/20 p-4 rounded-2xl"><i class="ph-fill ph-map-pin-line text-4xl"></i></div>
@@ -165,7 +170,7 @@
                 </div>
             </div>
 
-            <!-- EKSPLORASI KATALOG -->
+            <!-- EKSPLORASI KATALOG NEGARA DUNIA -->
             <div id="view-explore-catalog" class="hidden min-h-full flex-col p-6 animate-slide-up">
                 <div class="flex justify-between items-center mb-3">
                     <button onclick="navigate('explore-menu')" class="flex items-center gap-2 text-slate-500 font-bold btn-press bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100"><i class="ph-bold ph-arrow-left"></i> Kembali</button>
@@ -192,6 +197,30 @@
                     </select>
                 </div>
                 <div id="catalog-grid" class="grid grid-cols-2 gap-3"></div>
+            </div>
+
+            <!-- EKSPLORASI KATALOG NEGARA BAGIAN AS -->
+            <div id="view-explore-states" class="hidden min-h-full flex-col p-6 animate-slide-up">
+                <div class="flex justify-between items-center mb-3">
+                    <button onclick="navigate('explore-menu')" class="flex items-center gap-2 text-slate-500 font-bold btn-press bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100"><i class="ph-bold ph-arrow-left"></i> Kembali</button>
+                </div>
+                
+                <!-- Search Bar States -->
+                <div class="relative w-full mb-3">
+                    <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="states-search" oninput="populateStatesCatalog()" placeholder="Cari negara bagian AS..." class="w-full bg-white border border-slate-200 text-slate-600 text-sm rounded-xl pl-9 pr-3 py-2.5 font-bold shadow-sm outline-none focus:ring-2 focus:ring-rose-500">
+                </div>
+
+                <div class="grid grid-cols-1 gap-2 mb-4">
+                    <select id="states-sort" onchange="populateStatesCatalog()" class="bg-white border border-slate-200 text-slate-600 text-xs rounded-xl px-3 py-2 font-bold shadow-sm outline-none focus:ring-2 focus:ring-rose-500 w-full">
+                        <option value="name-asc">🔤 Urutkan Abjad (A-Z)</option>
+                        <option value="pop-desc">👥 Populasi Terbanyak</option>
+                        <option value="pop-asc">👤 Populasi Paling Sedikit</option>
+                        <option value="area-desc">🗺️ Luas Terbesar</option>
+                        <option value="area-asc">📍 Luas Terkecil</option>
+                    </select>
+                </div>
+                <div id="states-grid" class="grid grid-cols-2 gap-3"></div>
             </div>
 
             <!-- EKSPLORASI BENUA -->
@@ -505,6 +534,46 @@
             </div>
         </div>
 
+        <!-- MODAL DETAIL NEGARA BAGIAN AS -->
+        <div id="modal-state-detail" class="hidden absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-[100] flex items-end sm:items-center justify-center sm:p-6 transition-all">
+            <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm h-[85vh] sm:h-auto sm:max-h-[85vh] shadow-2xl relative animate-slide-up flex flex-col">
+                <button onclick="document.getElementById('modal-state-detail').classList.add('hidden')" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 text-slate-500 rounded-full flex items-center justify-center btn-press z-20">
+                    <i class="ph-bold ph-x"></i>
+                </button>
+
+                <div class="p-6 bg-rose-50 rounded-t-3xl border-b border-rose-100 flex flex-col items-center text-center shrink-0 relative">
+                    <p class="text-[10px] text-rose-400 font-bold uppercase tracking-widest mb-3">Ketuk gambar untuk perbesar</p>
+                    <div class="flex justify-center items-center gap-4 mb-3 w-full">
+                        <img id="detail-state-flag" src="" onclick="openFlagZoom(this.src)" class="w-24 h-16 object-contain rounded shadow-md border border-slate-200 cursor-zoom-in active:scale-95 transition-transform" title="Bendera Negara Bagian">
+                    </div>
+                    <h2 id="detail-state-name" class="text-2xl font-black text-slate-800 leading-tight mt-1">Nama State</h2>
+                    <p id="detail-state-abbr" class="text-xs text-rose-500 font-bold mt-1 bg-white px-2 py-0.5 rounded-full border border-rose-200">US-XX</p>
+                </div>
+
+                <div class="p-6 flex-1 overflow-y-auto flex flex-col gap-5 text-sm text-slate-600 pb-10 no-scrollbar">
+                    <div class="flex flex-col gap-3">
+                        <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Informasi Dasar</h4>
+                        <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
+                            <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap"><i class="ph-bold ph-buildings"></i> Ibukota</span>
+                            <span id="detail-state-capital" class="font-bold text-slate-800 text-right">Mendata...</span>
+                        </div>
+                        <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
+                            <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap"><i class="ph-bold ph-users"></i> Populasi</span>
+                            <span id="detail-state-population" class="font-bold text-slate-800 text-right">Mendata...</span>
+                        </div>
+                        <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
+                            <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap"><i class="ph-bold ph-bounding-box"></i> Luas Wilayah</span>
+                            <span id="detail-state-area" class="font-bold text-slate-800 text-right">Mendata...</span>
+                        </div>
+                        <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
+                            <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap"><i class="ph-bold ph-flag-banner"></i> Status</span>
+                            <span class="font-bold text-slate-800 text-right">Negara Bagian AS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- MODAL LINKED LIST (Daftar Negara Terkait) -->
         <div id="modal-related-list" class="hidden absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-[105] flex items-center justify-center p-6 transition-all">
             <div class="bg-white rounded-3xl w-full max-w-xs max-h-[70vh] shadow-2xl relative animate-pop flex flex-col overflow-hidden">
@@ -586,6 +655,60 @@
             "ESH": "Dipersengketakan (Maroko/Sahrawi)", "ATA": "Traktat Antarktika"
         };
 
+        // DATABASE MINI NEGARA BAGIAN AS (50 States)
+        const usStatesData = [
+            { id: "al", name: "Alabama", capital: "Montgomery", pop: 5024279, area: 135767 },
+            { id: "ak", name: "Alaska", capital: "Juneau", pop: 733391, area: 1717856 },
+            { id: "az", name: "Arizona", capital: "Phoenix", pop: 7151502, area: 295234 },
+            { id: "ar", name: "Arkansas", capital: "Little Rock", pop: 3011524, area: 137732 },
+            { id: "ca", name: "California", capital: "Sacramento", pop: 39538223, area: 423967 },
+            { id: "co", name: "Colorado", capital: "Denver", pop: 5773714, area: 269601 },
+            { id: "ct", name: "Connecticut", capital: "Hartford", pop: 3605944, area: 14357 },
+            { id: "de", name: "Delaware", capital: "Dover", pop: 989948, area: 6446 },
+            { id: "fl", name: "Florida", capital: "Tallahassee", pop: 21538187, area: 170312 },
+            { id: "ga", name: "Georgia", capital: "Atlanta", pop: 10711908, area: 153910 },
+            { id: "hi", name: "Hawaii", capital: "Honolulu", pop: 1455271, area: 28313 },
+            { id: "id", name: "Idaho", capital: "Boise", pop: 1839106, area: 216443 },
+            { id: "il", name: "Illinois", capital: "Springfield", pop: 12812508, area: 149995 },
+            { id: "in", name: "Indiana", capital: "Indianapolis", pop: 6785528, area: 94326 },
+            { id: "ia", name: "Iowa", capital: "Des Moines", pop: 3190369, area: 145746 },
+            { id: "ks", name: "Kansas", capital: "Topeka", pop: 2937880, area: 213100 },
+            { id: "ky", name: "Kentucky", capital: "Frankfort", pop: 4505836, area: 104656 },
+            { id: "la", name: "Louisiana", capital: "Baton Rouge", pop: 4657757, area: 135659 },
+            { id: "me", name: "Maine", capital: "Augusta", pop: 1362359, area: 91633 },
+            { id: "md", name: "Maryland", capital: "Annapolis", pop: 6177224, area: 32114 },
+            { id: "ma", name: "Massachusetts", capital: "Boston", pop: 7029917, area: 27336 },
+            { id: "mi", name: "Michigan", capital: "Lansing", pop: 10077331, area: 250487 },
+            { id: "mn", name: "Minnesota", capital: "St. Paul", pop: 5706494, area: 225163 },
+            { id: "ms", name: "Mississippi", capital: "Jackson", pop: 2961279, area: 125438 },
+            { id: "mo", name: "Missouri", capital: "Jefferson City", pop: 6154913, area: 180540 },
+            { id: "mt", name: "Montana", capital: "Helena", pop: 1084225, area: 380831 },
+            { id: "ne", name: "Nebraska", capital: "Lincoln", pop: 1961504, area: 200330 },
+            { id: "nv", name: "Nevada", capital: "Carson City", pop: 3104614, area: 286380 },
+            { id: "nh", name: "New Hampshire", capital: "Concord", pop: 1377529, area: 24214 },
+            { id: "nj", name: "New Jersey", capital: "Trenton", pop: 9288994, area: 22591 },
+            { id: "nm", name: "New Mexico", capital: "Santa Fe", pop: 2117522, area: 314917 },
+            { id: "ny", name: "New York", capital: "Albany", pop: 20201249, area: 141297 },
+            { id: "nc", name: "North Carolina", capital: "Raleigh", pop: 10439388, area: 139390 },
+            { id: "nd", name: "North Dakota", capital: "Bismarck", pop: 779094, area: 183108 },
+            { id: "oh", name: "Ohio", capital: "Columbus", pop: 11799448, area: 116096 },
+            { id: "ok", name: "Oklahoma", capital: "Oklahoma City", pop: 3959353, area: 181037 },
+            { id: "or", name: "Oregon", capital: "Salem", pop: 4237256, area: 254799 },
+            { id: "pa", name: "Pennsylvania", capital: "Harrisburg", pop: 13002700, area: 119280 },
+            { id: "ri", name: "Rhode Island", capital: "Providence", pop: 1097379, area: 4001 },
+            { id: "sc", name: "South Carolina", capital: "Columbia", pop: 5118425, area: 82933 },
+            { id: "sd", name: "South Dakota", capital: "Pierre", pop: 886667, area: 199729 },
+            { id: "tn", name: "Tennessee", capital: "Nashville", pop: 6910840, area: 109153 },
+            { id: "tx", name: "Texas", capital: "Austin", pop: 29145505, area: 695662 },
+            { id: "ut", name: "Utah", capital: "Salt Lake City", pop: 3271616, area: 219882 },
+            { id: "vt", name: "Vermont", capital: "Montpelier", pop: 643077, area: 24906 },
+            { id: "va", name: "Virginia", capital: "Richmond", pop: 8631393, area: 110787 },
+            { id: "wa", name: "Washington", capital: "Olympia", pop: 7705281, area: 184661 },
+            { id: "wv", name: "West Virginia", capital: "Charleston", pop: 1793716, area: 62756 },
+            { id: "wi", name: "Wisconsin", capital: "Madison", pop: 5893718, area: 169635 },
+            { id: "wy", name: "Wyoming", capital: "Cheyenne", pop: 576851, area: 253335 }
+        ];
+
         function getBorderNames(bordersArr) {
             if(!bordersArr || bordersArr.length === 0) return "Tidak Berbatasan Darat";
             return bordersArr.map(code => {
@@ -628,7 +751,8 @@
         const views = {
             'loading': document.getElementById('view-loading'), 'explore-menu': document.getElementById('view-explore-menu'),
             'explore-globe': document.getElementById('view-explore-globe'), 'explore-map': document.getElementById('view-explore-map'),
-            'explore-catalog': document.getElementById('view-explore-catalog'), 'explore-continents': document.getElementById('view-explore-continents'), 
+            'explore-catalog': document.getElementById('view-explore-catalog'), 'explore-states': document.getElementById('view-explore-states'),
+            'explore-continents': document.getElementById('view-explore-continents'), 
             'quiz-menu': document.getElementById('view-quiz-menu'), 'quiz-play': document.getElementById('view-quiz-play'), 
             'quiz-compare': document.getElementById('view-quiz-compare'), 'quiz-map-guess': document.getElementById('view-quiz-map-guess'), 
             'quiz-map-find': document.getElementById('view-quiz-map-find'), 'profile': document.getElementById('view-profile')
@@ -688,13 +812,20 @@
             populateCatalog(); 
             renderView('quiz-menu'); 
 
-            // Listener untuk Sticky Search Button di Katalog
+            // Listener untuk Sticky Search Button di Katalog dan States
             document.getElementById('main-scroll').addEventListener('scroll', function() {
-                const searchInput = document.getElementById('catalog-search');
+                const searchInputCat = document.getElementById('catalog-search');
+                const searchInputStates = document.getElementById('states-search');
                 const stickyBtn = document.getElementById('btn-sticky-search');
-                if (searchInput && stickyBtn && !document.getElementById('view-explore-catalog').classList.contains('hidden')) {
-                    const rect = searchInput.getBoundingClientRect();
-                    // Jika kolom search sudah melewati tinggi header ke atas
+                
+                let rect = null;
+                if (!document.getElementById('view-explore-catalog').classList.contains('hidden') && searchInputCat) {
+                    rect = searchInputCat.getBoundingClientRect();
+                } else if (!document.getElementById('view-explore-states').classList.contains('hidden') && searchInputStates) {
+                    rect = searchInputStates.getBoundingClientRect();
+                }
+
+                if (rect && stickyBtn) {
                     if (rect.top < 60) stickyBtn.classList.remove('hidden');
                     else stickyBtn.classList.add('hidden');
                 }
@@ -704,7 +835,13 @@
         function scrollToSearch() {
             const mainScroll = document.getElementById('main-scroll');
             mainScroll.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(() => document.getElementById('catalog-search').focus(), 300);
+            setTimeout(() => {
+                if (!document.getElementById('view-explore-catalog').classList.contains('hidden')) {
+                    document.getElementById('catalog-search').focus();
+                } else if (!document.getElementById('view-explore-states').classList.contains('hidden')) {
+                    document.getElementById('states-search').focus();
+                }
+            }, 300);
         }
 
         window.onpopstate = (e) => { if (e.state && e.state.view) renderView(e.state.view, false); };
@@ -714,7 +851,7 @@
             stopTimer(); isCompareMode = (viewId === 'quiz-compare');
             Object.values(views).forEach(v => v.classList.add('hidden')); toast.classList.add('hidden'); 
             document.getElementById('modal-gameover').classList.add('hidden');
-            document.getElementById('btn-sticky-search').classList.add('hidden'); // Sembunyikan selalu saat pindah menu
+            document.getElementById('btn-sticky-search').classList.add('hidden'); 
             
             if (views[viewId]) views[viewId].classList.remove('hidden');
 
@@ -732,16 +869,15 @@
 
             if(viewId === 'explore-globe') setTimeout(initGlobe, 200);
             if(viewId === 'explore-map') setTimeout(()=>initLeafletMap('explore'), 200);
+            if(viewId === 'explore-states') populateStatesCatalog();
             if(viewId === 'explore-continents') populateContinents();
         }
 
-        // --- SISTEM PENGATURAN KUIS BARU ---
         function adjustSetting(type, amount) {
             if (type === 'lives') {
                 quizSettingLives = Math.max(1, Math.min(10, quizSettingLives + amount));
                 document.getElementById('display-setting-lives').innerText = quizSettingLives;
             } else if (type === 'time') {
-                // Minimum diubah menjadi 3, kelipatan 1
                 quizTimeTemp = Math.max(3, Math.min(60, quizTimeTemp + amount));
                 document.getElementById('display-setting-time').innerText = quizTimeTemp;
                 quizSettingTime = quizTimeTemp;
@@ -751,12 +887,12 @@
             const btn = document.getElementById('btn-setting-time-inf');
             const container = document.getElementById('time-adjust-container');
             if (quizSettingTime === 0) {
-                quizSettingTime = quizTimeTemp; // Mode terbatas waktu
+                quizSettingTime = quizTimeTemp;
                 btn.classList.replace('bg-brand-primary', 'bg-slate-200');
                 btn.classList.replace('text-white', 'text-slate-500');
                 container.classList.remove('opacity-50', 'pointer-events-none');
             } else {
-                quizSettingTime = 0; // Mode Infinity
+                quizSettingTime = 0;
                 btn.classList.replace('bg-slate-200', 'bg-brand-primary');
                 btn.classList.replace('text-slate-500', 'text-white');
                 container.classList.add('opacity-50', 'pointer-events-none');
@@ -858,7 +994,6 @@
                     appContainer.classList.add('animate-shake'); setTimeout(() => appContainer.classList.remove('animate-shake'), 400); 
                     lives--; updateStatsDisplay(); showToast(false); 
                     
-                    // --- Fitur Notifikasi Salah (Quiz Feedback) ---
                     const fdbk = document.getElementById('quiz-feedback');
                     const fdbkText = document.getElementById('quiz-feedback-text');
                     if (type === 'text-capital') {
@@ -983,7 +1118,7 @@
             document.getElementById('modal-gameover').classList.remove('hidden'); 
         }
 
-        // --- SISTEM KATALOG & PENCARIAN ---
+        // --- SISTEM KATALOG & PENCARIAN NEGARA DUNIA ---
         function populateCatalog() {
             const grid = document.getElementById('catalog-grid');
             const sortVal = document.getElementById('catalog-sort').value; 
@@ -1028,6 +1163,52 @@
                     </div>
                     <span class="font-bold text-xs leading-tight text-slate-700">${c.name.common}</span>
                     <span class="text-[10px] font-medium text-slate-400">${c.capital?c.capital[0]:'-'}</span>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // --- SISTEM KATALOG & PENCARIAN NEGARA BAGIAN AS ---
+        function populateStatesCatalog() {
+            const grid = document.getElementById('states-grid');
+            const sortVal = document.getElementById('states-sort').value; 
+            const searchVal = document.getElementById('states-search').value.toLowerCase();
+            grid.innerHTML = '';
+            
+            let filtered = [...usStatesData];
+            
+            if (searchVal) {
+                filtered = filtered.filter(s => 
+                    s.name.toLowerCase().includes(searchVal) || 
+                    s.capital.toLowerCase().includes(searchVal)
+                );
+            }
+
+            if(sortVal==='name-asc') filtered.sort((a,b)=>a.name.localeCompare(b.name)); 
+            else if(sortVal==='pop-desc') filtered.sort((a,b)=>b.pop-a.pop); 
+            else if(sortVal==='pop-asc') filtered.sort((a,b)=>a.pop-b.pop); 
+            else if(sortVal==='area-desc') filtered.sort((a,b)=>b.area-a.area); 
+            else if(sortVal==='area-asc') filtered.sort((a,b)=>a.area-b.area);
+            
+            if(filtered.length === 0) {
+                grid.innerHTML = `<div class="text-center text-slate-400 font-bold py-10 w-full">Pencarian tidak ditemukan</div>`;
+                return;
+            }
+
+            filtered.forEach((s) => {
+                const flagUrl = `https://flagcdn.com/w160/us-${s.id}.png`;
+                const card = document.createElement('div'); 
+                card.className = "bg-white p-3 rounded-2xl shadow-sm border border-slate-50 flex items-center gap-4 btn-press cursor-pointer hover:border-rose-300 transition-colors w-full";
+                card.onclick = () => openStateDetail(s);
+
+                card.innerHTML = `
+                    <div class="w-16 h-10 shrink-0 bg-slate-50 border border-slate-100 rounded flex items-center justify-center p-0.5">
+                        <img src="${flagUrl}" class="max-w-full max-h-full object-contain">
+                    </div>
+                    <div class="flex flex-col flex-1">
+                        <span class="font-bold text-sm leading-tight text-slate-700">${s.name}</span>
+                        <span class="text-[10px] font-medium text-slate-400">${s.capital}</span>
+                    </div>
                 `;
                 grid.appendChild(card);
             });
@@ -1081,7 +1262,12 @@
 
             document.getElementById('detail-flag').src = c.flags.svg;
             const coatImg = document.getElementById('detail-coat');
-            if(c.coatOfArms && c.coatOfArms.svg) { coatImg.src = c.coatOfArms.svg; coatImg.classList.remove('hidden'); } 
+            
+            // OPTIMASI: Panggil file versi PNG yang ukurannya sangat ringan, jika tidak ada baru gunakan SVG
+            if(c.coatOfArms && (c.coatOfArms.png || c.coatOfArms.svg)) { 
+                coatImg.src = c.coatOfArms.png || c.coatOfArms.svg; 
+                coatImg.classList.remove('hidden'); 
+            } 
             else { coatImg.classList.add('hidden'); }
 
             document.getElementById('detail-name-common').innerText = c.name.common; 
@@ -1089,7 +1275,6 @@
             document.getElementById('detail-capital').innerText = c.capital ? c.capital[0] : "-"; 
             document.getElementById('detail-region').innerText = c.region || "-"; 
             
-            // Subregion Link
             document.getElementById('detail-subregion').innerHTML = c.subregion 
                 ? `<span class="cursor-pointer text-brand-primary hover:underline font-bold" onclick="showRelated('subregion', '${c.subregion}')">${c.subregion}</span>` 
                 : "-"; 
@@ -1097,19 +1282,16 @@
             document.getElementById('detail-population').innerText = c.population ? c.population.toLocaleString('id-ID') + " Jiwa" : "-"; 
             document.getElementById('detail-area').innerText = c.area ? c.area.toLocaleString('id-ID') + " km²" : "-"; 
             
-            // Languages Link
             document.getElementById('detail-languages').innerHTML = c.languages 
                 ? Object.entries(c.languages).map(([code, name]) => `<span class="cursor-pointer text-brand-primary hover:underline font-bold" onclick="showRelated('language', '${name}')">${name}</span>`).join(', ') 
                 : "-"; 
             
-            // Currencies Link
             document.getElementById('detail-currencies').innerHTML = c.currencies 
                 ? Object.entries(c.currencies).map(([code, details]) => `<span class="cursor-pointer text-brand-primary hover:underline font-bold" onclick="showRelated('currency', '${code}', '${details.name}')">${code}, ${details.name} ${details.symbol ? '('+details.symbol+')' : ''}</span>`).join('; ') 
                 : "-"; 
             
             document.getElementById('detail-un').innerText = c.unMember ? "Anggota PBB ✅" : "Non-PBB ❌";
             
-            // Sovereign Link (Negara Induk)
             const sovContainer = document.getElementById('detail-sovereign-container');
             if (!c.unMember && sovereignMap[c.cca3]) {
                 sovContainer.classList.remove('hidden');
@@ -1126,7 +1308,6 @@
             document.getElementById('detail-timezone').innerText = c.timezones ? c.timezones.join(', ') : "-";
             document.getElementById('detail-tld').innerText = c.tld ? c.tld.join(', ') : "-";
             
-            // Teks Kepemilikan laut diubah Ya/Tidak
             document.getElementById('detail-landlocked').innerText = c.landlocked ? "Tidak" : "Ya";
             document.getElementById('detail-borders').innerText = getBorderNames(c.borders);
             
@@ -1134,7 +1315,6 @@
             if(c.idd && c.idd.root) phoneCode = c.idd.root + (c.idd.suffixes && c.idd.suffixes.length === 1 ? c.idd.suffixes[0] : "");
             document.getElementById('detail-idd').innerText = phoneCode;
 
-            // Peta Daratan Utama
             const shapeSection = document.getElementById('detail-shape-section');
             const shapeImg = document.getElementById('detail-shape');
             
@@ -1147,47 +1327,17 @@
             }
         }
 
-        // --- FITUR RELASI (RELATED LIST MODAL) ---
-        function showRelated(type, filterValue, displayValue = null) {
-            const container = document.getElementById('related-list-content');
-            container.innerHTML = '';
-            let filtered = [];
-            let title = displayValue || filterValue;
-            let subtitle = "";
-
-            if (type === 'subregion') {
-                subtitle = "Sub-Benua";
-                filtered = countriesData.filter(c => c.subregion === filterValue);
-            } else if (type === 'language') {
-                subtitle = "Bahasa Resmi";
-                filtered = countriesData.filter(c => c.languages && Object.values(c.languages).includes(filterValue));
-            } else if (type === 'currency') {
-                subtitle = "Mata Uang";
-                filtered = countriesData.filter(c => c.currencies && c.currencies[filterValue]);
-            } else if (type === 'sovereign') {
-                subtitle = "Wilayah / Negara Induk";
-                // Menampilkan negara induknya beserta semua wilayah dependensinya
-                filtered = countriesData.filter(c => sovereignMap[c.cca3] === filterValue || c.name.common === filterValue || c.name.common.includes(filterValue.replace(' (China)', '')));
-            }
-
-            document.getElementById('related-list-subtitle').innerText = subtitle;
-            document.getElementById('related-list-title').innerText = title;
-
-            filtered.sort((a,b)=>a.name.common.localeCompare(b.name.common)).forEach(c => {
-                const item = document.createElement('div');
-                item.className = "flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-100 shadow-sm cursor-pointer hover:border-brand-primary/50 transition-colors btn-press";
-                item.onclick = () => {
-                    document.getElementById('modal-related-list').classList.add('hidden');
-                    openDetail(c);
-                };
-                item.innerHTML = `
-                    <img src="${c.flags.svg}" class="w-10 h-7 object-contain rounded border border-slate-200">
-                    <span class="font-bold text-sm text-slate-700 leading-tight">${c.name.common}</span>
-                `;
-                container.appendChild(item);
-            });
-
-            document.getElementById('modal-related-list').classList.remove('hidden');
+        function openStateDetail(s) {
+            document.getElementById('modal-state-detail').classList.remove('hidden');
+            
+            const flagUrl = `https://flagcdn.com/w160/us-${s.id}.png`;
+            document.getElementById('detail-state-flag').src = flagUrl;
+            document.getElementById('detail-state-name').innerText = s.name; 
+            document.getElementById('detail-state-abbr').innerText = "US-" + s.id.toUpperCase(); 
+            
+            document.getElementById('detail-state-capital').innerText = s.capital; 
+            document.getElementById('detail-state-population').innerText = s.pop.toLocaleString('id-ID') + " Jiwa"; 
+            document.getElementById('detail-state-area').innerText = s.area.toLocaleString('id-ID') + " km²"; 
         }
 
         function closeCountryDetail() { document.getElementById('modal-country-detail').classList.add('hidden'); }
