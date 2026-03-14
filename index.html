@@ -165,6 +165,13 @@
                 <div class="flex justify-between items-center mb-3">
                     <button onclick="navigate('explore-menu')" class="flex items-center gap-2 text-slate-500 font-bold btn-press bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100"><i class="ph-bold ph-arrow-left"></i> Kembali</button>
                 </div>
+                
+                <!-- Search Bar -->
+                <div class="relative w-full mb-3">
+                    <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="catalog-search" oninput="populateCatalog()" placeholder="Cari negara atau ibukota..." class="w-full bg-white border border-slate-200 text-slate-600 text-sm rounded-xl pl-9 pr-3 py-2.5 font-bold shadow-sm outline-none focus:ring-2 focus:ring-brand-primary">
+                </div>
+
                 <div class="grid grid-cols-2 gap-2 mb-4">
                     <select id="catalog-un-filter" onchange="populateCatalog()" class="bg-white border border-slate-200 text-slate-600 text-xs rounded-xl px-3 py-2 font-bold shadow-sm outline-none focus:ring-2 focus:ring-brand-primary w-full">
                         <option value="all">Semua Status PBB</option>
@@ -202,19 +209,22 @@
                     <div class="flex flex-col gap-2">
                         <div class="flex justify-between items-center bg-slate-50 p-2 rounded-xl px-3">
                             <span class="text-xs font-bold text-slate-500 flex items-center gap-1"><i class="ph-fill ph-heart text-brand-secondary"></i> Nyawa</span>
-                            <select id="setting-lives" class="bg-white border border-slate-200 text-xs font-bold rounded-lg px-2 py-1 outline-none text-slate-700">
-                                <option value="1">1 (Sudden Death)</option>
-                                <option value="3" selected>3 Kesempatan</option>
-                                <option value="5">5 Kesempatan</option>
-                            </select>
+                            <div class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-1 shadow-sm">
+                                <button onclick="adjustSetting('lives', -1)" class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-brand-primary font-bold btn-press">-</button>
+                                <span id="display-setting-lives" class="text-xs font-bold text-slate-700 w-4 text-center">3</span>
+                                <button onclick="adjustSetting('lives', 1)" class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-brand-primary font-bold btn-press">+</button>
+                            </div>
                         </div>
                         <div class="flex justify-between items-center bg-slate-50 p-2 rounded-xl px-3">
-                            <span class="text-xs font-bold text-slate-500 flex items-center gap-1"><i class="ph-fill ph-timer text-blue-500"></i> Waktu</span>
-                            <select id="setting-time" class="bg-white border border-slate-200 text-xs font-bold rounded-lg px-2 py-1 outline-none text-slate-700">
-                                <option value="0" selected>Santai (Off)</option>
-                                <option value="10">10 Detik/Soal</option>
-                                <option value="15">15 Detik/Soal</option>
-                            </select>
+                            <span class="text-xs font-bold text-slate-500 flex items-center gap-1"><i class="ph-fill ph-timer text-blue-500"></i> Waktu (Detik)</span>
+                            <div class="flex items-center gap-2">
+                                <button onclick="toggleInfinityTime()" id="btn-setting-time-inf" class="w-7 h-7 flex items-center justify-center bg-brand-primary text-white rounded-lg shadow-sm btn-press"><i class="ph-bold ph-infinity"></i></button>
+                                <div id="time-adjust-container" class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-1 opacity-50 pointer-events-none shadow-sm transition-all">
+                                    <button onclick="adjustSetting('time', -5)" class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-brand-primary font-bold btn-press">-</button>
+                                    <span id="display-setting-time" class="text-xs font-bold text-slate-700 w-5 text-center">10</span>
+                                    <button onclick="adjustSetting('time', 5)" class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-brand-primary font-bold btn-press">+</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -277,6 +287,13 @@
             <div id="view-quiz-play" class="hidden min-h-full flex flex-col p-6 animate-pop relative">
                 <div id="timer-container-classic" class="hidden absolute top-0 left-0 right-0 h-1.5 bg-slate-200 z-10"><div id="timer-bar-classic" class="h-full bg-brand-primary w-full transition-all linear"></div></div>
                 <div class="bg-white rounded-3xl p-5 shadow-xl shadow-slate-200/50 flex flex-col items-center justify-center border border-slate-100 text-center h-full relative overflow-hidden">
+                    
+                    <!-- Feedback Toast Modal untuk Jawaban Salah -->
+                    <div id="quiz-feedback" class="hidden absolute top-4 left-4 right-4 bg-rose-500 text-white p-3 rounded-2xl shadow-xl flex items-center gap-3 z-[60] animate-slide-down border-2 border-white">
+                        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center shrink-0"><i class="ph-bold ph-x text-xl"></i></div>
+                        <p id="quiz-feedback-text" class="text-xs font-bold leading-snug text-left"></p>
+                    </div>
+
                     <div id="question-header" class="mb-6 w-full flex flex-col items-center justify-center relative z-10 shrink-0"></div>
                     <div id="options-container" class="w-full grid grid-cols-2 gap-3 mt-auto relative z-10"></div>
                 </div>
@@ -395,7 +412,7 @@
                     <p id="detail-name-official" class="text-xs text-slate-500 font-medium mt-1">Resmi</p>
                 </div>
 
-                <div class="p-6 flex-1 overflow-y-auto flex flex-col gap-5 text-sm text-slate-600 pb-10 no-scrollbar">
+                <div id="modal-country-scroll" class="p-6 flex-1 overflow-y-auto flex flex-col gap-5 text-sm text-slate-600 pb-10 no-scrollbar">
                     <div class="flex flex-col gap-3">
                         <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Informasi Dasar</h4>
                         <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
@@ -459,7 +476,7 @@
                         </div>
                         <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
                             <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap"><i class="ph-bold ph-waves"></i> Kepemilikan Laut</span>
-                            <span id="detail-landlocked" class="font-bold text-slate-800 text-right text-xs">Mendata...</span>
+                            <span id="detail-landlocked" class="font-bold text-slate-800 text-right">Mendata...</span>
                         </div>
                         <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-4">
                             <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap mt-0.5"><i class="ph-bold ph-clock"></i> Zona Waktu</span>
@@ -471,14 +488,30 @@
                         </div>
                     </div>
                     
-                    <!-- SILUET WILAYAH UTAMA -->
+                    <!-- PETA WILAYAH UTAMA -->
                     <div id="detail-shape-section" class="flex flex-col gap-2 mt-2 pt-4 border-t border-slate-100 items-center justify-center hidden">
-                        <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 text-center">Siluet Daratan Utama</h4>
+                        <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 text-center">Peta Daratan Utama</h4>
                         <div class="w-full h-32 bg-slate-50/50 rounded-xl flex items-center justify-center p-3 opacity-70 mix-blend-multiply">
                             <img id="detail-shape" src="" class="max-w-full max-h-full object-contain filter drop-shadow-md">
                         </div>
                     </div>
 
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL LINKED LIST (Daftar Negara Terkait) -->
+        <div id="modal-related-list" class="hidden absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-[105] flex items-center justify-center p-6 transition-all">
+            <div class="bg-white rounded-3xl w-full max-w-xs max-h-[70vh] shadow-2xl relative animate-pop flex flex-col overflow-hidden">
+                <button onclick="document.getElementById('modal-related-list').classList.add('hidden')" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 text-slate-500 rounded-full flex items-center justify-center btn-press z-10">
+                    <i class="ph-bold ph-x"></i>
+                </button>
+                <div class="p-5 bg-slate-50 border-b border-slate-200 shrink-0">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1" id="related-list-subtitle">Kategori</p>
+                    <h3 class="text-lg font-black text-brand-primary leading-tight" id="related-list-title">Nama Item</h3>
+                </div>
+                <div class="p-4 flex-1 overflow-y-auto flex flex-col gap-2 no-scrollbar bg-slate-50/30" id="related-list-content">
+                    <!-- Item List Disuntik via JS -->
                 </div>
             </div>
         </div>
@@ -528,10 +561,15 @@
         let isCompareMode = false, compareProperty = 'population', countryA = null, countryB = null;
         let audioEnabled = true;
 
+        // Custom Settings Quiz
+        let quizSettingLives = 3;
+        let quizSettingTime = 0; // 0 = infinity time
+        let quizTimeTemp = 10; 
+
         // KAMUS HYBRID (Custom Dictionary) - Negara Induk Wilayah Dependensi
         const sovereignMap = {
             "CXR": "Australia", "CCK": "Australia", "NFK": "Australia", "HMD": "Australia",
-            "MAC": "Tiongkok (China)", "HKG": "Tiongkok (China)",
+            "MAC": "Tiongkok", "HKG": "Tiongkok",
             "FRO": "Denmark", "GRL": "Denmark",
             "ALA": "Finlandia",
             "NCL": "Prancis", "GUF": "Prancis", "GLP": "Prancis", "MTQ": "Prancis", "MYT": "Prancis", "REU": "Prancis", "BLM": "Prancis", "MAF": "Prancis", "SPM": "Prancis", "WLF": "Prancis", "ATF": "Prancis",
@@ -596,7 +634,6 @@
         // Fetch Data
         async function fetchCountries() {
             try {
-                // Menambahkan field 'cca2' ke jalur ke-3 untuk mendapatkan SVG siluet negara
                 const [res1, res2, res3] = await Promise.all([
                     fetch('https://restcountries.com/v3.1/all?fields=name,cca3,capital,flags,region,subregion,population,area,latlng,borders'),
                     fetch('https://restcountries.com/v3.1/all?fields=cca3,currencies,languages,unMember,demonyms,coatOfArms,car,timezones,idd,tld'),
@@ -668,6 +705,33 @@
             if(viewId === 'explore-continents') populateContinents();
         }
 
+        // --- SISTEM PENGATURAN KUIS BARU ---
+        function adjustSetting(type, amount) {
+            if (type === 'lives') {
+                quizSettingLives = Math.max(1, Math.min(10, quizSettingLives + amount));
+                document.getElementById('display-setting-lives').innerText = quizSettingLives;
+            } else if (type === 'time') {
+                quizTimeTemp = Math.max(5, Math.min(60, quizTimeTemp + amount));
+                document.getElementById('display-setting-time').innerText = quizTimeTemp;
+                quizSettingTime = quizTimeTemp;
+            }
+        }
+        function toggleInfinityTime() {
+            const btn = document.getElementById('btn-setting-time-inf');
+            const container = document.getElementById('time-adjust-container');
+            if (quizSettingTime === 0) {
+                quizSettingTime = quizTimeTemp; // Mode terbatas waktu
+                btn.classList.replace('bg-brand-primary', 'bg-slate-200');
+                btn.classList.replace('text-white', 'text-slate-500');
+                container.classList.remove('opacity-50', 'pointer-events-none');
+            } else {
+                quizSettingTime = 0; // Mode Infinity
+                btn.classList.replace('bg-slate-200', 'bg-brand-primary');
+                btn.classList.replace('text-slate-500', 'text-white');
+                container.classList.add('opacity-50', 'pointer-events-none');
+            }
+        }
+
         function setDifficulty(level) {
             currentDifficulty = level;
             ['easy','medium','hard'].forEach(l => document.getElementById(`btn-diff-${l}`).className = "flex-1 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-slate-600 transition-all btn-press");
@@ -709,8 +773,8 @@
         }
 
         function startQuiz(mode) {
-            maxLives = parseInt(document.getElementById('setting-lives').value); lives = maxLives;
-            timeLimit = parseInt(document.getElementById('setting-time').value);
+            maxLives = quizSettingLives; lives = maxLives;
+            timeLimit = quizSettingTime;
             score = 0; updateStatsDisplay(); activeQuizType = mode;
             if(mode === 'population' || mode === 'area') { navigate('quiz-compare'); startCompareQuiz(mode); } 
             else if(mode === 'map-guess') { navigate('quiz-map-guess'); setTimeout(nextMapGuess, 200); }
@@ -720,6 +784,7 @@
 
         function nextQuestion() {
             stopTimer(); if(lives <= 0) return gameOver();
+            document.getElementById('quiz-feedback').classList.add('hidden'); // Sembunyikan toast quiz jika ada
             const container = document.getElementById('options-container'); container.innerHTML = '';
             
             let qType = activeQuizType === 'mixed' ? ['capital', 'flagToCountry', 'countryToFlag'][Math.floor(Math.random() * 3)] : activeQuizType;
@@ -752,10 +817,31 @@
             if (type === 'text-capital') btn.innerHTML = `<span class="text-sm text-center leading-tight w-full px-1">${cObj.capital[0]}</span>`;
             else if (type === 'text-country') btn.innerHTML = `<span class="text-sm text-center leading-tight w-full px-1">${cObj.name.common}</span>`;
             else btn.innerHTML = `<img src="${cObj.flags.svg}" class="w-full h-full max-h-[70px] object-contain p-1 drop-shadow-sm">`;
+            
             btn.onclick = () => {
                 stopTimer(); document.querySelectorAll('#options-container button').forEach(b => b.onclick = null);
-                if (isCorrect) { btn.classList.add('bg-brand-success/20', 'border-brand-success'); showToast(true); score+=10; updateStatsDisplay(); setTimeout(nextQuestion, 1000); } 
-                else { btn.classList.add('bg-brand-secondary/20', 'border-brand-secondary'); appContainer.classList.add('animate-shake'); setTimeout(() => appContainer.classList.remove('animate-shake'), 400); lives--; updateStatsDisplay(); showToast(false); document.querySelector('#options-container button[data-correct="true"]').classList.add('bg-brand-success/20', 'border-brand-success', 'border-dashed'); setTimeout(nextQuestion, 1500); }
+                if (isCorrect) { 
+                    btn.classList.add('bg-brand-success/20', 'border-brand-success'); showToast(true); score+=10; updateStatsDisplay(); setTimeout(nextQuestion, 1000); 
+                } else { 
+                    btn.classList.add('bg-brand-secondary/20', 'border-brand-secondary'); 
+                    appContainer.classList.add('animate-shake'); setTimeout(() => appContainer.classList.remove('animate-shake'), 400); 
+                    lives--; updateStatsDisplay(); showToast(false); 
+                    
+                    // --- Fitur Notifikasi Salah (Quiz Feedback) ---
+                    const fdbk = document.getElementById('quiz-feedback');
+                    const fdbkText = document.getElementById('quiz-feedback-text');
+                    if (type === 'text-capital') {
+                        fdbkText.innerText = `${cObj.capital[0]} adalah ibukota dari ${cObj.name.common}`;
+                    } else if (type === 'text-country') {
+                        fdbkText.innerText = `Itu adalah bendera milik ${currentCorrectAnswer.name.common}, bukan ${cObj.name.common}`;
+                    } else if (type === 'image-flag') {
+                        fdbkText.innerText = `Ini adalah bendera milik negara ${cObj.name.common}`;
+                    }
+                    fdbk.classList.remove('hidden');
+                    
+                    document.querySelector('#options-container button[data-correct="true"]').classList.add('bg-brand-success/20', 'border-brand-success', 'border-dashed'); 
+                    setTimeout(nextQuestion, 2200); // Waktu jeda diperlama agar user sempat membaca notifikasi feedback
+                }
             };
             container.appendChild(btn);
         }
@@ -866,13 +952,23 @@
             document.getElementById('modal-gameover').classList.remove('hidden'); 
         }
 
+        // --- SISTEM KATALOG & PENCARIAN ---
         function populateCatalog() {
-            const grid = document.getElementById('catalog-grid'), sortVal = document.getElementById('catalog-sort').value; 
+            const grid = document.getElementById('catalog-grid');
+            const sortVal = document.getElementById('catalog-sort').value; 
             const unFilter = document.getElementById('catalog-un-filter').value;
+            const searchVal = document.getElementById('catalog-search').value.toLowerCase();
             grid.innerHTML = '';
             
             let filtered = [...countriesData];
             
+            if (searchVal) {
+                filtered = filtered.filter(c => 
+                    c.name.common.toLowerCase().includes(searchVal) || 
+                    (c.capital && c.capital[0].toLowerCase().includes(searchVal))
+                );
+            }
+
             if (unFilter === 'un') filtered = filtered.filter(c => c.unMember);
             if (unFilter === 'non-un') filtered = filtered.filter(c => !c.unMember);
 
@@ -882,6 +978,11 @@
             else if(sortVal==='area-desc') filtered.sort((a,b)=>(b.area||0)-(a.area||0)); 
             else if(sortVal==='area-asc') filtered.sort((a,b)=>(a.area||0)-(b.area||0));
             
+            if(filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-2 text-center text-slate-400 font-bold py-10">Pencarian tidak ditemukan</div>`;
+                return;
+            }
+
             filtered.forEach((c) => {
                 const card = document.createElement('div'); 
                 card.className = "bg-white p-3 rounded-2xl shadow-sm border border-slate-50 flex flex-col items-center text-center btn-press cursor-pointer hover:border-brand-primary/30 transition-colors relative overflow-hidden";
@@ -942,6 +1043,9 @@
         }
 
         function openDetail(c) {
+            // Perbaikan agar selalu auto-scroll ke paling atas setiap membuka detail baru
+            document.getElementById('modal-country-scroll').scrollTop = 0;
+
             document.getElementById('detail-flag').src = c.flags.svg;
             const coatImg = document.getElementById('detail-coat');
             if(c.coatOfArms && c.coatOfArms.svg) { coatImg.src = c.coatOfArms.svg; coatImg.classList.remove('hidden'); } 
@@ -951,23 +1055,34 @@
             document.getElementById('detail-name-official').innerText = c.name.official || "-"; 
             document.getElementById('detail-capital').innerText = c.capital ? c.capital[0] : "-"; 
             document.getElementById('detail-region').innerText = c.region || "-"; 
-            document.getElementById('detail-subregion').innerText = c.subregion || "-"; 
+            
+            // Subregion Link
+            document.getElementById('detail-subregion').innerHTML = c.subregion 
+                ? `<span class="cursor-pointer text-brand-primary hover:underline font-bold" onclick="showRelated('subregion', '${c.subregion}')">${c.subregion}</span>` 
+                : "-"; 
+            
             document.getElementById('detail-population').innerText = c.population ? c.population.toLocaleString('id-ID') + " Jiwa" : "-"; 
             document.getElementById('detail-area').innerText = c.area ? c.area.toLocaleString('id-ID') + " km²" : "-"; 
             
-            document.getElementById('detail-currencies').innerText = c.currencies 
-                ? Object.entries(c.currencies).map(([code, details]) => `${code}, ${details.name} ${details.symbol ? '('+details.symbol+')' : ''}`).join('; ') 
+            // Languages Link
+            document.getElementById('detail-languages').innerHTML = c.languages 
+                ? Object.entries(c.languages).map(([code, name]) => `<span class="cursor-pointer text-brand-primary hover:underline font-bold" onclick="showRelated('language', '${name}')">${name}</span>`).join(', ') 
                 : "-"; 
             
-            document.getElementById('detail-languages').innerText = c.languages ? Object.values(c.languages).join(', ') : "-"; 
+            // Currencies Link
+            document.getElementById('detail-currencies').innerHTML = c.currencies 
+                ? Object.entries(c.currencies).map(([code, details]) => `<span class="cursor-pointer text-brand-primary hover:underline font-bold" onclick="showRelated('currency', '${code}', '${details.name}')">${code}, ${details.name} ${details.symbol ? '('+details.symbol+')' : ''}</span>`).join('; ') 
+                : "-"; 
             
             document.getElementById('detail-un').innerText = c.unMember ? "Anggota PBB ✅" : "Non-PBB ❌";
             
+            // Sovereign Link (Negara Induk)
             const sovContainer = document.getElementById('detail-sovereign-container');
             if (!c.unMember && sovereignMap[c.cca3]) {
                 sovContainer.classList.remove('hidden');
                 sovContainer.classList.add('flex'); 
-                document.getElementById('detail-sovereign').innerText = sovereignMap[c.cca3];
+                const parentName = sovereignMap[c.cca3];
+                document.getElementById('detail-sovereign').innerHTML = `<span class="cursor-pointer text-brand-primary hover:underline font-black" onclick="showRelated('sovereign', '${parentName}')">${parentName}</span>`;
             } else {
                 sovContainer.classList.add('hidden');
                 sovContainer.classList.remove('flex');
@@ -977,14 +1092,16 @@
             document.getElementById('detail-car').innerText = c.car && c.car.side ? (c.car.side === 'left' ? "Kiri ⬅️" : "Kanan ➡️") : "-";
             document.getElementById('detail-timezone').innerText = c.timezones ? c.timezones.join(', ') : "-";
             document.getElementById('detail-tld').innerText = c.tld ? c.tld.join(', ') : "-";
-            document.getElementById('detail-landlocked').innerText = c.landlocked ? "Terkurung Daratan 🏜️" : "Punya Pantai/Laut 🏖️";
+            
+            // Teks Kepemilikan laut diubah Ya/Tidak
+            document.getElementById('detail-landlocked').innerText = c.landlocked ? "Tidak" : "Ya";
             document.getElementById('detail-borders').innerText = getBorderNames(c.borders);
             
             let phoneCode = "-";
             if(c.idd && c.idd.root) phoneCode = c.idd.root + (c.idd.suffixes && c.idd.suffixes.length === 1 ? c.idd.suffixes[0] : "");
             document.getElementById('detail-idd').innerText = phoneCode;
 
-            // Siluet Wilayah Utama
+            // Peta Peta Daratan Utama
             const shapeSection = document.getElementById('detail-shape-section');
             const shapeImg = document.getElementById('detail-shape');
             
@@ -997,6 +1114,49 @@
             }
 
             document.getElementById('modal-country-detail').classList.remove('hidden');
+        }
+
+        // --- FITUR RELASI (RELATED LIST MODAL) ---
+        function showRelated(type, filterValue, displayValue = null) {
+            const container = document.getElementById('related-list-content');
+            container.innerHTML = '';
+            let filtered = [];
+            let title = displayValue || filterValue;
+            let subtitle = "";
+
+            if (type === 'subregion') {
+                subtitle = "Sub-Benua";
+                filtered = countriesData.filter(c => c.subregion === filterValue);
+            } else if (type === 'language') {
+                subtitle = "Bahasa Resmi";
+                filtered = countriesData.filter(c => c.languages && Object.values(c.languages).includes(filterValue));
+            } else if (type === 'currency') {
+                subtitle = "Mata Uang";
+                filtered = countriesData.filter(c => c.currencies && c.currencies[filterValue]);
+            } else if (type === 'sovereign') {
+                subtitle = "Wilayah / Negara Induk";
+                // Menampilkan negara induknya beserta semua wilayah dependensinya
+                filtered = countriesData.filter(c => sovereignMap[c.cca3] === filterValue || c.name.common === filterValue || c.name.common.includes(filterValue.replace(' (China)', '')));
+            }
+
+            document.getElementById('related-list-subtitle').innerText = subtitle;
+            document.getElementById('related-list-title').innerText = title;
+
+            filtered.sort((a,b)=>a.name.common.localeCompare(b.name.common)).forEach(c => {
+                const item = document.createElement('div');
+                item.className = "flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-100 shadow-sm cursor-pointer hover:border-brand-primary/50 transition-colors btn-press";
+                item.onclick = () => {
+                    document.getElementById('modal-related-list').classList.add('hidden');
+                    openDetail(c);
+                };
+                item.innerHTML = `
+                    <img src="${c.flags.svg}" class="w-10 h-7 object-contain rounded border border-slate-200">
+                    <span class="font-bold text-sm text-slate-700 leading-tight">${c.name.common}</span>
+                `;
+                container.appendChild(item);
+            });
+
+            document.getElementById('modal-related-list').classList.remove('hidden');
         }
 
         function closeCountryDetail() { document.getElementById('modal-country-detail').classList.add('hidden'); }
