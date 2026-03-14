@@ -115,7 +115,11 @@
                     </button>
                     <button onclick="navigate('explore-catalog')" class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm btn-press flex items-center gap-4 hover:border-brand-primary/30">
                         <div class="bg-indigo-50 p-4 rounded-2xl text-indigo-500"><i class="ph-fill ph-cards text-4xl"></i></div>
-                        <div><h3 class="font-bold text-xl text-slate-700">Katalog Ensiklopedia</h3><p class="text-sm text-slate-400 mt-1">Info lengkap semua negara</p></div>
+                        <div><h3 class="font-bold text-xl text-slate-700">Katalog Negara</h3><p class="text-sm text-slate-400 mt-1">Ensiklopedia berdasar abjad</p></div>
+                    </button>
+                    <button onclick="navigate('explore-continents')" class="bg-amber-500 p-6 rounded-3xl text-left text-white shadow-xl shadow-amber-500/30 btn-press flex items-center gap-4">
+                        <div class="bg-white/20 p-4 rounded-2xl"><i class="ph-fill ph-map-pin-line text-4xl"></i></div>
+                        <div><h3 class="font-bold text-xl">Benua & Kawasan</h3><p class="text-sm text-amber-100 mt-1">Jelajahi berdasar wilayah</p></div>
                     </button>
                 </div>
             </div>
@@ -158,17 +162,32 @@
 
             <!-- EKSPLORASI KATALOG -->
             <div id="view-explore-catalog" class="hidden min-h-full flex-col p-6 animate-slide-up">
-                <div class="flex justify-between items-center mb-4">
-                    <button onclick="navigate('explore-menu')" class="flex items-center gap-2 text-slate-500 font-bold btn-press bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100"><i class="ph-bold ph-arrow-left"></i></button>
-                    <select id="catalog-sort" onchange="populateCatalog()" class="bg-white border border-slate-200 text-slate-600 text-sm rounded-xl px-3 py-2 font-bold shadow-sm outline-none focus:ring-2 focus:ring-brand-primary">
+                <div class="flex justify-between items-center mb-3">
+                    <button onclick="navigate('explore-menu')" class="flex items-center gap-2 text-slate-500 font-bold btn-press bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100"><i class="ph-bold ph-arrow-left"></i> Kembali</button>
+                </div>
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                    <select id="catalog-un-filter" onchange="populateCatalog()" class="bg-white border border-slate-200 text-slate-600 text-xs rounded-xl px-3 py-2 font-bold shadow-sm outline-none focus:ring-2 focus:ring-brand-primary w-full">
+                        <option value="all">Semua Status PBB</option>
+                        <option value="un">Anggota PBB</option>
+                        <option value="non-un">Non-PBB</option>
+                    </select>
+                    <select id="catalog-sort" onchange="populateCatalog()" class="bg-white border border-slate-200 text-slate-600 text-xs rounded-xl px-3 py-2 font-bold shadow-sm outline-none focus:ring-2 focus:ring-brand-primary w-full">
                         <option value="name-asc">🔤 Abjad (A-Z)</option>
-                        <option value="pop-desc">👥 Populasi (Banyak)</option>
-                        <option value="pop-asc">👤 Populasi (Sedikit)</option>
+                        <option value="pop-desc">👥 Pop (Banyak)</option>
+                        <option value="pop-asc">👤 Pop (Sedikit)</option>
                         <option value="area-desc">🗺️ Luas (Besar)</option>
                         <option value="area-asc">📍 Luas (Kecil)</option>
                     </select>
                 </div>
                 <div id="catalog-grid" class="grid grid-cols-2 gap-3"></div>
+            </div>
+
+            <!-- EKSPLORASI BENUA -->
+            <div id="view-explore-continents" class="hidden min-h-full flex-col p-6 animate-slide-up">
+                <div class="flex justify-between items-center mb-4">
+                    <button onclick="navigate('explore-menu')" class="flex items-center gap-2 text-slate-500 font-bold btn-press bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100"><i class="ph-bold ph-arrow-left"></i> Kembali</button>
+                </div>
+                <div id="continents-container" class="flex flex-col gap-6 pb-6"></div>
             </div>
 
             <!-- KUIS MENU -->
@@ -369,7 +388,7 @@
                 <div class="p-6 bg-slate-50 rounded-t-3xl border-b border-slate-200 flex flex-col items-center text-center shrink-0 relative">
                     <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-3">Ketuk gambar untuk perbesar</p>
                     <div class="flex justify-center items-center gap-4 mb-3 w-full">
-                        <img id="detail-flag" src="" onclick="openFlagZoom(this.src)" class="w-24 h-16 object-cover rounded shadow-md border border-slate-200 cursor-zoom-in active:scale-95 transition-transform" title="Bendera Negara">
+                        <img id="detail-flag" src="" onclick="openFlagZoom(this.src)" class="w-24 h-16 object-contain rounded shadow-md border border-slate-200 cursor-zoom-in active:scale-95 transition-transform" title="Bendera Negara">
                         <img id="detail-coat" src="" onclick="openFlagZoom(this.src)" class="w-16 h-16 object-contain drop-shadow-md cursor-zoom-in active:scale-95 transition-transform hidden" title="Lambang Negara">
                     </div>
                     <h2 id="detail-name-common" class="text-2xl font-black text-slate-800 leading-tight mt-1">Nama</h2>
@@ -415,6 +434,13 @@
                             <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap"><i class="ph-bold ph-bank"></i> Status PBB</span>
                             <span id="detail-un" class="font-bold text-slate-800 text-right">Mendata...</span>
                         </div>
+                        
+                        <!-- BARIS STATUS NEGARA INDUK (DINAMIS HYBRID) -->
+                        <div id="detail-sovereign-container" class="hidden justify-between items-start border-b border-brand-primary/10 pb-2 gap-2 mt-1 mb-1">
+                            <span class="flex items-center gap-2 text-brand-primary whitespace-nowrap font-bold"><i class="ph-bold ph-crown text-amber-500"></i> Negara Induk</span>
+                            <span id="detail-sovereign" class="font-black text-brand-primary text-right">Mendata...</span>
+                        </div>
+
                         <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
                             <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap"><i class="ph-bold ph-identification-card"></i> Sebutan Warga</span>
                             <span id="detail-demonym" class="font-bold text-slate-800 text-right">Mendata...</span>
@@ -444,6 +470,15 @@
                             <span id="detail-borders" class="font-bold text-brand-warning text-right text-xs leading-snug">Mendata...</span>
                         </div>
                     </div>
+                    
+                    <!-- SILUET WILAYAH UTAMA -->
+                    <div id="detail-shape-section" class="flex flex-col gap-2 mt-2 pt-4 border-t border-slate-100 items-center justify-center hidden">
+                        <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 text-center">Siluet Daratan Utama</h4>
+                        <div class="w-full h-32 bg-slate-50/50 rounded-xl flex items-center justify-center p-3 opacity-70 mix-blend-multiply">
+                            <img id="detail-shape" src="" class="max-w-full max-h-full object-contain filter drop-shadow-md">
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -493,6 +528,21 @@
         let isCompareMode = false, compareProperty = 'population', countryA = null, countryB = null;
         let audioEnabled = true;
 
+        // KAMUS HYBRID (Custom Dictionary) - Negara Induk Wilayah Dependensi
+        const sovereignMap = {
+            "CXR": "Australia", "CCK": "Australia", "NFK": "Australia", "HMD": "Australia",
+            "MAC": "Tiongkok (China)", "HKG": "Tiongkok (China)",
+            "FRO": "Denmark", "GRL": "Denmark",
+            "ALA": "Finlandia",
+            "NCL": "Prancis", "GUF": "Prancis", "GLP": "Prancis", "MTQ": "Prancis", "MYT": "Prancis", "REU": "Prancis", "BLM": "Prancis", "MAF": "Prancis", "SPM": "Prancis", "WLF": "Prancis", "ATF": "Prancis",
+            "SJM": "Norwegia", "BVT": "Norwegia",
+            "TKL": "Selandia Baru", "NIU": "Selandia Baru", "COK": "Selandia Baru",
+            "ABW": "Belanda", "CUW": "Belanda", "SXM": "Belanda", "BES": "Belanda",
+            "AIA": "Inggris Raya", "BMU": "Inggris Raya", "IOT": "Inggris Raya", "VGB": "Inggris Raya", "CYM": "Inggris Raya", "FLK": "Inggris Raya", "GIB": "Inggris Raya", "MSR": "Inggris Raya", "PCN": "Inggris Raya", "SHN": "Inggris Raya", "SGS": "Inggris Raya", "TCA": "Inggris Raya", "JEY": "Inggris Raya", "GGY": "Inggris Raya", "IMN": "Inggris Raya",
+            "ASM": "Amerika Serikat", "GUM": "Amerika Serikat", "MNP": "Amerika Serikat", "PRI": "Amerika Serikat", "VIR": "Amerika Serikat", "UMI": "Amerika Serikat",
+            "ESH": "Dipersengketakan (Maroko/Sahrawi)", "ATA": "Traktat Antarktika"
+        };
+
         function getBorderNames(bordersArr) {
             if(!bordersArr || bordersArr.length === 0) return "Tidak Berbatasan Darat";
             return bordersArr.map(code => {
@@ -535,10 +585,10 @@
         const views = {
             'loading': document.getElementById('view-loading'), 'explore-menu': document.getElementById('view-explore-menu'),
             'explore-globe': document.getElementById('view-explore-globe'), 'explore-map': document.getElementById('view-explore-map'),
-            'explore-catalog': document.getElementById('view-explore-catalog'), 'quiz-menu': document.getElementById('view-quiz-menu'),
-            'quiz-play': document.getElementById('view-quiz-play'), 'quiz-compare': document.getElementById('view-quiz-compare'),
-            'quiz-map-guess': document.getElementById('view-quiz-map-guess'), 'quiz-map-find': document.getElementById('view-quiz-map-find'),
-            'profile': document.getElementById('view-profile')
+            'explore-catalog': document.getElementById('view-explore-catalog'), 'explore-continents': document.getElementById('view-explore-continents'), 
+            'quiz-menu': document.getElementById('view-quiz-menu'), 'quiz-play': document.getElementById('view-quiz-play'), 
+            'quiz-compare': document.getElementById('view-quiz-compare'), 'quiz-map-guess': document.getElementById('view-quiz-map-guess'), 
+            'quiz-map-find': document.getElementById('view-quiz-map-find'), 'profile': document.getElementById('view-profile')
         };
         const statusHeader = document.getElementById('game-status'), toast = document.getElementById('feedback-toast'), bottomNav = document.getElementById('bottom-nav');
         const appContainer = document.getElementById('app-container');
@@ -546,14 +596,11 @@
         // Fetch Data
         async function fetchCountries() {
             try {
-                // Memecah permintaan menjadi 3 jalur agar mematuhi aturan ketat API (maksimal 10 fields per URL)
+                // Menambahkan field 'cca2' ke jalur ke-3 untuk mendapatkan SVG siluet negara
                 const [res1, res2, res3] = await Promise.all([
-                    // Jalur 1: 10 fields
                     fetch('https://restcountries.com/v3.1/all?fields=name,cca3,capital,flags,region,subregion,population,area,latlng,borders'),
-                    // Jalur 2: 10 fields
                     fetch('https://restcountries.com/v3.1/all?fields=cca3,currencies,languages,unMember,demonyms,coatOfArms,car,timezones,idd,tld'),
-                    // Jalur 3: Sisa 2 fields
-                    fetch('https://restcountries.com/v3.1/all?fields=cca3,landlocked')
+                    fetch('https://restcountries.com/v3.1/all?fields=cca3,landlocked,cca2')
                 ]);
                 
                 if (!res1.ok || !res2.ok || !res3.ok) throw new Error(`HTTP Error: Ada penolakan dari server API`);
@@ -566,11 +613,9 @@
                     throw new Error("Format API tidak valid");
                 }
 
-                // Menggunakan sistem pemetaan (lookup map) agar penggabungan data lebih cepat dan tidak rentan error
                 const map2 = {}; data2.forEach(c => map2[c.cca3] = c);
                 const map3 = {}; data3.forEach(c => map3[c.cca3] = c);
 
-                // Menjahit data (Merging) dari 3 jalur tersebut
                 countriesData = data1.map(c1 => ({
                     ...c1,
                     ...(map2[c1.cca3] || {}),
@@ -620,6 +665,7 @@
 
             if(viewId === 'explore-globe') setTimeout(initGlobe, 200);
             if(viewId === 'explore-map') setTimeout(()=>initLeafletMap('explore'), 200);
+            if(viewId === 'explore-continents') populateContinents();
         }
 
         function setDifficulty(level) {
@@ -821,15 +867,77 @@
         }
 
         function populateCatalog() {
-            const grid = document.getElementById('catalog-grid'), sortVal = document.getElementById('catalog-sort').value; grid.innerHTML = '';
-            let sorted = [...countriesData];
-            if(sortVal==='name-asc') sorted.sort((a,b)=>a.name.common.localeCompare(b.name.common)); else if(sortVal==='pop-desc') sorted.sort((a,b)=>(b.population||0)-(a.population||0)); else if(sortVal==='pop-asc') sorted.sort((a,b)=>(a.population||0)-(b.population||0)); else if(sortVal==='area-desc') sorted.sort((a,b)=>(b.area||0)-(a.area||0)); else if(sortVal==='area-asc') sorted.sort((a,b)=>(a.area||0)-(b.area||0));
-            // Removed slice(0, 50) to display all countries
-            sorted.forEach((c) => {
-                const card = document.createElement('div'); card.className = "bg-white p-3 rounded-2xl shadow-sm border border-slate-50 flex flex-col items-center text-center btn-press cursor-pointer hover:border-brand-primary/30 transition-colors";
+            const grid = document.getElementById('catalog-grid'), sortVal = document.getElementById('catalog-sort').value; 
+            const unFilter = document.getElementById('catalog-un-filter').value;
+            grid.innerHTML = '';
+            
+            let filtered = [...countriesData];
+            
+            if (unFilter === 'un') filtered = filtered.filter(c => c.unMember);
+            if (unFilter === 'non-un') filtered = filtered.filter(c => !c.unMember);
+
+            if(sortVal==='name-asc') filtered.sort((a,b)=>a.name.common.localeCompare(b.name.common)); 
+            else if(sortVal==='pop-desc') filtered.sort((a,b)=>(b.population||0)-(a.population||0)); 
+            else if(sortVal==='pop-asc') filtered.sort((a,b)=>(a.population||0)-(b.population||0)); 
+            else if(sortVal==='area-desc') filtered.sort((a,b)=>(b.area||0)-(a.area||0)); 
+            else if(sortVal==='area-asc') filtered.sort((a,b)=>(a.area||0)-(b.area||0));
+            
+            filtered.forEach((c) => {
+                const card = document.createElement('div'); 
+                card.className = "bg-white p-3 rounded-2xl shadow-sm border border-slate-50 flex flex-col items-center text-center btn-press cursor-pointer hover:border-brand-primary/30 transition-colors relative overflow-hidden";
                 card.onclick = () => openDetail(c);
-                card.innerHTML = `<img src="${c.flags.svg}" class="w-full h-16 object-contain rounded mb-2 bg-slate-50 p-1 border border-slate-100"><span class="font-bold text-xs leading-tight text-slate-700">${c.name.common}</span><span class="text-[10px] font-medium text-slate-400">${c.capital?c.capital[0]:'-'}</span>`;
+                
+                const nonUnBadge = !c.unMember ? `<div class="absolute top-2 right-2 bg-slate-100 text-slate-400 text-[8px] font-black px-1.5 py-0.5 rounded-md border border-slate-200 shadow-sm" title="Non-PBB">Non-PBB</div>` : '';
+
+                card.innerHTML = `
+                    ${nonUnBadge}
+                    <div class="w-full h-16 bg-slate-50 border border-slate-100 rounded flex items-center justify-center p-1 mb-2 mt-3">
+                        <img src="${c.flags.svg}" class="max-w-full max-h-full object-contain">
+                    </div>
+                    <span class="font-bold text-xs leading-tight text-slate-700">${c.name.common}</span>
+                    <span class="text-[10px] font-medium text-slate-400">${c.capital?c.capital[0]:'-'}</span>
+                `;
                 grid.appendChild(card);
+            });
+        }
+
+        function populateContinents() {
+            const container = document.getElementById('continents-container');
+            if (container.innerHTML !== '') return; 
+
+            const regions = {};
+            countriesData.forEach(c => {
+                const r = c.region || 'Lainnya';
+                const sr = c.subregion || 'Lainnya';
+                if (!regions[r]) regions[r] = {};
+                if (!regions[r][sr]) regions[r][sr] = [];
+                regions[r][sr].push(c);
+            });
+
+            Object.keys(regions).sort().forEach(r => {
+                const regionBlock = document.createElement('div');
+                regionBlock.className = 'bg-white rounded-3xl p-5 shadow-sm border border-slate-100';
+                
+                let subHtml = `<h2 class="text-xl font-black text-brand-primary mb-4 flex items-center gap-2"><i class="ph-fill ph-map-trifold"></i> Benua ${r}</h2>`;
+                
+                Object.keys(regions[r]).sort().forEach(sr => {
+                    const countries = regions[r][sr].sort((a,b) => a.name.common.localeCompare(b.name.common));
+                    subHtml += `<div class="mb-5 last:mb-0">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 border-b border-slate-100 pb-1">${sr}</h3>
+                        <div class="flex flex-wrap gap-2">`;
+                    
+                    countries.forEach(c => {
+                        subHtml += `<button onclick="openDetailByCCA3('${c.cca3}')" class="bg-slate-50 hover:bg-slate-100 border border-slate-200 px-2 py-1.5 rounded-xl flex items-center gap-2 btn-press transition-colors">
+                            <img src="${c.flags.svg}" class="w-6 h-4 object-contain rounded shadow-[0_1px_3px_rgba(0,0,0,0.1)] bg-white">
+                            <span class="text-[10px] font-bold text-slate-700">${c.name.common}</span>
+                        </button>`;
+                    });
+                    
+                    subHtml += `</div></div>`;
+                });
+                
+                regionBlock.innerHTML = subHtml;
+                container.appendChild(regionBlock);
             });
         }
 
@@ -846,10 +954,25 @@
             document.getElementById('detail-subregion').innerText = c.subregion || "-"; 
             document.getElementById('detail-population').innerText = c.population ? c.population.toLocaleString('id-ID') + " Jiwa" : "-"; 
             document.getElementById('detail-area').innerText = c.area ? c.area.toLocaleString('id-ID') + " km²" : "-"; 
-            document.getElementById('detail-currencies').innerText = c.currencies ? Object.values(c.currencies).map(x=>`${x.name} ${x.symbol ? '('+x.symbol+')' : ''}`).join(', ') : "-"; 
+            
+            document.getElementById('detail-currencies').innerText = c.currencies 
+                ? Object.entries(c.currencies).map(([code, details]) => `${code}, ${details.name} ${details.symbol ? '('+details.symbol+')' : ''}`).join('; ') 
+                : "-"; 
+            
             document.getElementById('detail-languages').innerText = c.languages ? Object.values(c.languages).join(', ') : "-"; 
             
             document.getElementById('detail-un').innerText = c.unMember ? "Anggota PBB ✅" : "Non-PBB ❌";
+            
+            const sovContainer = document.getElementById('detail-sovereign-container');
+            if (!c.unMember && sovereignMap[c.cca3]) {
+                sovContainer.classList.remove('hidden');
+                sovContainer.classList.add('flex'); 
+                document.getElementById('detail-sovereign').innerText = sovereignMap[c.cca3];
+            } else {
+                sovContainer.classList.add('hidden');
+                sovContainer.classList.remove('flex');
+            }
+
             document.getElementById('detail-demonym').innerText = c.demonyms && c.demonyms.eng ? c.demonyms.eng.m : "-";
             document.getElementById('detail-car').innerText = c.car && c.car.side ? (c.car.side === 'left' ? "Kiri ⬅️" : "Kanan ➡️") : "-";
             document.getElementById('detail-timezone').innerText = c.timezones ? c.timezones.join(', ') : "-";
@@ -860,6 +983,18 @@
             let phoneCode = "-";
             if(c.idd && c.idd.root) phoneCode = c.idd.root + (c.idd.suffixes && c.idd.suffixes.length === 1 ? c.idd.suffixes[0] : "");
             document.getElementById('detail-idd').innerText = phoneCode;
+
+            // Siluet Wilayah Utama
+            const shapeSection = document.getElementById('detail-shape-section');
+            const shapeImg = document.getElementById('detail-shape');
+            
+            if (c.cca2) {
+                shapeSection.classList.remove('hidden');
+                shapeImg.src = `https://raw.githubusercontent.com/djaiss/mapsicon/master/all/${c.cca2.toLowerCase()}/vector.svg`;
+                shapeImg.onerror = () => shapeSection.classList.add('hidden');
+            } else {
+                shapeSection.classList.add('hidden');
+            }
 
             document.getElementById('modal-country-detail').classList.remove('hidden');
         }
@@ -890,7 +1025,7 @@
             });
         }
         function changeMapStyle(style) { if(mapTileLayer) mapTileLayer.setUrl(mapStyles[style]); }
-        function openDetailByCCA3(cca3) { const c = countriesData.find(x=>x.cca3===cca3); if(c){ myLeafletMap.closePopup(); openDetail(c); } }
+        function openDetailByCCA3(cca3) { const c = countriesData.find(x=>x.cca3===cca3); if(c){ if(myLeafletMap) myLeafletMap.closePopup(); openDetail(c); } }
     </script>
 </body>
 </html>
