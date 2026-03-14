@@ -439,6 +439,15 @@
         const bottomNav = document.getElementById('bottom-nav');
         const appContainer = document.getElementById('app-container');
 
+        // Mengambil nama-nama border dari kode
+        function getBorderNames(bordersArr) {
+            if(!bordersArr || bordersArr.length === 0) return "Tidak Berbatasan Darat";
+            return bordersArr.map(code => {
+                const c = countriesData.find(x => x.cca3 === code);
+                return c ? c.name.common : code;
+            }).join(', ');
+        }
+
         // Fetch Data dengan membuang yang "undefined" ibukotanya
         async function fetchCountries() {
             try {
