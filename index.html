@@ -139,14 +139,12 @@
                 </div>
             </div>
 
-            <!-- EKSPLORASI MAP (Leaflet) dengan Toggler Gaya Peta -->
+            <!-- EKSPLORASI MAP (Leaflet) -->
             <div id="view-explore-map" class="hidden h-full flex flex-col p-6 animate-slide-up relative">
                 <button onclick="navigate('explore-menu')" class="mb-4 flex items-center gap-2 text-slate-500 font-bold w-fit btn-press bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100 relative z-10">
                     <i class="ph-bold ph-arrow-left"></i> Kembali
                 </button>
-                
                 <div class="flex-1 w-full bg-slate-100 rounded-3xl overflow-hidden relative shadow-inner border border-slate-200 z-0 flex flex-col">
-                    <!-- Toggler Gaya Peta -->
                     <div class="absolute top-4 left-4 z-[400] bg-white/90 backdrop-blur rounded-xl shadow-md p-1 border border-slate-100">
                         <select id="map-style-selector" onchange="changeMapStyle(this.value)" class="bg-transparent text-xs font-bold text-slate-700 outline-none cursor-pointer p-1">
                             <option value="street">Peta Jalan</option>
@@ -175,16 +173,13 @@
 
             <!-- KUIS MENU -->
             <div id="view-quiz-menu" class="hidden min-h-full flex flex-col p-6 animate-pop">
-                
                 <div class="mb-5 bg-white p-4 rounded-3xl shadow-sm border border-slate-100">
                     <h3 class="font-bold text-slate-700 mb-3 flex items-center justify-between">
                         <span class="flex items-center gap-2"><i class="ph-fill ph-gear text-slate-400"></i> Pengaturan</span>
-                        <!-- Toggle Suara -->
                         <button onclick="toggleAudio()" id="btn-audio-toggle" class="text-brand-primary bg-brand-primary/10 px-2 py-1 rounded text-xs flex items-center gap-1 btn-press">
                             <i class="ph-fill ph-speaker-high"></i> Suara On
                         </button>
                     </h3>
-                    
                     <div class="flex flex-col gap-2">
                         <div class="flex justify-between items-center bg-slate-50 p-2 rounded-xl px-3">
                             <span class="text-xs font-bold text-slate-500 flex items-center gap-1"><i class="ph-fill ph-heart text-brand-secondary"></i> Nyawa</span>
@@ -364,61 +359,97 @@
             </button>
         </nav>
         
-        <!-- MODAL DETAIL NEGARA (Lengkap & Bisa Scroll Teks Panjang) -->
-        <div id="modal-country-detail" class="hidden absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-6 transition-all">
+        <!-- MODAL DETAIL NEGARA KUSTOM HYBRID BARU -->
+        <div id="modal-country-detail" class="hidden absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-[100] flex items-end sm:items-center justify-center sm:p-6 transition-all">
             <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm h-[85vh] sm:h-auto sm:max-h-[85vh] shadow-2xl relative animate-slide-up flex flex-col">
-                <button onclick="closeCountryDetail()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 text-slate-500 rounded-full flex items-center justify-center btn-press z-10">
+                <button onclick="closeCountryDetail()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 text-slate-500 rounded-full flex items-center justify-center btn-press z-20">
                     <i class="ph-bold ph-x"></i>
                 </button>
 
-                <!-- Header Modal -->
-                <div class="p-6 bg-slate-50 rounded-t-3xl border-b border-slate-200 flex flex-col items-center text-center shrink-0">
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2">Ketuk bendera untuk perbesar</p>
-                    <img id="detail-flag" src="" onclick="openFlagZoom(this.src)" class="w-24 h-16 object-cover rounded shadow-md mb-3 border border-slate-200 cursor-zoom-in active:scale-95 transition-transform">
-                    <h2 id="detail-name-common" class="text-2xl font-black text-slate-800 leading-tight">Nama</h2>
+                <div class="p-6 bg-slate-50 rounded-t-3xl border-b border-slate-200 flex flex-col items-center text-center shrink-0 relative">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-3">Ketuk gambar untuk perbesar</p>
+                    <div class="flex justify-center items-center gap-4 mb-3 w-full">
+                        <img id="detail-flag" src="" onclick="openFlagZoom(this.src)" class="w-24 h-16 object-cover rounded shadow-md border border-slate-200 cursor-zoom-in active:scale-95 transition-transform" title="Bendera Negara">
+                        <img id="detail-coat" src="" onclick="openFlagZoom(this.src)" class="w-16 h-16 object-contain drop-shadow-md cursor-zoom-in active:scale-95 transition-transform hidden" title="Lambang Negara">
+                    </div>
+                    <h2 id="detail-name-common" class="text-2xl font-black text-slate-800 leading-tight mt-1">Nama</h2>
                     <p id="detail-name-official" class="text-xs text-slate-500 font-medium mt-1">Resmi</p>
                 </div>
 
-                <!-- Area Data Scrollable -->
-                <div class="p-6 flex-1 overflow-y-auto flex flex-col gap-4 text-sm text-slate-600 pb-10 no-scrollbar">
-                    <div class="flex justify-between items-start border-b border-slate-100 pb-3 gap-2">
-                        <span class="flex items-center gap-2 text-slate-400 whitespace-nowrap"><i class="ph-bold ph-buildings"></i> Ibukota</span>
-                        <span id="detail-capital" class="font-bold text-slate-800 text-right">Mendata...</span>
+                <div class="p-6 flex-1 overflow-y-auto flex flex-col gap-5 text-sm text-slate-600 pb-10 no-scrollbar">
+                    <div class="flex flex-col gap-3">
+                        <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Informasi Dasar</h4>
+                        <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
+                            <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap"><i class="ph-bold ph-buildings"></i> Ibukota</span>
+                            <span id="detail-capital" class="font-bold text-slate-800 text-right">Mendata...</span>
+                        </div>
+                        <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
+                            <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap"><i class="ph-bold ph-map-pin"></i> Benua</span>
+                            <span id="detail-region" class="font-bold text-slate-800 text-right">Mendata...</span>
+                        </div>
+                        <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
+                            <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap"><i class="ph-bold ph-map-trifold"></i> Sub-Benua</span>
+                            <span id="detail-subregion" class="font-bold text-slate-800 text-right">Mendata...</span>
+                        </div>
+                        <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
+                            <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap"><i class="ph-bold ph-users"></i> Populasi</span>
+                            <span id="detail-population" class="font-bold text-slate-800 text-right">Mendata...</span>
+                        </div>
+                        <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
+                            <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap"><i class="ph-bold ph-bounding-box"></i> Luas Wilayah</span>
+                            <span id="detail-area" class="font-bold text-slate-800 text-right">Mendata...</span>
+                        </div>
+                        <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-4">
+                            <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap mt-0.5"><i class="ph-bold ph-translate"></i> Bahasa Resmi</span>
+                            <span id="detail-languages" class="font-bold text-slate-800 text-right leading-snug">Mendata...</span>
+                        </div>
+                        <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-4">
+                            <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap mt-0.5"><i class="ph-bold ph-money"></i> Mata Uang</span>
+                            <span id="detail-currencies" class="font-bold text-brand-primary text-right leading-snug">Mendata...</span>
+                        </div>
                     </div>
-                    <div class="flex justify-between items-start border-b border-slate-100 pb-3 gap-2">
-                        <span class="flex items-center gap-2 text-slate-400 whitespace-nowrap"><i class="ph-bold ph-map-pin"></i> Benua</span>
-                        <span id="detail-region" class="font-bold text-slate-800 text-right">Mendata...</span>
-                    </div>
-                    <div class="flex justify-between items-start border-b border-slate-100 pb-3 gap-2">
-                        <span class="flex items-center gap-2 text-slate-400 whitespace-nowrap"><i class="ph-bold ph-map-trifold"></i> Sub-Benua</span>
-                        <span id="detail-subregion" class="font-bold text-slate-800 text-right">Mendata...</span>
-                    </div>
-                    <div class="flex justify-between items-start border-b border-slate-100 pb-3 gap-2">
-                        <span class="flex items-center gap-2 text-slate-400 whitespace-nowrap"><i class="ph-bold ph-users"></i> Populasi</span>
-                        <span id="detail-population" class="font-bold text-slate-800 text-right">Mendata...</span>
-                    </div>
-                    <div class="flex justify-between items-start border-b border-slate-100 pb-3 gap-2">
-                        <span class="flex items-center gap-2 text-slate-400 whitespace-nowrap"><i class="ph-bold ph-bounding-box"></i> Luas Wilayah</span>
-                        <span id="detail-area" class="font-bold text-slate-800 text-right">Mendata...</span>
-                    </div>
-                    <div class="flex justify-between items-start border-b border-slate-100 pb-3 gap-4">
-                        <span class="flex items-center gap-2 text-slate-400 whitespace-nowrap mt-0.5"><i class="ph-bold ph-money"></i> Mata Uang</span>
-                        <span id="detail-currencies" class="font-bold text-brand-primary text-right leading-snug">Mendata...</span>
-                    </div>
-                    <div class="flex justify-between items-start border-b border-slate-100 pb-3 gap-4">
-                        <span class="flex items-center gap-2 text-slate-400 whitespace-nowrap mt-0.5"><i class="ph-bold ph-translate"></i> Bahasa Resmi</span>
-                        <span id="detail-languages" class="font-bold text-slate-800 text-right leading-snug">Mendata...</span>
-                    </div>
-                    <div class="flex justify-between items-start pt-1 gap-4">
-                        <span class="flex items-center gap-2 text-slate-400 whitespace-nowrap mt-0.5"><i class="ph-bold ph-arrows-merge"></i> Tetangga</span>
-                        <span id="detail-borders" class="font-bold text-brand-warning text-right leading-snug">Mendata...</span>
+
+                    <div class="flex flex-col gap-3 mt-2">
+                        <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Fakta Geografis & Unik</h4>
+                        <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
+                            <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap"><i class="ph-bold ph-bank"></i> Status PBB</span>
+                            <span id="detail-un" class="font-bold text-slate-800 text-right">Mendata...</span>
+                        </div>
+                        <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
+                            <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap"><i class="ph-bold ph-identification-card"></i> Sebutan Warga</span>
+                            <span id="detail-demonym" class="font-bold text-slate-800 text-right">Mendata...</span>
+                        </div>
+                        <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
+                            <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap"><i class="ph-bold ph-car-profile"></i> Lajur Kemudi</span>
+                            <span id="detail-car" class="font-bold text-slate-800 text-right">Mendata...</span>
+                        </div>
+                        <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
+                            <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap"><i class="ph-bold ph-phone-call"></i> Kode Telepon</span>
+                            <span id="detail-idd" class="font-bold text-slate-800 text-right">Mendata...</span>
+                        </div>
+                        <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
+                            <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap"><i class="ph-bold ph-globe"></i> Domain Web</span>
+                            <span id="detail-tld" class="font-bold text-slate-800 text-right">Mendata...</span>
+                        </div>
+                        <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
+                            <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap"><i class="ph-bold ph-waves"></i> Kepemilikan Laut</span>
+                            <span id="detail-landlocked" class="font-bold text-slate-800 text-right text-xs">Mendata...</span>
+                        </div>
+                        <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-4">
+                            <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap mt-0.5"><i class="ph-bold ph-clock"></i> Zona Waktu</span>
+                            <span id="detail-timezone" class="font-bold text-slate-800 text-right text-xs leading-snug">Mendata...</span>
+                        </div>
+                        <div class="flex justify-between items-start pt-1 gap-4">
+                            <span class="flex items-center gap-2 text-slate-500 whitespace-nowrap mt-0.5"><i class="ph-bold ph-arrows-merge"></i> Tetangga</span>
+                            <span id="detail-borders" class="font-bold text-brand-warning text-right text-xs leading-snug">Mendata...</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- MODAL FOKUS BENDERA (Zoom Besar) -->
-        <div id="modal-flag-zoom" class="hidden absolute inset-0 bg-black/95 z-[60] flex flex-col items-center justify-center p-4 transition-opacity animate-fadeIn">
+        <!-- MODAL FOKUS BENDERA -->
+        <div id="modal-flag-zoom" class="hidden absolute inset-0 bg-black/95 z-[110] flex flex-col items-center justify-center p-4 transition-opacity animate-fadeIn">
             <button onclick="closeFlagZoom()" class="absolute top-6 right-6 w-10 h-10 bg-white/10 text-white rounded-full flex items-center justify-center text-xl btn-press">
                 <i class="ph-bold ph-x"></i>
             </button>
@@ -427,7 +458,7 @@
         </div>
 
         <!-- MODAL GAME OVER -->
-        <div id="modal-gameover" class="hidden absolute inset-0 bg-slate-900/80 backdrop-blur-sm z-[70] flex items-center justify-center p-6">
+        <div id="modal-gameover" class="hidden absolute inset-0 bg-slate-900/80 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
             <div class="bg-white rounded-3xl p-8 w-full max-w-sm text-center shadow-2xl animate-pop relative overflow-hidden">
                 <div class="w-20 h-20 bg-brand-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <i class="ph-fill ph-skull text-4xl text-brand-secondary"></i>
@@ -444,21 +475,15 @@
     </div>
 
     <script>
-        // PWA Manifest Injector (Bisa diinstall ke HP)
         const manifest = {
-            name: "GeoGlimpse MVP",
-            short_name: "GeoGlimpse",
-            display: "standalone",
-            background_color: "#f8fafc",
-            theme_color: "#0ea5e9",
+            name: "GeoGlimpse MVP", short_name: "GeoGlimpse", display: "standalone",
+            background_color: "#f8fafc", theme_color: "#0ea5e9",
             icons: [{"src": "https://cdn-icons-png.flaticon.com/512/814/814513.png", "sizes": "512x512", "type": "image/png"}]
         };
         const stringManifest = JSON.stringify(manifest);
         const blob = new Blob([stringManifest], {type: 'application/json'});
-        const manifestURL = URL.createObjectURL(blob);
-        document.head.insertAdjacentHTML('beforeend', `<link rel="manifest" href="${manifestURL}">`);
+        document.head.insertAdjacentHTML('beforeend', `<link rel="manifest" href="${URL.createObjectURL(blob)}">`);
 
-        // Data & State
         let countriesData = [];
         let score = 0, lives = 3, maxLives = 3;
         let bestClassicScore = 0, bestCompareScore = 0, bestMapScore = 0;
@@ -468,7 +493,6 @@
         let isCompareMode = false, compareProperty = 'population', countryA = null, countryB = null;
         let audioEnabled = true;
 
-        // Mengambil nama-nama border dari kode
         function getBorderNames(bordersArr) {
             if(!bordersArr || bordersArr.length === 0) return "Tidak Berbatasan Darat";
             return bordersArr.map(code => {
@@ -477,12 +501,9 @@
             }).join(', ');
         }
 
-        // --- SISTEM AUDIO (SINTESIS TANPA FILE EXTERNAL) ---
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
-
         function initAudio() { if(!audioCtx) audioCtx = new AudioContext(); if(audioCtx.state === 'suspended') audioCtx.resume(); }
-        
         function playTone(freq1, freq2, type, duration, vol=0.1) {
             if(!audioEnabled) return; initAudio();
             const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
@@ -499,8 +520,7 @@
             else if(type === 'wrong') playTone(150, 100, 'sawtooth', 0.4, 0.1);
         }
         function toggleAudio() {
-            audioEnabled = !audioEnabled;
-            const btn = document.getElementById('btn-audio-toggle');
+            audioEnabled = !audioEnabled; const btn = document.getElementById('btn-audio-toggle');
             if(audioEnabled) {
                 btn.innerHTML = '<i class="ph-fill ph-speaker-high"></i> Suara On';
                 btn.classList.replace('bg-slate-200', 'bg-brand-primary/10'); btn.classList.replace('text-slate-500', 'text-brand-primary');
@@ -512,7 +532,6 @@
         }
         document.addEventListener('click', (e) => { if(e.target.closest('.btn-press')) playSfx('pop'); });
 
-        // DOM
         const views = {
             'loading': document.getElementById('view-loading'), 'explore-menu': document.getElementById('view-explore-menu'),
             'explore-globe': document.getElementById('view-explore-globe'), 'explore-map': document.getElementById('view-explore-map'),
@@ -527,14 +546,52 @@
         // Fetch Data
         async function fetchCountries() {
             try {
-                const [res1, res2] = await Promise.all([
+                // Memecah permintaan menjadi 3 jalur agar mematuhi aturan ketat API (maksimal 10 fields per URL)
+                const [res1, res2, res3] = await Promise.all([
+                    // Jalur 1: 10 fields
                     fetch('https://restcountries.com/v3.1/all?fields=name,cca3,capital,flags,region,subregion,population,area,latlng,borders'),
-                    fetch('https://restcountries.com/v3.1/all?fields=cca3,currencies,languages')
+                    // Jalur 2: 10 fields
+                    fetch('https://restcountries.com/v3.1/all?fields=cca3,currencies,languages,unMember,demonyms,coatOfArms,car,timezones,idd,tld'),
+                    // Jalur 3: Sisa 2 fields
+                    fetch('https://restcountries.com/v3.1/all?fields=cca3,landlocked')
                 ]);
-                const data1 = await res1.json(), data2 = await res2.json();
-                countriesData = data1.map(c1 => ({ ...c1, ...(data2.find(c => c.cca3 === c1.cca3) || {}) }))
-                    .filter(c => c.capital && c.capital.length > 0 && c.capital[0] !== "undefined" && c.flags && c.flags.svg && c.latlng);
-            } catch (e) { console.error(e); }
+                
+                if (!res1.ok || !res2.ok || !res3.ok) throw new Error(`HTTP Error: Ada penolakan dari server API`);
+                
+                const data1 = await res1.json();
+                const data2 = await res2.json();
+                const data3 = await res3.json();
+                
+                if (!Array.isArray(data1) || !Array.isArray(data2) || !Array.isArray(data3)) {
+                    throw new Error("Format API tidak valid");
+                }
+
+                // Menggunakan sistem pemetaan (lookup map) agar penggabungan data lebih cepat dan tidak rentan error
+                const map2 = {}; data2.forEach(c => map2[c.cca3] = c);
+                const map3 = {}; data3.forEach(c => map3[c.cca3] = c);
+
+                // Menjahit data (Merging) dari 3 jalur tersebut
+                countriesData = data1.map(c1 => ({
+                    ...c1,
+                    ...(map2[c1.cca3] || {}),
+                    ...(map3[c1.cca3] || {})
+                })).filter(c => 
+                    c.capital && c.capital.length > 0 && 
+                    c.capital[0] !== "undefined" && c.capital[0].trim() !== "" &&
+                    c.flags && c.flags.svg && c.latlng
+                );
+            } catch (e) { 
+                console.error("Gagal menarik data:", e);
+                const loadingView = document.getElementById('view-loading');
+                if(loadingView) {
+                    loadingView.innerHTML = `
+                        <div class="w-20 h-20 bg-brand-secondary/10 rounded-full flex items-center justify-center mb-4"><i class="ph-duotone ph-warning text-5xl text-brand-secondary"></i></div>
+                        <h2 class="text-xl font-black text-slate-700">Gagal Memuat Data</h2>
+                        <p class="text-sm text-slate-400 font-medium text-center px-6 mt-2">Server API menolak permintaan. Silakan muat ulang.</p>
+                        <button onclick="location.reload()" class="mt-6 bg-brand-primary text-white font-bold px-6 py-2 rounded-xl btn-press">Muat Ulang</button>
+                    `;
+                }
+            }
         }
 
         // Navigasi
@@ -576,7 +633,6 @@
         }
         function getRandomItems(arr, n) { return [...arr].sort(() => 0.5 - Math.random()).slice(0, n); }
 
-        // --- SISTEM TIMER UMUM ---
         function stopTimer() { if(timerInterval) clearInterval(timerInterval); document.querySelectorAll('[id^=timer-container]').forEach(el=>el.classList.add('hidden')); }
         function runTimer(context) {
             if(timeLimit <= 0) return;
@@ -606,19 +662,16 @@
             }
         }
 
-        // --- LOGIKA UTAMA PERMAINAN ---
         function startQuiz(mode) {
             maxLives = parseInt(document.getElementById('setting-lives').value); lives = maxLives;
             timeLimit = parseInt(document.getElementById('setting-time').value);
             score = 0; updateStatsDisplay(); activeQuizType = mode;
-
             if(mode === 'population' || mode === 'area') { navigate('quiz-compare'); startCompareQuiz(mode); } 
             else if(mode === 'map-guess') { navigate('quiz-map-guess'); setTimeout(nextMapGuess, 200); }
             else if(mode === 'map-find') { navigate('quiz-map-find'); setTimeout(nextMapFind, 200); }
             else { navigate('quiz-play'); nextQuestion(); }
         }
 
-        // 1. Kuis Klasik
         function nextQuestion() {
             stopTimer(); if(lives <= 0) return gameOver();
             const container = document.getElementById('options-container'); container.innerHTML = '';
@@ -661,7 +714,6 @@
             container.appendChild(btn);
         }
 
-        // 2. Kuis Adu Statistik
         function startCompareQuiz(type) { compareProperty = type; countryA = getRandomItems(countriesData, 1)[0]; countryB = getNextCompare(countryA, countriesData); document.getElementById('compare-hint').classList.remove('hidden'); renderCompareUI(); }
         function getNextCompare(baseC, poolData) { let pool = poolData.filter(c => c.cca3 !== baseC.cca3); return getRandomItems(pool, 1)[0]; }
         function renderCompareUI() {
@@ -682,7 +734,6 @@
             setTimeout(() => { if(lives<=0 && !isCorrect) gameOver(); else { countryA = countryB; countryB = getNextCompare(countryA, countriesData); renderCompareUI(); } }, 1200); 
         }
 
-        // 3. Kuis Tebak Lokasi Peta (Geoguessr Lite)
         let mapGuessLeaflet = null;
         function nextMapGuess() {
             stopTimer(); if(lives <= 0) return gameOver();
@@ -697,7 +748,6 @@
             }
             mapGuessLeaflet.setView([currentCorrectAnswer.latlng[0], currentCorrectAnswer.latlng[1]], 5);
             
-            // Buat opsi jawaban
             const container = document.getElementById('map-guess-options'); container.innerHTML = '';
             options.forEach(c => {
                 const btn = document.createElement('button'); btn.className = "bg-slate-50 border-2 border-slate-100 font-bold p-3 rounded-xl btn-press text-sm text-slate-700 shadow-sm";
@@ -712,7 +762,6 @@
             runTimer('map-guess');
         }
 
-        // 4. Kuis Cari di Peta
         let mapFindLeaflet = null, findMarkers = [];
         function nextMapFind() {
             stopTimer(); if(lives <= 0) return gameOver();
@@ -724,7 +773,6 @@
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(mapFindLeaflet);
             }
             
-            // Perbaikan logic menghapus marker Leaflet: ambil properties .marker di dalam object findMarkers
             findMarkers.forEach(m => mapFindLeaflet.removeLayer(m.marker)); findMarkers = [];
             
             countriesData.forEach(c => {
@@ -733,16 +781,12 @@
                 const marker = L.marker([c.latlng[0], c.latlng[1]], {icon: icon}).addTo(mapFindLeaflet);
                 
                 marker.on('click', () => {
-                    stopTimer(); 
-                    // Perbaikan logic mematikan event klik pada marker
-                    findMarkers.forEach(m => m.marker.off('click'));
-                    
+                    stopTimer(); findMarkers.forEach(m => m.marker.off('click'));
                     if(isTarget) {
                         marker.setIcon(L.divIcon({className:'', html: `<div class="w-6 h-6 bg-brand-success border-2 border-white rounded-full animate-bounce"></div>`, iconSize:[24,24]}));
                         showToast(true); score+=25; updateStatsDisplay(); setTimeout(nextMapFind, 1500);
                     } else {
                         marker.setIcon(L.divIcon({className:'', html: `<div class="w-4 h-4 bg-brand-secondary border-2 border-white rounded-full"></div>`, iconSize:[16,16]}));
-                        // Tunjukkan yang benar
                         const correctMarker = findMarkers.find(m => m.isCorrectTarget);
                         if(correctMarker) correctMarker.marker.setIcon(L.divIcon({className:'', html: `<div class="w-6 h-6 bg-brand-success border-2 border-white rounded-full animate-pulse shadow-[0_0_15px_#10b981]"></div>`, iconSize:[24,24]}));
                         appContainer.classList.add('animate-shake'); setTimeout(()=>appContainer.classList.remove('animate-shake'),400);
@@ -756,7 +800,6 @@
         }
         function skipMapFind() { lives--; updateStatsDisplay(); stopTimer(); showToast(false); setTimeout(nextMapFind, 500); }
 
-        // --- SISTEM UTILITY ---
         function showToast(isCorrect) {
             playSfx(isCorrect ? 'correct' : 'wrong');
             toast.innerHTML = isCorrect ? '<i class="ph-bold ph-check text-6xl text-white drop-shadow-md"></i>' : '<i class="ph-bold ph-x text-6xl text-white drop-shadow-md"></i>';
@@ -777,7 +820,6 @@
             document.getElementById('modal-gameover').classList.remove('hidden'); 
         }
 
-        // --- EKSPLORASI (KATALOG & PETA) ---
         function populateCatalog() {
             const grid = document.getElementById('catalog-grid'), sortVal = document.getElementById('catalog-sort').value; grid.innerHTML = '';
             let sorted = [...countriesData];
@@ -791,9 +833,36 @@
         }
 
         function openDetail(c) {
-            document.getElementById('detail-flag').src = c.flags.svg; document.getElementById('detail-name-common').innerText = c.name.common; document.getElementById('detail-name-official').innerText = c.name.official || "-"; document.getElementById('detail-capital').innerText = c.capital?c.capital[0]:"-"; document.getElementById('detail-region').innerText = c.region||"-"; document.getElementById('detail-subregion').innerText = c.subregion||"-"; document.getElementById('detail-population').innerText = c.population?c.population.toLocaleString('id-ID')+" Jiwa":"-"; document.getElementById('detail-area').innerText = c.area?c.area.toLocaleString('id-ID')+" km²":"-"; document.getElementById('detail-currencies').innerText = c.currencies?Object.values(c.currencies).map(x=>`${x.name} (${x.symbol})`).join(', '):"-"; document.getElementById('detail-languages').innerText = c.languages?Object.values(c.languages).join(', '):"-"; document.getElementById('detail-borders').innerText = getBorderNames(c.borders);
+            document.getElementById('detail-flag').src = c.flags.svg;
+            const coatImg = document.getElementById('detail-coat');
+            if(c.coatOfArms && c.coatOfArms.svg) { coatImg.src = c.coatOfArms.svg; coatImg.classList.remove('hidden'); } 
+            else { coatImg.classList.add('hidden'); }
+
+            document.getElementById('detail-name-common').innerText = c.name.common; 
+            document.getElementById('detail-name-official').innerText = c.name.official || "-"; 
+            document.getElementById('detail-capital').innerText = c.capital ? c.capital[0] : "-"; 
+            document.getElementById('detail-region').innerText = c.region || "-"; 
+            document.getElementById('detail-subregion').innerText = c.subregion || "-"; 
+            document.getElementById('detail-population').innerText = c.population ? c.population.toLocaleString('id-ID') + " Jiwa" : "-"; 
+            document.getElementById('detail-area').innerText = c.area ? c.area.toLocaleString('id-ID') + " km²" : "-"; 
+            document.getElementById('detail-currencies').innerText = c.currencies ? Object.values(c.currencies).map(x=>`${x.name} ${x.symbol ? '('+x.symbol+')' : ''}`).join(', ') : "-"; 
+            document.getElementById('detail-languages').innerText = c.languages ? Object.values(c.languages).join(', ') : "-"; 
+            
+            document.getElementById('detail-un').innerText = c.unMember ? "Anggota PBB ✅" : "Non-PBB ❌";
+            document.getElementById('detail-demonym').innerText = c.demonyms && c.demonyms.eng ? c.demonyms.eng.m : "-";
+            document.getElementById('detail-car').innerText = c.car && c.car.side ? (c.car.side === 'left' ? "Kiri ⬅️" : "Kanan ➡️") : "-";
+            document.getElementById('detail-timezone').innerText = c.timezones ? c.timezones.join(', ') : "-";
+            document.getElementById('detail-tld').innerText = c.tld ? c.tld.join(', ') : "-";
+            document.getElementById('detail-landlocked').innerText = c.landlocked ? "Terkurung Daratan 🏜️" : "Punya Pantai/Laut 🏖️";
+            document.getElementById('detail-borders').innerText = getBorderNames(c.borders);
+            
+            let phoneCode = "-";
+            if(c.idd && c.idd.root) phoneCode = c.idd.root + (c.idd.suffixes && c.idd.suffixes.length === 1 ? c.idd.suffixes[0] : "");
+            document.getElementById('detail-idd').innerText = phoneCode;
+
             document.getElementById('modal-country-detail').classList.remove('hidden');
         }
+
         function closeCountryDetail() { document.getElementById('modal-country-detail').classList.add('hidden'); }
         function openFlagZoom(url) { document.getElementById('zoomed-flag').src = url; document.getElementById('modal-flag-zoom').classList.remove('hidden'); }
         function closeFlagZoom() { document.getElementById('modal-flag-zoom').classList.add('hidden'); }
@@ -809,12 +878,10 @@
 
         let myLeafletMap = null, mapTileLayer = null;
         const mapStyles = { 'street': 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', 'dark': 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', 'satellite': 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' };
-        
         function initLeafletMap() {
             if(myLeafletMap) { myLeafletMap.invalidateSize(); return; }
             myLeafletMap = L.map('map-container', {center:[20,0],zoom:2,zoomControl:false}); L.control.zoom({position:'bottomright'}).addTo(myLeafletMap);
             mapTileLayer = L.tileLayer(mapStyles['street'], {maxZoom:18,minZoom:2}).addTo(myLeafletMap);
-            
             countriesData.forEach(c => {
                 const icon = L.divIcon({className:'custom-div-icon', html:`<div class="w-4 h-4 bg-brand-primary border-2 border-white rounded-full shadow-md hover:scale-125 transition-transform"></div>`, iconSize:[16,16], iconAnchor:[8,8]});
                 const pop = `<div class="flex flex-col"><div class="bg-slate-50 p-2 border-b flex items-center gap-2"><img src="${c.flags.svg}" class="w-8 h-5 object-cover rounded border"><div><h4 class="font-bold text-xs m-0">${c.name.common}</h4></div></div><div class="p-2 text-[10px]"><button onclick="openDetailByCCA3('${c.cca3}')" class="w-full bg-brand-primary/10 text-brand-primary font-bold py-1 rounded">Detail</button></div></div>`;
