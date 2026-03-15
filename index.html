@@ -429,11 +429,13 @@
             </button>
         </nav>
         
-        <!-- MODAL DETAIL NEGARA KUSTOM HYBRID BARU -->
-        <div id="modal-country-detail" class="hidden absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-[100] flex items-end sm:items-center justify-center sm:p-6 transition-all">
-            <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm h-[85vh] sm:h-auto sm:max-h-[85vh] shadow-2xl relative animate-slide-up flex flex-col">
-                <button onclick="closeCountryDetail()" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 text-slate-500 rounded-full flex items-center justify-center btn-press z-20">
-                    <i class="ph-bold ph-x"></i>
+        <!-- AREA KHUSUS MODAL / POP-UP (Hanya Boleh Ada 1 Untuk Tiap ID) -->
+
+        <!-- 1. MODAL DETAIL NEGARA DUNIA -->
+        <div id="modal-country-detail" class="hidden absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-[100] flex items-center justify-center p-4 sm:p-6 transition-all">
+            <div class="bg-white rounded-3xl w-full max-w-sm max-h-[85vh] shadow-2xl relative animate-slide-up flex flex-col">
+                <button onclick="closeModal('modal-country-detail')" class="absolute top-4 right-4 w-10 h-10 bg-slate-100 hover:bg-rose-500 hover:text-white text-slate-500 rounded-full flex items-center justify-center shadow-md border-2 border-white transition-colors z-20 btn-press">
+                    <i class="ph-bold ph-x text-lg"></i>
                 </button>
 
                 <div class="p-6 bg-slate-50 rounded-t-3xl border-b border-slate-200 flex flex-col items-center text-center shrink-0 relative">
@@ -446,7 +448,7 @@
                     <p id="detail-name-official" class="text-xs text-slate-500 font-medium mt-1">Resmi</p>
                 </div>
 
-                <div id="modal-country-scroll" class="p-6 flex-1 overflow-y-auto flex flex-col gap-5 text-sm text-slate-600 pb-10 no-scrollbar">
+                <div id="modal-country-scroll" class="p-6 flex-1 overflow-y-auto flex flex-col gap-5 text-sm text-slate-600 pb-8 no-scrollbar">
                     <div class="flex flex-col gap-3">
                         <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Informasi Dasar</h4>
                         <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
@@ -486,7 +488,6 @@
                             <span id="detail-un" class="font-bold text-slate-800 text-right">Mendata...</span>
                         </div>
                         
-                        <!-- BARIS STATUS NEGARA INDUK (DINAMIS HYBRID) -->
                         <div id="detail-sovereign-container" class="hidden justify-between items-start border-b border-brand-primary/10 pb-2 gap-2 mt-1 mb-1">
                             <span class="flex items-center gap-2 text-brand-primary whitespace-nowrap font-bold"><i class="ph-bold ph-crown text-amber-500"></i> Negara Induk</span>
                             <span id="detail-sovereign" class="font-black text-brand-primary text-right">Mendata...</span>
@@ -525,8 +526,8 @@
                     <!-- PETA WILAYAH UTAMA -->
                     <div id="detail-shape-section" class="flex flex-col gap-2 mt-2 pt-4 border-t border-slate-100 items-center justify-center hidden">
                         <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 text-center">Peta Daratan Utama</h4>
-                        <div class="w-full h-32 bg-slate-50/50 rounded-xl flex items-center justify-center p-3 opacity-70 mix-blend-multiply">
-                            <img id="detail-shape" src="" class="max-w-full max-h-full object-contain filter drop-shadow-md">
+                        <div class="w-full h-32 bg-slate-50/50 rounded-xl flex items-center justify-center p-3">
+                            <img id="detail-shape" src="" class="max-w-full max-h-full object-contain">
                         </div>
                     </div>
 
@@ -534,11 +535,11 @@
             </div>
         </div>
 
-        <!-- MODAL DETAIL NEGARA BAGIAN AS -->
-        <div id="modal-state-detail" class="hidden absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-[100] flex items-end sm:items-center justify-center sm:p-6 transition-all">
-            <div class="bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-sm h-[85vh] sm:h-auto sm:max-h-[85vh] shadow-2xl relative animate-slide-up flex flex-col">
-                <button onclick="document.getElementById('modal-state-detail').classList.add('hidden')" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 text-slate-500 rounded-full flex items-center justify-center btn-press z-20">
-                    <i class="ph-bold ph-x"></i>
+        <!-- 2. MODAL DETAIL NEGARA BAGIAN AS -->
+        <div id="modal-state-detail" class="hidden absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-[100] flex items-center justify-center p-4 sm:p-6 transition-all">
+            <div class="bg-white rounded-3xl w-full max-w-sm max-h-[85vh] shadow-2xl relative animate-slide-up flex flex-col">
+                <button onclick="closeModal('modal-state-detail')" class="absolute top-4 right-4 w-10 h-10 bg-slate-100 hover:bg-rose-500 hover:text-white text-slate-500 rounded-full flex items-center justify-center shadow-md border-2 border-white transition-colors z-20 btn-press">
+                    <i class="ph-bold ph-x text-lg"></i>
                 </button>
 
                 <div class="p-6 bg-rose-50 rounded-t-3xl border-b border-rose-100 flex flex-col items-center text-center shrink-0 relative">
@@ -550,7 +551,7 @@
                     <p id="detail-state-abbr" class="text-xs text-rose-500 font-bold mt-1 bg-white px-2 py-0.5 rounded-full border border-rose-200">US-XX</p>
                 </div>
 
-                <div class="p-6 flex-1 overflow-y-auto flex flex-col gap-5 text-sm text-slate-600 pb-10 no-scrollbar">
+                <div class="p-6 flex-1 overflow-y-auto flex flex-col gap-5 text-sm text-slate-600 pb-8 no-scrollbar">
                     <div class="flex flex-col gap-3">
                         <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Informasi Dasar</h4>
                         <div class="flex justify-between items-start border-b border-slate-100 pb-2 gap-2">
@@ -574,15 +575,15 @@
             </div>
         </div>
 
-        <!-- MODAL LINKED LIST (Daftar Negara Terkait) -->
-        <div id="modal-related-list" class="hidden absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-[105] flex items-center justify-center p-6 transition-all">
+        <!-- 3. MODAL LINKED LIST (Daftar Negara Terkait) -->
+        <div id="modal-related-list" class="hidden absolute inset-0 bg-slate-900/70 backdrop-blur-sm z-[105] flex items-center justify-center p-4 sm:p-6 transition-all">
             <div class="bg-white rounded-3xl w-full max-w-xs max-h-[70vh] shadow-2xl relative animate-pop flex flex-col overflow-hidden">
-                <button onclick="document.getElementById('modal-related-list').classList.add('hidden')" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 text-slate-500 rounded-full flex items-center justify-center btn-press z-10">
-                    <i class="ph-bold ph-x"></i>
+                <button onclick="closeModal('modal-related-list')" class="absolute top-4 right-4 w-10 h-10 bg-slate-100 hover:bg-rose-500 hover:text-white text-slate-500 rounded-full flex items-center justify-center shadow-md border-2 border-white transition-colors z-20 btn-press">
+                    <i class="ph-bold ph-x text-lg"></i>
                 </button>
                 <div class="p-5 bg-slate-50 border-b border-slate-200 shrink-0">
                     <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1" id="related-list-subtitle">Kategori</p>
-                    <h3 class="text-lg font-black text-brand-primary leading-tight" id="related-list-title">Nama Item</h3>
+                    <h3 class="text-lg font-black text-brand-primary leading-tight pr-8" id="related-list-title">Nama Item</h3>
                 </div>
                 <div class="p-4 flex-1 overflow-y-auto flex flex-col gap-2 no-scrollbar bg-slate-50/30" id="related-list-content">
                     <!-- Item List Disuntik via JS -->
@@ -590,16 +591,16 @@
             </div>
         </div>
 
-        <!-- MODAL FOKUS BENDERA -->
+        <!-- 4. MODAL FOKUS BENDERA -->
         <div id="modal-flag-zoom" class="hidden absolute inset-0 bg-black/95 z-[110] flex flex-col items-center justify-center p-4 transition-opacity animate-fadeIn">
-            <button onclick="closeFlagZoom()" class="absolute top-6 right-6 w-10 h-10 bg-white/10 text-white rounded-full flex items-center justify-center text-xl btn-press">
+            <button onclick="closeModal('modal-flag-zoom')" class="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-rose-500 text-white rounded-full flex items-center justify-center text-xl transition-colors shadow-lg btn-press">
                 <i class="ph-bold ph-x"></i>
             </button>
             <img id="zoomed-flag" src="" class="max-w-full max-h-[80vh] object-contain rounded shadow-2xl">
             <p class="text-white/50 text-sm mt-6 font-medium">Ketuk X untuk menutup</p>
         </div>
 
-        <!-- MODAL GAME OVER -->
+        <!-- 5. MODAL GAME OVER -->
         <div id="modal-gameover" class="hidden absolute inset-0 bg-slate-900/80 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
             <div class="bg-white rounded-3xl p-8 w-full max-w-sm text-center shadow-2xl animate-pop relative overflow-hidden">
                 <div class="w-20 h-20 bg-brand-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -608,7 +609,7 @@
                 <h2 class="text-2xl font-black mb-2 text-slate-800" id="go-title">Game Over!</h2>
                 <p class="text-slate-500 mb-4 font-medium" id="go-desc">Skor yang Anda kumpulkan:</p>
                 <div class="text-6xl font-black text-brand-primary mb-8" id="final-score">0</div>
-                <button onclick="navigate('quiz-menu')" class="w-full bg-brand-primary text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-500/30 btn-press">
+                <button onclick="closeModal('modal-gameover'); navigate('quiz-menu');" class="w-full bg-brand-primary text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-500/30 btn-press">
                     Kembali ke Menu
                 </button>
             </div>
@@ -653,6 +654,13 @@
             "AIA": "Inggris Raya", "BMU": "Inggris Raya", "IOT": "Inggris Raya", "VGB": "Inggris Raya", "CYM": "Inggris Raya", "FLK": "Inggris Raya", "GIB": "Inggris Raya", "MSR": "Inggris Raya", "PCN": "Inggris Raya", "SHN": "Inggris Raya", "SGS": "Inggris Raya", "TCA": "Inggris Raya", "JEY": "Inggris Raya", "GGY": "Inggris Raya", "IMN": "Inggris Raya",
             "ASM": "Amerika Serikat", "GUM": "Amerika Serikat", "MNP": "Amerika Serikat", "PRI": "Amerika Serikat", "VIR": "Amerika Serikat", "UMI": "Amerika Serikat",
             "ESH": "Dipersengketakan (Maroko/Sahrawi)", "ATA": "Traktat Antarktika"
+        };
+
+        // PETA DARATAN UTAMA (Mencegah potong peta pada library standar)
+        const shapeOverrides = {
+            "my": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Malaysia_location_map.svg/1024px-Malaysia_location_map.svg.png",
+            "us": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/US_map_-_geographic.svg/800px-US_map_-_geographic.svg.png",
+            "ru": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Russia_location_map.svg/800px-Russia_location_map.svg.png"
         };
 
         // DATABASE MINI NEGARA BAGIAN AS (50 States)
@@ -715,6 +723,11 @@
                 const c = countriesData.find(x => x.cca3 === code);
                 return c ? c.name.common : code;
             }).join(', ');
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return "";
+            return str.toString().replace(/'/g, "\\'").replace(/"/g, '&quot;');
         }
 
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -805,7 +818,50 @@
             }
         }
 
-        // Navigasi
+        // --- SISTEM MODAL OTOMATIS (Back Button History) ---
+        window.onpopstate = (e) => {
+            // Sembunyikan semua modal secara default
+            ['modal-country-detail', 'modal-state-detail', 'modal-related-list', 'modal-flag-zoom', 'modal-gameover'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.classList.add('hidden');
+            });
+
+            if (e.state && e.state.modal) {
+                // Jika history saat ini adalah state Modal, maka tampilkan Modal tersebut
+                const modalEl = document.getElementById(e.state.modal);
+                if (modalEl) modalEl.classList.remove('hidden');
+                
+                // Pastikan parent modal (seperti latar negara detail) tetap menyala jika related list aktif
+                if (e.state.parentModal) {
+                    const parentEl = document.getElementById(e.state.parentModal);
+                    if(parentEl) parentEl.classList.remove('hidden');
+                }
+            } else if (e.state && e.state.view) {
+                renderView(e.state.view, false);
+            }
+        };
+
+        function openModal(modalId, parentModalId = null) {
+            document.getElementById(modalId).classList.remove('hidden');
+            const currentState = history.state || {};
+            history.pushState({ 
+                view: currentState.view || 'quiz-menu', 
+                modal: modalId,
+                parentModal: parentModalId || currentState.modal 
+            }, '');
+        }
+
+        function closeModal(modalId) {
+            const currentState = history.state || {};
+            // Menggunakan trigger history back agar sistem rapi kembali ke state sebelumnya
+            if (currentState.modal === modalId) {
+                history.back(); 
+            } else {
+                // Fallback jika tidak sinkron
+                document.getElementById(modalId).classList.add('hidden');
+            }
+        }
+
         window.onload = async () => { 
             history.replaceState({ view: 'quiz-menu' }, ''); 
             await fetchCountries(); 
@@ -844,14 +900,18 @@
             }, 300);
         }
 
-        window.onpopstate = (e) => { if (e.state && e.state.view) renderView(e.state.view, false); };
-
         function navigate(viewId) { history.pushState({ view: viewId }, ''); renderView(viewId, true); }
-        function renderView(viewId) {
+        function renderView(viewId, pushHistory = true) {
             stopTimer(); isCompareMode = (viewId === 'quiz-compare');
-            Object.values(views).forEach(v => v.classList.add('hidden')); toast.classList.add('hidden'); 
-            document.getElementById('modal-gameover').classList.add('hidden');
+            Object.values(views).forEach(v => { if(v) v.classList.add('hidden'); }); 
+            toast.classList.add('hidden'); 
             document.getElementById('btn-sticky-search').classList.add('hidden'); 
+            
+            // Sembunyikan manual modal yang mungkin tersisa
+            ['modal-country-detail', 'modal-state-detail', 'modal-related-list', 'modal-flag-zoom', 'modal-gameover'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.classList.add('hidden');
+            });
             
             if (views[viewId]) views[viewId].classList.remove('hidden');
 
@@ -873,6 +933,7 @@
             if(viewId === 'explore-continents') populateContinents();
         }
 
+        // --- SISTEM PENGATURAN KUIS BARU ---
         function adjustSetting(type, amount) {
             if (type === 'lives') {
                 quizSettingLives = Math.max(1, Math.min(10, quizSettingLives + amount));
@@ -925,7 +986,7 @@
             }, 50);
         }
         function handleTimeOut(context) {
-            appContainer.classList.add('animate-shake'); setTimeout(() => appContainer.classList.remove('animate-shake'), 400);
+            appContainer.classList.add('animate-shake'); setTimeout(() => appContainer.classList.remove('animate-shake'), 300);
             lives--; updateStatsDisplay(); showToast(false);
             if(context === 'classic') {
                 const btns = document.querySelectorAll('#options-container button');
@@ -991,7 +1052,7 @@
                     btn.classList.add('bg-brand-success/20', 'border-brand-success'); showToast(true); score+=10; updateStatsDisplay(); setTimeout(nextQuestion, 1000); 
                 } else { 
                     btn.classList.add('bg-brand-secondary/20', 'border-brand-secondary'); 
-                    appContainer.classList.add('animate-shake'); setTimeout(() => appContainer.classList.remove('animate-shake'), 400); 
+                    appContainer.classList.add('animate-shake'); setTimeout(() => appContainer.classList.remove('animate-shake'), 300); 
                     lives--; updateStatsDisplay(); showToast(false); 
                     
                     const fdbk = document.getElementById('quiz-feedback');
@@ -1115,7 +1176,7 @@
         function gameOver() { 
             stopTimer(); 
             document.getElementById('final-score').innerText = score; 
-            document.getElementById('modal-gameover').classList.remove('hidden'); 
+            openModal('modal-gameover'); 
         }
 
         // --- SISTEM KATALOG & PENCARIAN NEGARA DUNIA ---
@@ -1254,21 +1315,22 @@
             });
         }
 
-        function openDetail(c) {
-            document.getElementById('modal-country-detail').classList.remove('hidden');
+        function openDetail(c, pushState = true) {
+            if (pushState) openModal('modal-country-detail');
+            
+            // Jeda memastikan scroll-reset dijalankan setelah DOM dirender
             setTimeout(() => {
-                document.getElementById('modal-country-scroll').scrollTop = 0;
+                const scrollEl = document.getElementById('modal-country-scroll');
+                if(scrollEl) scrollEl.scrollTop = 0;
             }, 10);
 
             document.getElementById('detail-flag').src = c.flags.svg;
             const coatImg = document.getElementById('detail-coat');
             
-            // OPTIMASI: Panggil file versi PNG yang ukurannya sangat ringan, jika tidak ada baru gunakan SVG
             if(c.coatOfArms && (c.coatOfArms.png || c.coatOfArms.svg)) { 
                 coatImg.src = c.coatOfArms.png || c.coatOfArms.svg; 
                 coatImg.classList.remove('hidden'); 
-            } 
-            else { coatImg.classList.add('hidden'); }
+            } else { coatImg.classList.add('hidden'); }
 
             document.getElementById('detail-name-common').innerText = c.name.common; 
             document.getElementById('detail-name-official').innerText = c.name.official || "-"; 
@@ -1276,18 +1338,18 @@
             document.getElementById('detail-region').innerText = c.region || "-"; 
             
             document.getElementById('detail-subregion').innerHTML = c.subregion 
-                ? `<span class="cursor-pointer text-brand-primary hover:underline font-bold" onclick="showRelated('subregion', '${c.subregion}')">${c.subregion}</span>` 
+                ? `<span class="cursor-pointer text-brand-primary hover:underline font-bold" onclick="showRelated('subregion', '${escapeHtml(c.subregion)}')">${c.subregion}</span>` 
                 : "-"; 
             
             document.getElementById('detail-population').innerText = c.population ? c.population.toLocaleString('id-ID') + " Jiwa" : "-"; 
             document.getElementById('detail-area').innerText = c.area ? c.area.toLocaleString('id-ID') + " km²" : "-"; 
             
             document.getElementById('detail-languages').innerHTML = c.languages 
-                ? Object.entries(c.languages).map(([code, name]) => `<span class="cursor-pointer text-brand-primary hover:underline font-bold" onclick="showRelated('language', '${name}')">${name}</span>`).join(', ') 
+                ? Object.entries(c.languages).map(([code, name]) => `<span class="cursor-pointer text-brand-primary hover:underline font-bold" onclick="showRelated('language', '${escapeHtml(name)}')">${name}</span>`).join(', ') 
                 : "-"; 
             
             document.getElementById('detail-currencies').innerHTML = c.currencies 
-                ? Object.entries(c.currencies).map(([code, details]) => `<span class="cursor-pointer text-brand-primary hover:underline font-bold" onclick="showRelated('currency', '${code}', '${details.name}')">${code}, ${details.name} ${details.symbol ? '('+details.symbol+')' : ''}</span>`).join('; ') 
+                ? Object.entries(c.currencies).map(([code, details]) => `<span class="cursor-pointer text-brand-primary hover:underline font-bold" onclick="showRelated('currency', '${escapeHtml(code)}', '${escapeHtml(details.name)}')">${code}, ${details.name} ${details.symbol ? '('+details.symbol+')' : ''}</span>`).join('; ') 
                 : "-"; 
             
             document.getElementById('detail-un').innerText = c.unMember ? "Anggota PBB ✅" : "Non-PBB ❌";
@@ -1297,7 +1359,7 @@
                 sovContainer.classList.remove('hidden');
                 sovContainer.classList.add('flex'); 
                 const parentName = sovereignMap[c.cca3];
-                document.getElementById('detail-sovereign').innerHTML = `<span class="cursor-pointer text-brand-primary hover:underline font-black" onclick="showRelated('sovereign', '${parentName}')">${parentName}</span>`;
+                document.getElementById('detail-sovereign').innerHTML = `<span class="cursor-pointer text-brand-primary hover:underline font-black" onclick="showRelated('sovereign', '${escapeHtml(parentName)}')">${parentName}</span>`;
             } else {
                 sovContainer.classList.add('hidden');
                 sovContainer.classList.remove('flex');
@@ -1318,9 +1380,16 @@
             const shapeSection = document.getElementById('detail-shape-section');
             const shapeImg = document.getElementById('detail-shape');
             
-            if (c.cca2) {
+            const cc2 = c.cca2 ? c.cca2.toLowerCase() : null;
+            if (cc2 && shapeOverrides[cc2]) {
                 shapeSection.classList.remove('hidden');
-                shapeImg.src = `https://raw.githubusercontent.com/djaiss/mapsicon/master/all/${c.cca2.toLowerCase()}/vector.svg`;
+                shapeImg.src = shapeOverrides[cc2];
+                // Peta override menggunakan styling khusus agar menyatu (blend) dengan warna putih/abu-abu
+                shapeImg.className = "max-w-full max-h-full object-contain filter drop-shadow-md grayscale contrast-125 mix-blend-multiply opacity-80";
+            } else if (cc2) {
+                shapeSection.classList.remove('hidden');
+                shapeImg.src = `https://raw.githubusercontent.com/djaiss/mapsicon/master/all/${cc2}/vector.svg`;
+                shapeImg.className = "max-w-full max-h-full object-contain filter drop-shadow-md opacity-70";
                 shapeImg.onerror = () => shapeSection.classList.add('hidden');
             } else {
                 shapeSection.classList.add('hidden');
@@ -1328,7 +1397,7 @@
         }
 
         function openStateDetail(s) {
-            document.getElementById('modal-state-detail').classList.remove('hidden');
+            openModal('modal-state-detail');
             
             const flagUrl = `https://flagcdn.com/w160/us-${s.id}.png`;
             document.getElementById('detail-state-flag').src = flagUrl;
@@ -1340,9 +1409,54 @@
             document.getElementById('detail-state-area').innerText = s.area.toLocaleString('id-ID') + " km²"; 
         }
 
-        function closeCountryDetail() { document.getElementById('modal-country-detail').classList.add('hidden'); }
-        function openFlagZoom(url) { document.getElementById('zoomed-flag').src = url; document.getElementById('modal-flag-zoom').classList.remove('hidden'); }
-        function closeFlagZoom() { document.getElementById('modal-flag-zoom').classList.add('hidden'); }
+        // --- FITUR RELASI (RELATED LIST MODAL) ---
+        function showRelated(type, filterValue, displayValue = null) {
+            const container = document.getElementById('related-list-content');
+            container.innerHTML = '';
+            let filtered = [];
+            let title = displayValue || filterValue;
+            let subtitle = "";
+
+            if (type === 'subregion') {
+                subtitle = "Sub-Benua";
+                filtered = countriesData.filter(c => c.subregion === filterValue);
+            } else if (type === 'language') {
+                subtitle = "Bahasa Resmi";
+                filtered = countriesData.filter(c => c.languages && Object.values(c.languages).includes(filterValue));
+            } else if (type === 'currency') {
+                subtitle = "Mata Uang";
+                filtered = countriesData.filter(c => c.currencies && c.currencies[filterValue]);
+            } else if (type === 'sovereign') {
+                subtitle = "Wilayah / Negara Induk";
+                filtered = countriesData.filter(c => sovereignMap[c.cca3] === filterValue || c.name.common === filterValue || c.name.common.includes(filterValue.replace(' (China)', '')));
+            }
+
+            document.getElementById('related-list-subtitle').innerText = subtitle;
+            document.getElementById('related-list-title').innerText = title;
+
+            filtered.sort((a,b)=>a.name.common.localeCompare(b.name.common)).forEach(c => {
+                const item = document.createElement('div');
+                item.className = "flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-100 shadow-sm cursor-pointer hover:border-brand-primary/50 transition-colors btn-press";
+                item.onclick = () => {
+                    // Cerdas: Kita tutup panel list ini terlebih dahulu (mundur 1 langkah history), lalu baru buka data negara barunya
+                    history.back();
+                    setTimeout(() => openDetail(c, false), 150);
+                };
+                item.innerHTML = `
+                    <img src="${c.flags.svg}" class="w-10 h-7 object-contain rounded border border-slate-200">
+                    <span class="font-bold text-sm text-slate-700 leading-tight">${c.name.common}</span>
+                `;
+                container.appendChild(item);
+            });
+
+            openModal('modal-related-list', 'modal-country-detail');
+        }
+
+        function openFlagZoom(url) { 
+            document.getElementById('zoomed-flag').src = url; 
+            const currentState = history.state || {};
+            openModal('modal-flag-zoom', currentState.modal); 
+        }
 
         let myGlobe = null;
         function initGlobe() {
