@@ -655,11 +655,11 @@
             "ESH": "Dipersengketakan (Maroko/Sahrawi)", "ATA": "Traktat Antarktika"
         };
 
-        // PETA DARATAN UTAMA (Mencegah potong peta pada library standar)
+        // PETA DARATAN UTAMA (Override siluet hitam murni untuk negara yang gagal/terpotong di library mapsicon)
         const shapeOverrides = {
-            "my": "https://upload.wikimedia.org/wikipedia/commons/2/23/Malaysia_location_map.svg",
-            "us": "https://upload.wikimedia.org/wikipedia/commons/1/1a/US_map_-_geographic.svg",
-            "ru": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Russia_location_map.svg"
+            "my": "https://img.icons8.com/ios-filled/250/000000/malaysia-map.png",
+            "us": "https://img.icons8.com/ios-filled/250/000000/usa-map.png",
+            "ru": "https://img.icons8.com/ios-filled/250/000000/russia-map.png"
         };
 
         // DATABASE MINI NEGARA BAGIAN AS (50 States)
@@ -1386,6 +1386,7 @@
             if(c.idd && c.idd.root) phoneCode = c.idd.root + (c.idd.suffixes && c.idd.suffixes.length === 1 ? c.idd.suffixes[0] : "");
             document.getElementById('detail-idd').innerText = phoneCode;
 
+            // Peta Daratan Utama
             const shapeSection = document.getElementById('detail-shape-section');
             const shapeImg = document.getElementById('detail-shape');
             
@@ -1393,8 +1394,15 @@
             if (cc2 && shapeOverrides[cc2]) {
                 shapeSection.classList.remove('hidden');
                 shapeImg.src = shapeOverrides[cc2];
-                // Peta override menggunakan styling khusus agar menyatu (blend) dengan warna putih/abu-abu
-                shapeImg.className = "max-w-full max-h-full object-contain filter drop-shadow-md grayscale contrast-125 mix-blend-multiply opacity-80";
+                // Peta override kini menggunakan siluet hitam transparan murni, menyatu seragam dengan style aplikasi
+                shapeImg.className = "max-w-full max-h-full object-contain filter drop-shadow-md opacity-70";
+                
+                // Fallback jika API icon eksternal diblokir/gagal
+                shapeImg.onerror = () => {
+                    shapeImg.src = `https://raw.githubusercontent.com/djaiss/mapsicon/master/all/${cc2}/vector.svg`;
+                    shapeImg.className = "max-w-full max-h-full object-contain filter drop-shadow-md opacity-70";
+                    shapeImg.onerror = () => shapeSection.classList.add('hidden');
+                };
             } else if (cc2) {
                 shapeSection.classList.remove('hidden');
                 shapeImg.src = `https://raw.githubusercontent.com/djaiss/mapsicon/master/all/${cc2}/vector.svg`;
