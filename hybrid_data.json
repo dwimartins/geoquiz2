@@ -14,5 +14,5 @@
   },
   "shapeOverrides": {
     "my": "https://cdn.jsdelivr.net/gh/Highcharts/map-collection-dist@master/countries/my/my-all.svg"
- }
+  }
 }
