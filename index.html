@@ -193,6 +193,13 @@
                     <i class="ph-bold ph-arrow-left"></i> Kembali
                 </button>
                 <div class="flex-1 w-full rounded-3xl overflow-hidden relative shadow-inner border border-slate-700 z-0 flex flex-col bg-slate-900">
+                    
+                    <!-- LOADING VEKTOR -->
+                    <div id="vector-map-loading" class="hidden absolute inset-0 z-[500] flex flex-col items-center justify-center bg-slate-900 text-white">
+                        <div class="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin mb-3"></div>
+                        <p class="text-xs font-bold animate-pulse text-slate-300">Memuat Peta Vektor...</p>
+                    </div>
+
                     <div class="absolute top-4 left-4 z-[400] bg-slate-800/90 backdrop-blur rounded-xl shadow-md p-2 px-3 border border-slate-600 pointer-events-none">
                         <span class="text-xs font-bold text-slate-300">Zoom untuk melihat nama negara</span>
                     </div>
@@ -228,7 +235,7 @@
                 <div id="catalog-grid" class="grid grid-cols-2 gap-3"></div>
             </div>
 
-            <!-- EKSPLORASI KATALOG PROVINSI INDONESIA (NEW) -->
+            <!-- EKSPLORASI KATALOG PROVINSI INDONESIA -->
             <div id="view-explore-provinces" class="hidden min-h-full flex-col p-6 animate-slide-up">
                 <div class="flex justify-between items-center mb-3">
                     <button onclick="navigate('explore-menu')" class="flex items-center gap-2 text-slate-500 font-bold btn-press bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100"><i class="ph-bold ph-arrow-left"></i> Kembali</button>
@@ -1651,12 +1658,20 @@
         let vectorLabels = [];
 
         async function initVectorMap() {
-            if(myVectorMap) { myVectorMap.invalidateSize(); return; }
+            const loadingEl = document.getElementById('vector-map-loading');
+            if(myVectorMap) { 
+                myVectorMap.invalidateSize(); 
+                if(loadingEl) loadingEl.classList.add('hidden');
+                return; 
+            }
             myVectorMap = L.map('map-vector-container', {center:[20,0], zoom:2, zoomControl:false});
             L.control.zoom({position:'bottomright'}).addTo(myVectorMap);
 
             try {
-                const response = await fetch('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson');
+                if(loadingEl) loadingEl.classList.remove('hidden');
+                
+                // Menggunakan GeoJSON yang jauh lebih ringan (250KB) dibanding sebelumnya (24MB)
+                const response = await fetch('https://cdn.jsdelivr.net/gh/johan/world.geo.json@master/countries.geo.json');
                 if(!response.ok) throw new Error("Gagal mengambil GeoJSON");
                 const geoData = await response.json();
                 
@@ -1670,14 +1685,17 @@
                             this.setStyle({ fillColor: '#1e293b', fillOpacity: 1 });
                         });
                         layer.on('click', function(e) {
-                            const cca3 = feature.properties.ISO_A3;
+                            const cca3 = feature.id; // JSON johan menggunakan 'id' untuk kode CCA3
                             const c = countriesData.find(x => x.cca3 === cca3);
                             if (c) openDetail(c);
                         });
                     }
                 }).addTo(myVectorMap);
+                
+                if(loadingEl) loadingEl.classList.add('hidden');
             } catch(e) {
                 console.error("Gagal memuat batas negara", e);
+                if(loadingEl) loadingEl.innerHTML = `<p class="text-red-500 font-bold px-4 text-center">Gagal memuat peta vektor: ${e.message}</p>`;
             }
 
             function updateLabels() {
@@ -1708,6 +1726,9 @@
 
             myVectorMap.on('zoomend', updateLabels);
             updateLabels();
+            
+            // Re-kalkulasi ukuran setelah render
+            setTimeout(() => myVectorMap.invalidateSize(), 100);
         }
 
         function changeMapStyle(style) { if(mapTileLayer) mapTileLayer.setUrl(mapStyles[style]); }
