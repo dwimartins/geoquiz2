@@ -100,7 +100,7 @@
         <main class="flex-1 relative overflow-y-auto no-scrollbar pb-24" id="main-scroll">
             
             <!-- LOADING -->
-            <div id="view-loading" class="absolute inset-0 flex flex-col items-center justify-center bg-brand-bg z-20">
+            <div id="view-loading" class="absolute inset-0 flex flex-col items-center justify-center bg-brand-bg z-[500]">
                 <div class="w-20 h-20 bg-brand-primary/10 rounded-full flex items-center justify-center animate-bounce mb-4"><i class="ph-duotone ph-airplane-tilt text-5xl text-brand-primary"></i></div>
                 <h2 class="text-xl font-black text-slate-700">Membangun Dunia...</h2>
                 <p class="text-sm text-slate-400 font-medium">Mengunduh data peta</p>
@@ -444,7 +444,7 @@
         </main>
 
         <!-- NAVIGASI BAWAH -->
-        <nav id="bottom-nav" class="absolute bottom-0 w-full bg-white/90 backdrop-blur-md px-6 py-3 rounded-t-3xl shadow-[0_-5px_20px_rgba(0,0,0,0.05)] z-30 flex justify-between items-center border-t border-slate-50">
+        <nav id="bottom-nav" class="hidden absolute bottom-0 w-full bg-white/90 backdrop-blur-md px-6 py-3 rounded-t-3xl shadow-[0_-5px_20px_rgba(0,0,0,0.05)] z-30 flex justify-between items-center border-t border-slate-50">
             <button onclick="navigate('explore-menu')" class="nav-btn flex flex-col items-center justify-center gap-1 flex-1 text-slate-400 transition-colors py-1 rounded-xl hover:bg-slate-50" data-tab="explore">
                 <i class="ph-fill ph-compass text-2xl"></i><span class="text-[10px] font-bold uppercase tracking-wider">Eksplor</span>
             </button>
@@ -682,6 +682,20 @@
             </div>
         </div>
 
+        <!-- 7. MODAL WARNING LOCAL FILES -->
+        <div id="modal-warning-local" class="hidden absolute inset-0 bg-slate-900/80 backdrop-blur-sm z-[600] flex items-center justify-center p-6">
+            <div class="bg-white rounded-3xl p-8 w-full max-w-sm text-center shadow-2xl animate-pop relative overflow-hidden">
+                <div class="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="ph-fill ph-warning-circle text-4xl text-amber-500"></i>
+                </div>
+                <h2 class="text-2xl font-black mb-2 text-slate-800">Mode Lokal Terdeteksi</h2>
+                <p class="text-slate-500 mb-6 font-medium text-sm leading-relaxed">Browser menolak membaca file JSON terpisah karena alasan keamanan (<b>CORS Error</b>) saat dibuka tanpa Web Server.<br><br>Game utama tetap berjalan, namun data <b>Provinsi RI & US States akan kosong</b>.</p>
+                <button onclick="document.getElementById('modal-warning-local').classList.add('hidden')" class="w-full bg-amber-500 text-white font-bold py-3.5 rounded-2xl shadow-lg shadow-amber-500/30 btn-press">
+                    Saya Mengerti
+                </button>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -761,7 +775,7 @@
             'loading': document.getElementById('view-loading'), 'explore-menu': document.getElementById('view-explore-menu'),
             'explore-globe': document.getElementById('view-explore-globe'), 'explore-map': document.getElementById('view-explore-map'),
             'explore-catalog': document.getElementById('view-explore-catalog'), 'explore-states': document.getElementById('view-explore-states'),
-            'explore-provinces': document.getElementById('view-explore-provinces'), // NEW View
+            'explore-provinces': document.getElementById('view-explore-provinces'), 
             'explore-continents': document.getElementById('view-explore-continents'), 
             'quiz-menu': document.getElementById('view-quiz-menu'), 'quiz-play': document.getElementById('view-quiz-play'), 
             'quiz-compare': document.getElementById('view-quiz-compare'), 'quiz-map-guess': document.getElementById('view-quiz-map-guess'), 
@@ -770,32 +784,25 @@
         const statusHeader = document.getElementById('game-status'), toast = document.getElementById('feedback-toast'), bottomNav = document.getElementById('bottom-nav');
         const appContainer = document.getElementById('app-container');
 
-        // Fetch Data
+        // Fetch Data - DIBAGI DUA TAHAP AGAR LEBIH AMAN
         async function fetchCountries() {
+            let isGlobalSuccess = false;
+
+            // 1. TAHAP PERTAMA: Ambil Data Utama (Internet API)
             try {
-                const [res1, res2, res3, resHybrid, resUs, resIndo] = await Promise.all([
+                const [res1, res2, res3] = await Promise.all([
                     fetch('https://restcountries.com/v3.1/all?fields=name,cca3,capital,flags,region,subregion,population,area,latlng,borders'),
                     fetch('https://restcountries.com/v3.1/all?fields=cca3,currencies,languages,unMember,demonyms,coatOfArms,car,timezones,idd,tld'),
-                    fetch('https://restcountries.com/v3.1/all?fields=cca3,landlocked,cca2'),
-                    fetch('hybrid_data.json'),
-                    fetch('us_states.json'),
-                    fetch('indonesia_provinces.json')
+                    fetch('https://restcountries.com/v3.1/all?fields=cca3,landlocked,cca2')
                 ]);
                 
-                if (!res1.ok || !res2.ok || !res3.ok || !resHybrid.ok || !resUs.ok || !resIndo.ok) {
-                    throw new Error(`HTTP Error: Gagal mengambil data`);
+                if (!res1.ok || !res2.ok || !res3.ok) {
+                    throw new Error(`API RestCountries gagal merespons`);
                 }
                 
                 const data1 = await res1.json();
                 const data2 = await res2.json();
                 const data3 = await res3.json();
-                
-                const hybridData = await resHybrid.json();
-                sovereignMap = hybridData.sovereignMap;
-                shapeOverrides = hybridData.shapeOverrides;
-                
-                usStatesData = await resUs.json();
-                indoProvincesData = await resIndo.json();
 
                 if (!Array.isArray(data1) || !Array.isArray(data2) || !Array.isArray(data3)) {
                     throw new Error("Format API tidak valid");
@@ -813,19 +820,52 @@
                     c.capital[0] !== "undefined" && c.capital[0].trim() !== "" &&
                     c.flags && c.flags.svg && c.latlng
                 );
+                
+                isGlobalSuccess = true;
 
             } catch (e) { 
-                console.error("Gagal menarik data:", e);
+                console.error("Gagal menarik data global:", e);
                 const loadingView = document.getElementById('view-loading');
                 if(loadingView) {
                     loadingView.innerHTML = `
                         <div class="w-20 h-20 bg-brand-secondary/10 rounded-full flex items-center justify-center mb-4"><i class="ph-duotone ph-warning text-5xl text-brand-secondary"></i></div>
-                        <h2 class="text-xl font-black text-slate-700">Gagal Memuat Data</h2>
-                        <p class="text-sm text-slate-400 font-medium text-center px-6 mt-2">Server API menolak permintaan atau Data JSON gagal dimuat. Pastikan dijalankan melalui Local Web Server.</p>
-                        <button onclick="location.reload()" class="mt-6 bg-brand-primary text-white font-bold px-6 py-2 rounded-xl btn-press">Muat Ulang</button>
+                        <h2 class="text-xl font-black text-slate-700 text-center px-4">Gagal Memuat Data Utama</h2>
+                        <p class="text-sm text-slate-400 font-medium text-center px-6 mt-2">Gagal menyambung ke server RestCountries.</p>
+                        <p class="text-xs text-red-500 font-bold mt-3 px-4 text-center border-t border-red-100 pt-2">${e.message}</p>
+                        <button onclick="location.reload()" class="mt-4 bg-brand-primary text-white font-bold px-6 py-2 rounded-xl btn-press">Coba Lagi</button>
                     `;
                 }
+                return false; 
             }
+
+            // 2. TAHAP KEDUA: Ambil Data JSON Lokal
+            // Jika ini gagal (karena CORS / double-click file HTML), aplikasi tetap berjalan dengan peringatan
+            try {
+                const [resHybrid, resUs, resIndo] = await Promise.all([
+                    fetch('hybrid_data.json'),
+                    fetch('us_states.json'),
+                    fetch('indonesia_provinces.json')
+                ]);
+                
+                if (!resHybrid.ok || !resUs.ok || !resIndo.ok) {
+                    throw new Error("File JSON Lokal tidak ditemukan (404)");
+                }
+
+                const hybridData = await resHybrid.json();
+                sovereignMap = hybridData.sovereignMap || {};
+                shapeOverrides = hybridData.shapeOverrides || {};
+                
+                usStatesData = await resUs.json();
+                indoProvincesData = await resIndo.json();
+
+            } catch (e) {
+                console.warn("Gagal memuat JSON lokal (CORS / Tidak Ada File):", e);
+                // Munculkan peringatan tapi jangan hentikan aplikasi
+                const warningModal = document.getElementById('modal-warning-local');
+                if(warningModal) warningModal.classList.remove('hidden');
+            }
+
+            return isGlobalSuccess; 
         }
 
         // --- SISTEM MODAL OTOMATIS (Back Button History) ---
@@ -884,7 +924,13 @@
 
         window.onload = async () => { 
             history.replaceState({ view: 'quiz-menu' }, ''); 
-            await fetchCountries(); 
+            
+            // KUNCI PERBAIKAN: Jika data Global JSON gagal dimuat, hentikan eksekusi kode agar UI Error tetap terlihat utuh
+            const isDataLoaded = await fetchCountries(); 
+            if (!isDataLoaded) {
+                return; // Stop di sini. Layar Loading Z-500 akan memblokir segalanya.
+            }
+
             populateCatalog(); 
             renderView('quiz-menu'); 
 
