@@ -335,6 +335,14 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <!-- PENGATURAN BARU: INTIP JAWABAN -->
+                        <div class="flex justify-between items-center bg-slate-50 p-2 rounded-xl px-3">
+                            <span class="text-xs font-bold text-slate-500 flex items-center gap-1"><i class="ph-fill ph-lightbulb text-amber-500"></i> Intip Jawaban</span>
+                            <button onclick="togglePeek()" id="btn-setting-peek" class="w-8 h-5 bg-slate-200 rounded-full relative transition-colors btn-press">
+                                <div id="peek-knob" class="w-4 h-4 bg-white rounded-full absolute top-0.5 left-0.5 transition-transform shadow-sm"></div>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -399,6 +407,12 @@
                     <div id="quiz-feedback" class="hidden absolute top-4 left-4 right-4 bg-rose-500 text-white p-3 rounded-2xl shadow-lg flex items-center gap-3 z-[60] animate-slide-down border-2 border-white">
                         <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center shrink-0"><i class="ph-bold ph-x text-lg"></i></div>
                         <p id="quiz-feedback-text" class="text-xs font-bold leading-snug text-left flex-1"></p>
+                    </div>
+
+                    <!-- TOAST INTIP JAWABAN -->
+                    <div id="peek-toast" class="hidden absolute top-4 left-4 right-4 bg-amber-500 text-white p-3 rounded-2xl shadow-lg flex items-center gap-3 z-[60] animate-slide-down border-2 border-white">
+                        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center shrink-0"><i class="ph-bold ph-lightbulb text-lg"></i></div>
+                        <p id="peek-toast-text" class="text-xs font-bold leading-snug text-left flex-1"></p>
                     </div>
 
                     <div id="question-header" class="mb-6 w-full flex flex-col items-center justify-center relative z-10 shrink-0"></div>
@@ -773,6 +787,9 @@
         let quizSettingLives = 3;
         let quizSettingTime = 0; 
         let quizTimeTemp = 10; 
+        
+        // Fitur Intip Jawaban
+        let quizSettingPeek = false;
 
         function getBorderNames(bordersArr) {
             if(!bordersArr || bordersArr.length === 0) return "No Land Borders";
@@ -785,6 +802,28 @@
         function escapeHtml(str) {
             if (!str) return "";
             return str.toString().replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        }
+
+        function showPeekToast(text) {
+            const fdbk = document.getElementById('peek-toast');
+            document.getElementById('peek-toast-text').innerText = text;
+            fdbk.classList.remove('hidden');
+            setTimeout(() => fdbk.classList.add('hidden'), 2500);
+            playSfx('pop');
+        }
+
+        function togglePeek() {
+            quizSettingPeek = !quizSettingPeek;
+            const btn = document.getElementById('btn-setting-peek');
+            const knob = document.getElementById('peek-knob');
+            if (quizSettingPeek) {
+                btn.classList.replace('bg-slate-200', 'bg-emerald-500');
+                knob.style.transform = 'translateX(12px)';
+            } else {
+                btn.classList.replace('bg-emerald-500', 'bg-slate-200');
+                knob.style.transform = 'translateX(0)';
+            }
+            playSfx('pop');
         }
 
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -1164,10 +1203,10 @@
             const qHeader = document.getElementById('question-header'); qHeader.innerHTML = '';
 
             if (qType === 'capital') {
-                qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-1">Apa ibukota dari</span><span class="text-brand-primary font-black text-2xl leading-tight text-center mb-3">${currentCorrectAnswer.name.common}</span><div class="relative inline-block mb-2"><img src="${currentCorrectAnswer.flags.svg}" class="w-20 h-14 object-contain rounded shadow-sm border border-slate-100">${!currentCorrectAnswer.unMember ? '<span class="absolute -top-2 -right-2 bg-slate-100 text-slate-500 text-[8px] font-black px-1.5 py-0.5 rounded shadow-sm border border-slate-200 z-10">Non-PBB</span>' : ''}</div><span class="text-[10px] uppercase font-bold text-slate-400 tracking-widest bg-slate-100 px-2 py-1 rounded-md">${currentCorrectAnswer.subregion || '-'}</span>`;
+                qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-1">Apa ibukota dari</span><span class="text-brand-primary font-black text-2xl leading-tight text-center mb-3">${currentCorrectAnswer.name.common}</span><div class="flex flex-col items-center mb-2"><img src="${currentCorrectAnswer.flags.svg}" class="w-32 h-20 object-contain rounded shadow-sm border border-slate-100 mb-2">${!currentCorrectAnswer.unMember ? '<span class="bg-slate-200 text-slate-500 text-[10px] font-black px-2 py-0.5 rounded shadow-sm border border-slate-300 uppercase tracking-widest">Non-PBB</span>' : ''}</div><span class="text-[10px] uppercase font-bold text-slate-400 tracking-widest bg-slate-100 px-2 py-1 rounded-md">${currentCorrectAnswer.subregion || '-'}</span>`;
                 options.forEach(c => createOptBtn(c, 'text-capital', container));
             } else if (qType === 'flagToCountry') {
-                qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-3">Bendera negara manakah ini?</span><div class="relative inline-block mb-2"><img src="${currentCorrectAnswer.flags.svg}" class="w-full max-w-[12rem] max-h-32 object-contain drop-shadow-md rounded border border-slate-100">${!currentCorrectAnswer.unMember ? '<span class="absolute -top-2 -right-2 bg-slate-100 text-slate-500 text-[8px] font-black px-1.5 py-0.5 rounded shadow-sm border border-slate-200 z-10">Non-PBB</span>' : ''}</div>`;
+                qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-3">Bendera negara manakah ini?</span><div class="flex flex-col items-center mb-2"><img src="${currentCorrectAnswer.flags.svg}" class="w-full max-w-[16rem] max-h-36 object-contain drop-shadow-md rounded border border-slate-100 mb-2">${!currentCorrectAnswer.unMember ? '<span class="bg-slate-200 text-slate-500 text-[10px] font-black px-2 py-0.5 rounded shadow-sm border border-slate-300 uppercase tracking-widest">Non-PBB</span>' : ''}</div>`;
                 options.forEach(c => createOptBtn(c, 'text-country', container));
             } else {
                 qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-1">Pilih bendera dari</span><span class="text-brand-primary font-black text-2xl text-center leading-tight mb-2">${currentCorrectAnswer.name.common}</span><span class="text-[10px] uppercase font-bold text-slate-400 tracking-widest bg-slate-100 px-2 py-1 rounded-md">${currentCorrectAnswer.subregion || '-'}</span>`;
@@ -1178,15 +1217,23 @@
         }
 
         function createOptBtn(cObj, type, container) {
-            const btn = document.createElement('button'), isCorrect = (cObj === currentCorrectAnswer);
+            const btn = document.createElement('button');
+            const isCorrect = (cObj === currentCorrectAnswer);
             btn.dataset.correct = isCorrect; 
             btn.className = "w-full bg-white border-2 border-slate-100 hover:border-brand-primary/50 text-slate-700 font-bold p-2 sm:p-3 rounded-2xl transition-all btn-press flex flex-col items-center justify-center group relative overflow-hidden min-h-[90px] shadow-sm";
             
-            const nonUnHtml = !cObj.unMember ? `<div class="absolute top-1 right-1 bg-white/90 backdrop-blur-sm text-slate-500 text-[8px] font-black px-1.5 py-0.5 rounded shadow-sm border border-slate-200 z-10 leading-tight">Non-PBB</div>` : '';
+            const nonUnHtml = !cObj.unMember ? `<div class="bg-slate-100 text-slate-500 text-[8px] font-black px-1.5 py-0.5 rounded shadow-sm border border-slate-200 leading-tight mb-1.5 z-10 shrink-0">Non-PBB</div>` : '';
 
-            if (type === 'text-capital') btn.innerHTML = `<span class="text-sm text-center leading-tight w-full px-1 relative z-0">${cObj.capital[0]}</span>`;
-            else if (type === 'text-country') btn.innerHTML = `<span class="text-sm text-center leading-tight w-full px-1 relative z-0">${cObj.name.common}</span>`;
-            else btn.innerHTML = `${nonUnHtml}<img src="${cObj.flags.svg}" class="w-full h-full max-h-[70px] object-contain p-1 drop-shadow-sm relative z-0">`;
+            let hintText = "";
+            if(type === 'text-capital') hintText = 'Negara: ' + cObj.name.common;
+            else if(type === 'image-flag') hintText = 'Negara: ' + cObj.name.common;
+            else hintText = 'Ibukota: ' + (cObj.capital ? cObj.capital[0] : '-');
+
+            const peekHtml = quizSettingPeek ? `<button class="absolute bottom-1 right-1 p-1 text-amber-400 hover:text-amber-500 hover:bg-amber-50 rounded-full transition-colors z-20" onclick="event.stopPropagation(); showPeekToast('${escapeHtml(hintText)}');"><i class="ph-fill ph-lightbulb text-xl drop-shadow-sm"></i></button>` : '';
+
+            if (type === 'text-capital') btn.innerHTML = `<div class="flex flex-col items-center justify-center w-full h-full relative z-0">${nonUnHtml}<span class="text-sm text-center leading-tight w-full px-1">${cObj.capital[0]}</span></div>${peekHtml}`;
+            else if (type === 'text-country') btn.innerHTML = `<div class="flex flex-col items-center justify-center w-full h-full relative z-0">${nonUnHtml}<span class="text-sm text-center leading-tight w-full px-1">${cObj.name.common}</span></div>${peekHtml}`;
+            else btn.innerHTML = `<div class="flex flex-col items-center justify-center w-full h-full relative z-0">${nonUnHtml}<img src="${cObj.flags.svg}" class="w-full h-full max-h-[48px] object-contain p-0.5 drop-shadow-sm"></div>${peekHtml}`;
             
             btn.onclick = () => {
                 stopTimer(); document.querySelectorAll('#options-container button').forEach(b => b.onclick = null);
