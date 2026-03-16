@@ -1154,8 +1154,14 @@
 
             lives--; updateStatsDisplay(); showToast(false);
             if(context === 'classic') {
+                const resetBaseClass = "w-full font-bold p-2 sm:p-3 rounded-2xl transition-all flex flex-col items-center justify-center relative overflow-hidden min-h-[90px] shadow-sm ";
                 const btns = document.querySelectorAll('#options-container button');
-                btns.forEach(b => { b.onclick = null; if(b.dataset.correct === "true") b.classList.add('bg-brand-success/20', 'border-brand-success', 'border-dashed'); });
+                btns.forEach(b => { 
+                    b.onclick = null; 
+                    if(b.dataset.correct === "true") {
+                        b.className = resetBaseClass + 'bg-brand-success/20 border-2 border-brand-success border-b-4 border-dashed shadow-inner';
+                    }
+                });
                 setTimeout(nextQuestion, 1500);
             } else if(context === 'map-guess') {
                 document.querySelectorAll('#map-guess-options button').forEach(b => b.onclick = null);
@@ -1214,31 +1220,54 @@
 
             if (qType === 'capital') {
                 qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-1">Apa ibukota dari</span><span class="text-brand-primary font-black text-2xl leading-tight text-center mb-3">${currentCorrectAnswer.name.common}</span><div class="flex flex-col items-center mb-3"><img src="${currentCorrectAnswer.flags.svg}" class="w-40 h-28 object-contain rounded-md shadow-md border border-slate-100 mb-2">${!currentCorrectAnswer.unMember ? '<span class="bg-slate-200 text-slate-500 text-[10px] font-black px-2 py-0.5 rounded shadow-sm border border-slate-300 uppercase tracking-widest">Non-PBB</span>' : ''}</div><span class="text-[10px] uppercase font-bold text-slate-400 tracking-widest bg-slate-100 px-2 py-1 rounded-md">${currentCorrectAnswer.subregion || '-'}</span>`;
-                options.forEach(c => createOptBtn(c, 'text-capital', container));
+                options.forEach((c, i) => createOptBtn(c, 'text-capital', container, i));
             } else if (qType === 'flagToCountry') {
-                qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-3">Bendera negara manakah ini?</span><div class="flex flex-col items-center mb-3"><img src="${currentCorrectAnswer.flags.svg}" class="w-full max-w-[18rem] max-h-48 object-contain drop-shadow-md rounded-md border border-slate-100 mb-2">${!currentCorrectAnswer.unMember ? '<span class="bg-slate-200 text-slate-500 text-[10px] font-black px-2 py-0.5 rounded shadow-sm border border-slate-300 uppercase tracking-widest">Non-PBB</span>' : ''}</div>`;
-                options.forEach(c => createOptBtn(c, 'text-country', container));
+                let labelsHtml = `<div class="flex items-center gap-2 justify-center">`;
+                if (!currentCorrectAnswer.unMember) {
+                    labelsHtml += `<span class="bg-slate-200 text-slate-500 text-[10px] font-black px-2 py-0.5 rounded shadow-sm border border-slate-300 uppercase tracking-widest">Non-PBB</span>`;
+                }
+                if (currentCorrectAnswer.subregion) {
+                    labelsHtml += `<span class="bg-slate-100 text-slate-400 text-[10px] font-black px-2 py-0.5 rounded shadow-sm border border-slate-200 uppercase tracking-widest">${currentCorrectAnswer.subregion}</span>`;
+                }
+                labelsHtml += `</div>`;
+
+                qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-3">Bendera negara manakah ini?</span><div class="flex flex-col items-center mb-3"><img src="${currentCorrectAnswer.flags.svg}" class="w-full max-w-[18rem] max-h-48 object-contain drop-shadow-md rounded-md border border-slate-100 mb-2">${labelsHtml}</div>`;
+                options.forEach((c, i) => createOptBtn(c, 'text-country', container, i));
             } else {
                 qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-1">Pilih bendera dari</span><span class="text-brand-primary font-black text-2xl text-center leading-tight mb-2">${currentCorrectAnswer.name.common}</span><span class="text-[10px] uppercase font-bold text-slate-400 tracking-widest bg-slate-100 px-2 py-1 rounded-md">${currentCorrectAnswer.subregion || '-'}</span>`;
-                options.forEach(c => createOptBtn(c, 'image-flag', container));
+                options.forEach((c, i) => createOptBtn(c, 'image-flag', container, i));
             }
             views['quiz-play'].classList.remove('animate-pop'); void views['quiz-play'].offsetWidth; views['quiz-play'].classList.add('animate-pop');
             runTimer('classic'); 
         }
 
-        function createOptBtn(cObj, type, container) {
+        function createOptBtn(cObj, type, container, index) {
             const btn = document.createElement('button');
             const isCorrect = (cObj === currentCorrectAnswer);
             btn.dataset.correct = isCorrect; 
-            btn.className = "w-full bg-white border-2 border-slate-100 hover:border-brand-primary/50 text-slate-700 font-bold p-2 sm:p-3 rounded-2xl transition-all btn-press flex flex-col items-center justify-center group relative overflow-hidden min-h-[90px] shadow-sm";
+            
+            let baseClass = "w-full border-2 font-bold p-2 sm:p-3 rounded-2xl transition-all btn-press flex flex-col items-center justify-center group relative overflow-hidden min-h-[90px] shadow-sm ";
+            
+            // Desain Estetik: Neo-Brutalism/3D Border untuk opsi teks
+            if (type !== 'image-flag') {
+                const styles = [
+                    'bg-white border-blue-200 border-b-4 border-b-blue-400 hover:bg-blue-50 text-slate-700',
+                    'bg-white border-emerald-200 border-b-4 border-b-emerald-400 hover:bg-emerald-50 text-slate-700',
+                    'bg-white border-amber-200 border-b-4 border-b-amber-400 hover:bg-amber-50 text-slate-700',
+                    'bg-white border-violet-200 border-b-4 border-b-violet-400 hover:bg-violet-50 text-slate-700'
+                ];
+                btn.className = baseClass + (styles[index % 4] || styles[0]);
+            } else {
+                btn.className = baseClass + "bg-white border-slate-100 hover:border-brand-primary/50 text-slate-700";
+            }
             
             const peekClick = `event.stopPropagation(); showPeekToastByCca3('${cObj.cca3}', '${type}');`;
             const peekHtml = quizSettingPeek ? `<button class="absolute bottom-2 right-2 p-1.5 text-amber-400 hover:text-amber-500 hover:bg-amber-50 rounded-full transition-colors z-20 shadow-sm border border-slate-100 bg-white/90 backdrop-blur" onclick="${peekClick}"><i class="ph-fill ph-lightbulb text-lg drop-shadow-sm"></i></button>` : '';
 
             if (type === 'text-capital') {
-                btn.innerHTML = `<div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none text-slate-900 group-hover:text-brand-primary transition-colors"><i class="ph-fill ph-buildings text-6xl"></i></div><div class="flex flex-col items-center justify-center w-full h-full relative z-10"><span class="text-sm text-center leading-tight w-full px-1 text-slate-700 font-bold">${cObj.capital[0]}</span></div>${peekHtml}`;
+                btn.innerHTML = `<div class="flex flex-col items-center justify-center w-full h-full relative z-10"><span class="text-sm text-center leading-tight w-full px-1 text-slate-700 font-bold">${cObj.capital[0]}</span></div>${peekHtml}`;
             } else if (type === 'text-country') {
-                btn.innerHTML = `<div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none text-slate-900 group-hover:text-rose-500 transition-colors"><i class="ph-fill ph-map-trifold text-6xl"></i></div><div class="flex flex-col items-center justify-center w-full h-full relative z-10"><span class="text-sm text-center leading-tight w-full px-1 text-slate-700 font-bold">${cObj.name.common}</span></div>${peekHtml}`;
+                btn.innerHTML = `<div class="flex flex-col items-center justify-center w-full h-full relative z-10"><span class="text-sm text-center leading-tight w-full px-1 text-slate-700 font-bold">${cObj.name.common}</span></div>${peekHtml}`;
             } else {
                 const nonUnHtml = !cObj.unMember ? `<div class="absolute top-1 right-1 bg-white/90 backdrop-blur-sm text-slate-500 text-[8px] font-black px-1.5 py-0.5 rounded shadow-sm border border-slate-200 z-20 leading-tight">Non-PBB</div>` : '';
                 btn.innerHTML = `<div class="flex flex-col items-center justify-center w-full h-full relative z-10">${nonUnHtml}<img src="${cObj.flags.svg}" class="w-full h-full max-h-[48px] object-contain p-0.5 drop-shadow-sm relative z-0"></div>${peekHtml}`;
@@ -1246,8 +1275,12 @@
             
             btn.onclick = () => {
                 stopTimer(); document.querySelectorAll('#options-container button').forEach(b => b.onclick = null);
+                
+                let resetBaseClass = "w-full font-bold p-2 sm:p-3 rounded-2xl transition-all flex flex-col items-center justify-center relative overflow-hidden min-h-[90px] shadow-sm ";
+
                 if (isCorrect) { 
-                    btn.classList.add('bg-brand-success/20', 'border-brand-success'); showToast(true); score+=10; updateStatsDisplay(); setTimeout(nextQuestion, 1000); 
+                    btn.className = resetBaseClass + 'bg-brand-success/20 border-2 border-brand-success border-b-4 shadow-inner';
+                    showToast(true); score+=10; updateStatsDisplay(); setTimeout(nextQuestion, 1000); 
                 } else { 
                     // Catat kesalahan
                     quizMistakes.push({ 
@@ -1257,7 +1290,7 @@
                         flag: currentCorrectAnswer.flags.svg
                     });
 
-                    btn.classList.add('bg-brand-secondary/20', 'border-brand-secondary'); 
+                    btn.className = resetBaseClass + 'bg-brand-secondary/20 border-2 border-brand-secondary border-b-4 shadow-inner'; 
                     appContainer.classList.add('animate-shake'); setTimeout(() => appContainer.classList.remove('animate-shake'), 300); 
                     lives--; updateStatsDisplay(); showToast(false); 
                     
@@ -1272,7 +1305,8 @@
                     }
                     fdbk.classList.remove('hidden');
                     
-                    document.querySelector('#options-container button[data-correct="true"]').classList.add('bg-brand-success/20', 'border-brand-success', 'border-dashed'); 
+                    let correctBtn = document.querySelector('#options-container button[data-correct="true"]');
+                    if(correctBtn) correctBtn.className = resetBaseClass + 'bg-brand-success/20 border-2 border-brand-success border-b-4 border-dashed shadow-inner'; 
                     setTimeout(nextQuestion, 2200); 
                 }
             };
