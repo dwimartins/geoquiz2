@@ -804,9 +804,19 @@
             return str.toString().replace(/'/g, "\\'").replace(/"/g, '&quot;');
         }
 
-        function showPeekToast(text) {
+        function showPeekToastByCca3(cca3, type) {
+            const cObj = countriesData.find(c => c.cca3 === cca3);
+            if(!cObj) return;
+            let html = "";
+            if (type === 'text-capital') {
+                html = `Negara: <span class="font-black">${cObj.name.common}</span>`;
+            } else if (type === 'text-country') {
+                html = `<div class="flex items-center gap-2"><span class="font-bold">Bendera:</span> <img src="${cObj.flags.svg}" class="w-8 h-5 object-cover rounded shadow-sm border border-white/50 bg-white"></div>`;
+            } else if (type === 'image-flag') {
+                html = `Negara: <span class="font-black">${cObj.name.common}</span>`;
+            }
             const fdbk = document.getElementById('peek-toast');
-            document.getElementById('peek-toast-text').innerText = text;
+            document.getElementById('peek-toast-text').innerHTML = html;
             fdbk.classList.remove('hidden');
             setTimeout(() => fdbk.classList.add('hidden'), 2500);
             playSfx('pop');
@@ -1203,10 +1213,10 @@
             const qHeader = document.getElementById('question-header'); qHeader.innerHTML = '';
 
             if (qType === 'capital') {
-                qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-1">Apa ibukota dari</span><span class="text-brand-primary font-black text-2xl leading-tight text-center mb-3">${currentCorrectAnswer.name.common}</span><div class="flex flex-col items-center mb-2"><img src="${currentCorrectAnswer.flags.svg}" class="w-32 h-20 object-contain rounded shadow-sm border border-slate-100 mb-2">${!currentCorrectAnswer.unMember ? '<span class="bg-slate-200 text-slate-500 text-[10px] font-black px-2 py-0.5 rounded shadow-sm border border-slate-300 uppercase tracking-widest">Non-PBB</span>' : ''}</div><span class="text-[10px] uppercase font-bold text-slate-400 tracking-widest bg-slate-100 px-2 py-1 rounded-md">${currentCorrectAnswer.subregion || '-'}</span>`;
+                qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-1">Apa ibukota dari</span><span class="text-brand-primary font-black text-2xl leading-tight text-center mb-3">${currentCorrectAnswer.name.common}</span><div class="flex flex-col items-center mb-3"><img src="${currentCorrectAnswer.flags.svg}" class="w-40 h-28 object-contain rounded-md shadow-md border border-slate-100 mb-2">${!currentCorrectAnswer.unMember ? '<span class="bg-slate-200 text-slate-500 text-[10px] font-black px-2 py-0.5 rounded shadow-sm border border-slate-300 uppercase tracking-widest">Non-PBB</span>' : ''}</div><span class="text-[10px] uppercase font-bold text-slate-400 tracking-widest bg-slate-100 px-2 py-1 rounded-md">${currentCorrectAnswer.subregion || '-'}</span>`;
                 options.forEach(c => createOptBtn(c, 'text-capital', container));
             } else if (qType === 'flagToCountry') {
-                qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-3">Bendera negara manakah ini?</span><div class="flex flex-col items-center mb-2"><img src="${currentCorrectAnswer.flags.svg}" class="w-full max-w-[16rem] max-h-36 object-contain drop-shadow-md rounded border border-slate-100 mb-2">${!currentCorrectAnswer.unMember ? '<span class="bg-slate-200 text-slate-500 text-[10px] font-black px-2 py-0.5 rounded shadow-sm border border-slate-300 uppercase tracking-widest">Non-PBB</span>' : ''}</div>`;
+                qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-3">Bendera negara manakah ini?</span><div class="flex flex-col items-center mb-3"><img src="${currentCorrectAnswer.flags.svg}" class="w-full max-w-[18rem] max-h-48 object-contain drop-shadow-md rounded-md border border-slate-100 mb-2">${!currentCorrectAnswer.unMember ? '<span class="bg-slate-200 text-slate-500 text-[10px] font-black px-2 py-0.5 rounded shadow-sm border border-slate-300 uppercase tracking-widest">Non-PBB</span>' : ''}</div>`;
                 options.forEach(c => createOptBtn(c, 'text-country', container));
             } else {
                 qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-1">Pilih bendera dari</span><span class="text-brand-primary font-black text-2xl text-center leading-tight mb-2">${currentCorrectAnswer.name.common}</span><span class="text-[10px] uppercase font-bold text-slate-400 tracking-widest bg-slate-100 px-2 py-1 rounded-md">${currentCorrectAnswer.subregion || '-'}</span>`;
@@ -1222,18 +1232,17 @@
             btn.dataset.correct = isCorrect; 
             btn.className = "w-full bg-white border-2 border-slate-100 hover:border-brand-primary/50 text-slate-700 font-bold p-2 sm:p-3 rounded-2xl transition-all btn-press flex flex-col items-center justify-center group relative overflow-hidden min-h-[90px] shadow-sm";
             
-            const nonUnHtml = !cObj.unMember ? `<div class="bg-slate-100 text-slate-500 text-[8px] font-black px-1.5 py-0.5 rounded shadow-sm border border-slate-200 leading-tight mb-1.5 z-10 shrink-0">Non-PBB</div>` : '';
+            const peekClick = `event.stopPropagation(); showPeekToastByCca3('${cObj.cca3}', '${type}');`;
+            const peekHtml = quizSettingPeek ? `<button class="absolute bottom-2 right-2 p-1.5 text-amber-400 hover:text-amber-500 hover:bg-amber-50 rounded-full transition-colors z-20 shadow-sm border border-slate-100 bg-white/90 backdrop-blur" onclick="${peekClick}"><i class="ph-fill ph-lightbulb text-lg drop-shadow-sm"></i></button>` : '';
 
-            let hintText = "";
-            if(type === 'text-capital') hintText = 'Negara: ' + cObj.name.common;
-            else if(type === 'image-flag') hintText = 'Negara: ' + cObj.name.common;
-            else hintText = 'Ibukota: ' + (cObj.capital ? cObj.capital[0] : '-');
-
-            const peekHtml = quizSettingPeek ? `<button class="absolute bottom-1 right-1 p-1 text-amber-400 hover:text-amber-500 hover:bg-amber-50 rounded-full transition-colors z-20" onclick="event.stopPropagation(); showPeekToast('${escapeHtml(hintText)}');"><i class="ph-fill ph-lightbulb text-xl drop-shadow-sm"></i></button>` : '';
-
-            if (type === 'text-capital') btn.innerHTML = `<div class="flex flex-col items-center justify-center w-full h-full relative z-0">${nonUnHtml}<span class="text-sm text-center leading-tight w-full px-1">${cObj.capital[0]}</span></div>${peekHtml}`;
-            else if (type === 'text-country') btn.innerHTML = `<div class="flex flex-col items-center justify-center w-full h-full relative z-0">${nonUnHtml}<span class="text-sm text-center leading-tight w-full px-1">${cObj.name.common}</span></div>${peekHtml}`;
-            else btn.innerHTML = `<div class="flex flex-col items-center justify-center w-full h-full relative z-0">${nonUnHtml}<img src="${cObj.flags.svg}" class="w-full h-full max-h-[48px] object-contain p-0.5 drop-shadow-sm"></div>${peekHtml}`;
+            if (type === 'text-capital') {
+                btn.innerHTML = `<div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none text-slate-900 group-hover:text-brand-primary transition-colors"><i class="ph-fill ph-buildings text-6xl"></i></div><div class="flex flex-col items-center justify-center w-full h-full relative z-10"><span class="text-sm text-center leading-tight w-full px-1 text-slate-700 font-bold">${cObj.capital[0]}</span></div>${peekHtml}`;
+            } else if (type === 'text-country') {
+                btn.innerHTML = `<div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none text-slate-900 group-hover:text-rose-500 transition-colors"><i class="ph-fill ph-map-trifold text-6xl"></i></div><div class="flex flex-col items-center justify-center w-full h-full relative z-10"><span class="text-sm text-center leading-tight w-full px-1 text-slate-700 font-bold">${cObj.name.common}</span></div>${peekHtml}`;
+            } else {
+                const nonUnHtml = !cObj.unMember ? `<div class="absolute top-1 right-1 bg-white/90 backdrop-blur-sm text-slate-500 text-[8px] font-black px-1.5 py-0.5 rounded shadow-sm border border-slate-200 z-20 leading-tight">Non-PBB</div>` : '';
+                btn.innerHTML = `<div class="flex flex-col items-center justify-center w-full h-full relative z-10">${nonUnHtml}<img src="${cObj.flags.svg}" class="w-full h-full max-h-[48px] object-contain p-0.5 drop-shadow-sm relative z-0"></div>${peekHtml}`;
+            }
             
             btn.onclick = () => {
                 stopTimer(); document.querySelectorAll('#options-container button').forEach(b => b.onclick = null);
