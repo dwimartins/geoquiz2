@@ -72,17 +72,18 @@
 
         /* Override untuk Map Khusus */
         #map-vector-leaflet-container { outline: none; background-color: #0f172a !important; }
-        #map-static-container { outline: none; background-color: #93c5fd !important; }
     </style>
 </head>
 <body class="text-brand-text antialiased">
 
     <div id="app-container">
         
+        <!-- Sticky Search Button -->
         <button id="btn-sticky-search" onclick="scrollToSearch()" class="hidden absolute top-[72px] right-6 z-40 bg-brand-primary text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center animate-pop btn-press border-2 border-white">
             <i class="ph-bold ph-magnifying-glass text-lg"></i>
         </button>
 
+        <!-- HEADER -->
         <header class="px-6 py-4 flex justify-between items-center bg-white/80 backdrop-blur-md z-20 rounded-b-3xl shadow-sm shrink-0 border-b border-slate-100">
             <div class="flex items-center gap-2">
                 <div class="bg-brand-primary/10 p-2 rounded-xl text-brand-primary"><i class="ph-bold ph-globe-hemisphere-west text-xl"></i></div>
@@ -95,28 +96,28 @@
             </div>
         </header>
 
+        <!-- TOAST NOTIFICATION -->
         <div id="feedback-toast" class="hidden"></div>
 
+        <!-- MAIN AREA -->
         <main class="flex-1 relative overflow-y-auto no-scrollbar pb-24" id="main-scroll">
             
+            <!-- LOADING -->
             <div id="view-loading" class="absolute inset-0 flex flex-col items-center justify-center bg-brand-bg z-[500]">
                 <div class="w-20 h-20 bg-brand-primary/10 rounded-full flex items-center justify-center animate-bounce mb-4"><i class="ph-duotone ph-airplane-tilt text-5xl text-brand-primary"></i></div>
                 <h2 class="text-xl font-black text-slate-700">Membangun Dunia...</h2>
                 <p class="text-sm text-slate-400 font-medium">Mengunduh data peta</p>
             </div>
 
-            <!-- MENU UTAMA EKSPLORASI -->
+            <!-- EKSPLORASI MENU -->
             <div id="view-explore-menu" class="hidden min-h-full flex-col p-6 animate-pop">
                 <h2 class="text-2xl font-black mb-6 text-slate-800">Ruang Belajar</h2>
                 <div class="grid gap-4">
-                    <button onclick="navigate('explore-globe')" class="bg-gradient-to-br from-blue-500 to-indigo-600 p-6 rounded-3xl text-left text-white shadow-xl shadow-blue-500/30 btn-press flex items-center gap-4">
-                        <div class="bg-white/20 p-4 rounded-2xl"><i class="ph-fill ph-globe text-4xl"></i></div>
-                        <div><h3 class="font-bold text-xl">Globe 3D</h3><p class="text-sm text-blue-100 mt-1">Putar bumi interaktif</p></div>
-                    </button>
                     
-                    <button onclick="navigate('explore-map-menu')" class="bg-emerald-500 p-6 rounded-3xl text-left text-white shadow-xl shadow-emerald-500/30 btn-press flex items-center gap-4 border border-emerald-400">
+                    <!-- MENU BARU: GLOBE & PETA -->
+                    <button onclick="navigate('explore-map-menu')" class="bg-gradient-to-br from-emerald-500 to-teal-600 p-6 rounded-3xl text-left text-white shadow-xl shadow-emerald-500/30 btn-press flex items-center gap-4">
                         <div class="bg-white/20 p-4 rounded-2xl"><i class="ph-fill ph-map-trifold text-4xl"></i></div>
-                        <div><h3 class="font-bold text-xl text-white">Jelajah Peta</h3><p class="text-sm text-emerald-100 mt-1">Pilihan 3 Jenis Peta</p></div>
+                        <div><h3 class="font-bold text-xl text-white">Globe & Peta</h3><p class="text-sm text-emerald-100 mt-1">Eksplorasi Dunia 3D & 2D</p></div>
                     </button>
 
                     <button onclick="navigate('explore-catalog')" class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm btn-press flex items-center gap-4 hover:border-brand-primary/30">
@@ -124,6 +125,7 @@
                         <div><h3 class="font-bold text-xl text-slate-700">Katalog Dunia</h3><p class="text-sm text-slate-400 mt-1">Ensiklopedia negara dunia</p></div>
                     </button>
                     
+                    <!-- PROVINSI INDONESIA -->
                     <button onclick="navigate('explore-provinces')" class="bg-red-500 p-6 rounded-3xl text-left text-white shadow-xl shadow-red-500/30 btn-press flex items-center gap-4 relative overflow-hidden">
                         <div class="absolute right-0 top-0 w-32 h-full bg-white/10 skew-x-12 transform origin-bottom -mr-4"></div>
                         <div class="bg-white/20 p-4 rounded-2xl relative z-10"><i class="ph-fill ph-flag text-4xl"></i></div>
@@ -142,33 +144,34 @@
                 </div>
             </div>
 
-            <!-- SUB-MENU JELAJAH PETA -->
+            <!-- SUB-MENU GLOBE & PETA -->
             <div id="view-explore-map-menu" class="hidden min-h-full flex-col p-6 animate-slide-up relative">
                 <button onclick="navigate('explore-menu')" class="mb-6 flex items-center gap-2 text-slate-500 font-bold w-fit btn-press bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100">
                     <i class="ph-bold ph-arrow-left"></i> Kembali
                 </button>
-                <h2 class="text-2xl font-black mb-6 text-slate-800">Opsi Jelajah Peta</h2>
+                <h2 class="text-2xl font-black mb-6 text-slate-800">Globe & Peta</h2>
                 <div class="grid gap-4">
+                    
+                    <button onclick="navigate('explore-globe')" class="bg-gradient-to-br from-blue-500 to-indigo-600 p-5 rounded-3xl text-left shadow-md btn-press flex flex-col gap-2 border border-blue-400">
+                        <div class="flex items-center gap-3"><div class="bg-white/20 p-3 rounded-xl text-white"><i class="ph-fill ph-globe text-2xl"></i></div><h3 class="font-bold text-lg text-white">Globe 3D</h3></div>
+                        <p class="text-xs text-blue-100 font-medium">Putar dan jelajahi bumi dalam bentuk 3D interaktif.</p>
+                    </button>
+
                     <button onclick="navigate('explore-map')" class="bg-white p-5 rounded-3xl text-left border border-slate-200 shadow-sm btn-press flex flex-col gap-2">
                         <div class="flex items-center gap-3"><div class="bg-blue-100 p-3 rounded-xl text-blue-600"><i class="ph-fill ph-map-trifold text-2xl"></i></div><h3 class="font-bold text-lg text-slate-700">Peta Raster Detail</h3></div>
-                        <p class="text-xs text-slate-500 font-medium">Atlas internasional + Overlay batas negara tegas.</p>
+                        <p class="text-xs text-slate-500 font-medium">Atlas satelit dan jalan raya (Standar Internasional).</p>
                     </button>
                     
                     <button onclick="navigate('explore-map-vector-leaflet')" class="bg-slate-800 p-5 rounded-3xl text-left border border-slate-700 shadow-md btn-press flex flex-col gap-2">
                         <div class="flex items-center gap-3"><div class="bg-white/10 p-3 rounded-xl text-emerald-400"><i class="ph-fill ph-polygon text-2xl"></i></div><h3 class="font-bold text-lg text-white">Peta Vektor Polos</h3></div>
                         <p class="text-xs text-slate-400 font-medium">Batas negara tegas dengan pewarnaan pintar agar tidak tabrakan.</p>
                     </button>
-                    
-                    <button onclick="navigate('explore-map-static')" class="bg-indigo-600 p-5 rounded-3xl text-left border border-indigo-500 shadow-md shadow-indigo-500/20 btn-press flex flex-col gap-2">
-                        <div class="flex items-center gap-3"><div class="bg-white/20 p-3 rounded-xl text-white"><i class="ph-fill ph-image text-2xl"></i></div><h3 class="font-bold text-lg text-white">Peta Atlas Statis</h3></div>
-                        <p class="text-xs text-indigo-100 font-medium">Gambar Atlas Dunia. Zoom mulus, nama negara langsung terlihat.</p>
-                    </button>
                 </div>
             </div>
 
             <!-- EKSPLORASI GLOBE -->
             <div id="view-explore-globe" class="hidden h-full flex flex-col p-6 animate-slide-up relative">
-                <button onclick="navigate('explore-menu')" class="mb-4 flex items-center gap-2 text-slate-500 font-bold w-fit btn-press bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100">
+                <button onclick="navigate('explore-map-menu')" class="mb-4 flex items-center gap-2 text-slate-500 font-bold w-fit btn-press bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100">
                     <i class="ph-bold ph-arrow-left"></i> Kembali
                 </button>
                 <div class="flex-1 w-full bg-slate-900 rounded-3xl overflow-hidden relative shadow-inner" id="globeViz-container" style="min-height: 300px;">
@@ -185,7 +188,7 @@
                 </div>
             </div>
 
-            <!-- EKSPLORASI MAP 1 (Leaflet Raster + Overlay Border) -->
+            <!-- EKSPLORASI MAP 1 (Leaflet Raster Internasional Esri) -->
             <div id="view-explore-map" class="hidden h-full flex flex-col p-6 animate-slide-up relative">
                 <button onclick="navigate('explore-map-menu')" class="mb-4 flex items-center gap-2 text-slate-500 font-bold w-fit btn-press bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100 relative z-10">
                     <i class="ph-bold ph-arrow-left"></i> Kembali
@@ -220,26 +223,6 @@
                     </div>
                     
                     <div id="map-vector-leaflet-container" class="flex-1 w-full h-full"></div>
-                </div>
-            </div>
-
-            <!-- EKSPLORASI MAP 3 (Peta SVG Statis Zoomable dengan Proxy) -->
-            <div id="view-explore-map-static" class="hidden h-full flex flex-col p-6 animate-slide-up relative">
-                <button onclick="navigate('explore-map-menu')" class="mb-4 flex items-center gap-2 text-slate-500 font-bold w-fit btn-press bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-100 relative z-10">
-                    <i class="ph-bold ph-arrow-left"></i> Kembali
-                </button>
-                <div class="flex-1 w-full rounded-3xl overflow-hidden relative shadow-inner border border-blue-200 z-0 flex flex-col bg-blue-300">
-                    
-                    <div id="vector-static-loading" class="hidden absolute inset-0 z-[500] flex flex-col items-center justify-center bg-blue-300 text-slate-800">
-                        <div class="w-10 h-10 border-4 border-slate-700 border-t-transparent rounded-full animate-spin mb-3"></div>
-                        <p class="text-xs font-bold animate-pulse text-slate-700">Memuat Peta Atlas Resolusi Tinggi...</p>
-                    </div>
-
-                    <div class="absolute top-4 left-4 z-[400] bg-white/90 backdrop-blur rounded-xl shadow-md p-2 px-3 border border-slate-200 pointer-events-none">
-                        <span class="text-xs font-bold text-slate-700">Peta Statis High-Res (Cubit untuk Zoom)</span>
-                    </div>
-                    
-                    <div id="map-static-container" class="flex-1 w-full h-full"></div>
                 </div>
             </div>
 
@@ -746,6 +729,15 @@
     </div>
 
     <script>
+        const manifest = {
+            name: "GeoGlimpse MVP", short_name: "GeoGlimpse", display: "standalone",
+            background_color: "#f8fafc", theme_color: "#0ea5e9",
+            icons: [{"src": "https://cdn-icons-png.flaticon.com/512/814/814513.png", "sizes": "512x512", "type": "image/png"}]
+        };
+        const stringManifest = JSON.stringify(manifest);
+        const blob = new Blob([stringManifest], {type: 'application/json'});
+        document.head.insertAdjacentHTML('beforeend', `<link rel="manifest" href="${URL.createObjectURL(blob)}">`);
+
         let countriesData = [];
         let indoProvincesData = []; 
         let usStatesData = [];
@@ -813,7 +805,6 @@
             'explore-map-menu': document.getElementById('view-explore-map-menu'),
             'explore-globe': document.getElementById('view-explore-globe'), 'explore-map': document.getElementById('view-explore-map'),
             'explore-map-vector-leaflet': document.getElementById('view-explore-map-vector-leaflet'), 
-            'explore-map-static': document.getElementById('view-explore-map-static'), 
             'explore-catalog': document.getElementById('view-explore-catalog'), 'explore-states': document.getElementById('view-explore-states'),
             'explore-provinces': document.getElementById('view-explore-provinces'), 
             'explore-continents': document.getElementById('view-explore-continents'), 
@@ -1025,7 +1016,6 @@
             if(viewId === 'explore-globe') setTimeout(initGlobe, 200);
             if(viewId === 'explore-map') setTimeout(()=>initLeafletMap(), 200);
             if(viewId === 'explore-map-vector-leaflet') setTimeout(()=>initVectorMapLeaflet(), 200); 
-            if(viewId === 'explore-map-static') setTimeout(()=>initStaticMap(), 200); 
             if(viewId === 'explore-states') populateStatesCatalog();
             if(viewId === 'explore-provinces') populateProvincesCatalog();
             if(viewId === 'explore-continents') populateContinents();
@@ -1618,11 +1608,10 @@
         }
 
         // ==========================================
-        // 1. PETA RASTER (LEAFLET INTERNASIONAL) - KINI LEBIH JELAS BATASNYA
+        // 1. PETA RASTER (LEAFLET INTERNASIONAL)
         // ==========================================
         let myLeafletMap = null, mapTileLayer = null;
         
-        // Menggunakan Esri NatGeo World Map untuk batas yang sangat jelas & tegas
         const mapStyles = { 
             'street': 'https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', 
             'voyager': 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', 
@@ -1730,72 +1719,6 @@
             myVectorMapLeaflet.on('zoomend', updateLabels);
             updateLabels();
             setTimeout(() => myVectorMapLeaflet.invalidateSize(), 100);
-        }
-
-        // ==========================================
-        // 3. PETA ATLAS STATIS (PNG VIEWER) - MENGGUNAKAN FALLBACK SYSTEM
-        // ==========================================
-        let myStaticMap = null;
-        let imageOverlay = null;
-
-        function initStaticMap() {
-            const loadingEl = document.getElementById('vector-static-loading');
-            if (loadingEl) loadingEl.classList.remove('hidden');
-
-            if (myStaticMap) { 
-                myStaticMap.invalidateSize(); 
-                if (loadingEl) loadingEl.classList.add('hidden');
-                return; 
-            }
-            
-            myStaticMap = L.map('map-static-container', {
-                crs: L.CRS.Simple,
-                minZoom: -2,
-                maxZoom: 3,
-                zoomControl: false,
-                attributionControl: false
-            });
-            L.control.zoom({position:'bottomright'}).addTo(myStaticMap);
-
-            const w = 2560;
-            const h = 1314;
-            const bounds = [[0, 0], [h, w]];
-
-            // Menggunakan tautan gambar langsung dari Wikipedia tanpa proxy, dengan resolusi menengah (1280px - 1920px) 
-            // agar memori HP tidak terbebani dan gambar cepat muncul.
-            const fallbackImages = [
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Political_World_Map_with_Capital_Cities_%28en%29.svg/1920px-Political_World_Map_with_Capital_Cities_%28en%29.svg.png',
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Political_World_Map_with_Capital_Cities_%28en%29.svg/1280px-Political_World_Map_with_Capital_Cities_%28en%29.svg.png',
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/World_map_%28political%29.svg/1280px-World_map_%28political%29.svg.png'
-            ];
-            
-            let currentImageIndex = 0;
-
-            function tryLoadImage() {
-                if(currentImageIndex >= fallbackImages.length) {
-                    if (loadingEl) loadingEl.innerHTML = '<p class="text-red-600 font-bold px-4 text-center">Gagal memuat gambar atlas setelah beberapa percobaan.</p>';
-                    return;
-                }
-                
-                if(imageOverlay) {
-                    myStaticMap.removeLayer(imageOverlay);
-                }
-
-                imageOverlay = L.imageOverlay(fallbackImages[currentImageIndex], bounds).addTo(myStaticMap);
-                
-                imageOverlay.on('load', function() {
-                    if (loadingEl) loadingEl.classList.add('hidden');
-                });
-                
-                imageOverlay.on('error', function() {
-                    console.warn("Gagal memuat atlas dari URL:", fallbackImages[currentImageIndex]);
-                    currentImageIndex++;
-                    tryLoadImage();
-                });
-            }
-
-            tryLoadImage();
-            myStaticMap.fitBounds(bounds);
         }
     </script>
 </body>
