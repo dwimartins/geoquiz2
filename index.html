@@ -1100,7 +1100,7 @@
             else if(context === 'map-find') taskName = 'Cari di Peta';
             
             if (activeQuizType !== 'population' && activeQuizType !== 'area') {
-                quizMistakes.push({ task: taskName + ' (Waktu Habis)', correct: currentCorrectAnswer.name.common, user: '-' });
+                quizMistakes.push({ task: taskName + ' (Habis)', correct: currentCorrectAnswer.name.common, user: '-', flag: currentCorrectAnswer.flags.svg });
             }
 
             lives--; updateStatsDisplay(); showToast(false);
@@ -1164,10 +1164,10 @@
             const qHeader = document.getElementById('question-header'); qHeader.innerHTML = '';
 
             if (qType === 'capital') {
-                qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-1">Apa ibukota dari</span><span class="text-brand-primary font-black text-2xl leading-tight text-center mb-3">${currentCorrectAnswer.name.common}</span><img src="${currentCorrectAnswer.flags.svg}" class="w-20 h-14 object-contain rounded shadow-sm border border-slate-100 mb-2"><span class="text-[10px] uppercase font-bold text-slate-400 tracking-widest bg-slate-100 px-2 py-1 rounded-md">${currentCorrectAnswer.subregion || '-'}</span>`;
+                qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-1">Apa ibukota dari</span><span class="text-brand-primary font-black text-2xl leading-tight text-center mb-3">${currentCorrectAnswer.name.common}</span><div class="relative inline-block mb-2"><img src="${currentCorrectAnswer.flags.svg}" class="w-20 h-14 object-contain rounded shadow-sm border border-slate-100">${!currentCorrectAnswer.unMember ? '<span class="absolute -top-2 -right-2 bg-slate-100 text-slate-500 text-[8px] font-black px-1.5 py-0.5 rounded shadow-sm border border-slate-200 z-10">Non-PBB</span>' : ''}</div><span class="text-[10px] uppercase font-bold text-slate-400 tracking-widest bg-slate-100 px-2 py-1 rounded-md">${currentCorrectAnswer.subregion || '-'}</span>`;
                 options.forEach(c => createOptBtn(c, 'text-capital', container));
             } else if (qType === 'flagToCountry') {
-                qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-3">Bendera negara manakah ini?</span><img src="${currentCorrectAnswer.flags.svg}" class="w-full max-h-32 object-contain drop-shadow-md rounded border border-slate-100 mb-2">`;
+                qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-3">Bendera negara manakah ini?</span><div class="relative inline-block mb-2"><img src="${currentCorrectAnswer.flags.svg}" class="w-full max-w-[12rem] max-h-32 object-contain drop-shadow-md rounded border border-slate-100">${!currentCorrectAnswer.unMember ? '<span class="absolute -top-2 -right-2 bg-slate-100 text-slate-500 text-[8px] font-black px-1.5 py-0.5 rounded shadow-sm border border-slate-200 z-10">Non-PBB</span>' : ''}</div>`;
                 options.forEach(c => createOptBtn(c, 'text-country', container));
             } else {
                 qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-1">Pilih bendera dari</span><span class="text-brand-primary font-black text-2xl text-center leading-tight mb-2">${currentCorrectAnswer.name.common}</span><span class="text-[10px] uppercase font-bold text-slate-400 tracking-widest bg-slate-100 px-2 py-1 rounded-md">${currentCorrectAnswer.subregion || '-'}</span>`;
@@ -1182,11 +1182,10 @@
             btn.dataset.correct = isCorrect; 
             btn.className = "w-full bg-white border-2 border-slate-100 hover:border-brand-primary/50 text-slate-700 font-bold p-2 sm:p-3 rounded-2xl transition-all btn-press flex flex-col items-center justify-center group relative overflow-hidden min-h-[90px] shadow-sm";
             
-            // Lencana Non-PBB untuk Opsi yang relevan
-            const nonUnHtml = !cObj.unMember ? `<div class="absolute top-2 right-2 bg-slate-100 text-slate-400 text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-sm border border-slate-200 z-10 leading-tight">Non-PBB</div>` : '';
+            const nonUnHtml = !cObj.unMember ? `<div class="absolute top-1 right-1 bg-white/90 backdrop-blur-sm text-slate-500 text-[8px] font-black px-1.5 py-0.5 rounded shadow-sm border border-slate-200 z-10 leading-tight">Non-PBB</div>` : '';
 
-            if (type === 'text-capital') btn.innerHTML = `${nonUnHtml}<span class="text-sm text-center leading-tight w-full px-1 relative z-0">${cObj.capital[0]}</span>`;
-            else if (type === 'text-country') btn.innerHTML = `${nonUnHtml}<span class="text-sm text-center leading-tight w-full px-1 relative z-0">${cObj.name.common}</span>`;
+            if (type === 'text-capital') btn.innerHTML = `<span class="text-sm text-center leading-tight w-full px-1 relative z-0">${cObj.capital[0]}</span>`;
+            else if (type === 'text-country') btn.innerHTML = `<span class="text-sm text-center leading-tight w-full px-1 relative z-0">${cObj.name.common}</span>`;
             else btn.innerHTML = `${nonUnHtml}<img src="${cObj.flags.svg}" class="w-full h-full max-h-[70px] object-contain p-1 drop-shadow-sm relative z-0">`;
             
             btn.onclick = () => {
@@ -1198,7 +1197,8 @@
                     quizMistakes.push({ 
                         task: type === 'text-capital' ? 'Tebak Ibukota' : (type === 'text-country' ? 'Tebak Negara' : 'Tebak Bendera'), 
                         correct: currentCorrectAnswer.name.common, 
-                        user: cObj.name.common 
+                        user: cObj.name.common,
+                        flag: currentCorrectAnswer.flags.svg
                     });
 
                     btn.classList.add('bg-brand-secondary/20', 'border-brand-secondary'); 
@@ -1223,22 +1223,11 @@
             container.appendChild(btn);
         }
 
-        function startCompareQuiz(type) { 
-            compareProperty = type; 
-            countryA = getNextTargetCountry(); 
-            countryB = getNextTargetCountry(countryA.cca3); 
-            document.getElementById('compare-hint').classList.remove('hidden'); renderCompareUI(); 
-        }
-        
+        function startCompareQuiz(type) { compareProperty = type; countryA = getNextTargetCountry(); countryB = getNextTargetCountry(countryA.cca3); document.getElementById('compare-hint').classList.remove('hidden'); renderCompareUI(); }
+        function getNextCompare(baseC, poolData) { let pool = poolData.filter(c => c.cca3 !== baseC.cca3); return getRandomItems(pool, 1)[0]; }
         function renderCompareUI() {
-            document.getElementById('comp-flag-a').src = countryA.flags.svg; 
-            document.getElementById('comp-name-a').innerHTML = countryA.name.common + (!countryA.unMember ? ' <span class="text-[9px] align-top bg-white/20 text-white px-1.5 py-0.5 rounded-full border border-white/30 ml-1">Non-PBB</span>' : ''); 
-            document.getElementById('comp-sub-a').innerText = countryA.subregion || '-'; document.getElementById('comp-type-a').innerText = compareProperty === 'population' ? 'populasi' : 'luas wilayah'; document.getElementById('comp-val-a').innerText = compareProperty === 'population' ? countryA.population.toLocaleString('id-ID') : countryA.area.toLocaleString('id-ID') + " km²";
-            
-            document.getElementById('comp-flag-b').src = countryB.flags.svg; 
-            document.getElementById('comp-name-b').innerHTML = countryB.name.common + (!countryB.unMember ? ' <span class="text-[9px] align-top bg-white/20 text-white px-1.5 py-0.5 rounded-full border border-white/30 ml-1">Non-PBB</span>' : ''); 
-            document.getElementById('comp-sub-b').innerText = countryB.subregion || '-';
-            
+            document.getElementById('comp-flag-a').src = countryA.flags.svg; document.getElementById('comp-name-a').innerText = countryA.name.common; document.getElementById('comp-sub-a').innerText = countryA.subregion || '-'; document.getElementById('comp-type-a').innerText = compareProperty === 'population' ? 'populasi' : 'luas wilayah'; document.getElementById('comp-val-a').innerText = compareProperty === 'population' ? countryA.population.toLocaleString('id-ID') : countryA.area.toLocaleString('id-ID') + " km²";
+            document.getElementById('comp-flag-b').src = countryB.flags.svg; document.getElementById('comp-name-b').innerText = countryB.name.common; document.getElementById('comp-sub-b').innerText = countryB.subregion || '-';
             document.getElementById('comp-guess-b').classList.remove('hidden'); document.getElementById('comp-result-b').classList.add('hidden');
             ['compare-top','compare-bottom'].forEach(id => { document.getElementById(id).disabled = false; document.getElementById(id).classList.remove('animate-slide-down', 'animate-slide-up'); void document.getElementById(id).offsetWidth; });
             document.getElementById('compare-top').classList.add('animate-slide-down'); document.getElementById('compare-bottom').classList.add('animate-slide-up');
@@ -1256,7 +1245,8 @@
                 quizMistakes.push({ 
                     task: compareProperty === 'population' ? 'Adu Populasi' : 'Adu Luas Wilayah', 
                     correct: (vA >= vB ? countryA.name.common : countryB.name.common), 
-                    user: (chosenArea === 'A' ? countryA.name.common : countryB.name.common) 
+                    user: (chosenArea === 'A' ? countryA.name.common : countryB.name.common),
+                    flag: (vA >= vB ? countryA.flags.svg : countryB.flags.svg)
                 });
 
                 valText.className = "text-4xl sm:text-5xl font-black tracking-tighter text-brand-secondary drop-shadow-lg"; appContainer.classList.add('animate-shake'); setTimeout(() => appContainer.classList.remove('animate-shake'), 300); lives--; updateStatsDisplay(); showToast(false); 
@@ -1285,14 +1275,14 @@
             options.forEach(c => {
                 const btn = document.createElement('button'); btn.className = "bg-slate-50 border-2 border-slate-100 font-bold p-3 rounded-xl btn-press text-sm text-slate-700 shadow-sm relative";
                 
-                btn.innerHTML = `${c.name.common} ${!c.unMember ? '<span class="ml-1 bg-slate-200 text-slate-500 text-[8px] px-1.5 py-0.5 rounded shadow-sm border border-slate-300 relative -top-0.5">Non-PBB</span>' : ''}`;
+                btn.innerHTML = `${c.name.common}`;
                 
                 btn.onclick = () => {
                     stopTimer(); Array.from(container.children).forEach(b=>b.onclick=null);
                     if(c === currentCorrectAnswer) { btn.classList.add('bg-brand-success/20','border-brand-success'); showToast(true); score+=20; updateStatsDisplay(); setTimeout(nextMapGuess, 1000); }
                     else { 
                         // Catat Kesalahan
-                        quizMistakes.push({ task: 'Tebak Lokasi', correct: currentCorrectAnswer.name.common, user: c.name.common });
+                        quizMistakes.push({ task: 'Tebak Lokasi', correct: currentCorrectAnswer.name.common, user: c.name.common, flag: currentCorrectAnswer.flags.svg });
                         
                         btn.classList.add('bg-brand-secondary/20','border-brand-secondary'); showToast(false); lives--; updateStatsDisplay(); appContainer.classList.add('animate-shake'); setTimeout(()=>appContainer.classList.remove('animate-shake'),400); Array.from(container.children).find(b=>b.innerText.includes(currentCorrectAnswer.name.common)).classList.add('bg-brand-success/20','border-brand-success','border-dashed'); setTimeout(nextMapGuess, 1500); 
                     }
@@ -1330,7 +1320,7 @@
                         showToast(true); score+=25; updateStatsDisplay(); setTimeout(nextMapFind, 1500);
                     } else {
                         // Catat kesalahan
-                        quizMistakes.push({ task: 'Cari di Peta', correct: currentCorrectAnswer.name.common, user: 'Negara Lain' });
+                        quizMistakes.push({ task: 'Cari di Peta', correct: currentCorrectAnswer.name.common, user: 'Lokasi Salah', flag: currentCorrectAnswer.flags.svg });
 
                         marker.setIcon(L.divIcon({className:'', html: `<div class="w-4 h-4 bg-brand-secondary border-2 border-white rounded-full"></div>`, iconSize:[16,16]}));
                         const correctMarker = findMarkers.find(m => m.isCorrectTarget);
@@ -1345,7 +1335,7 @@
             runTimer('map-find');
         }
         function skipMapFind() { 
-            quizMistakes.push({ task: 'Cari di Peta (Dilewati)', correct: currentCorrectAnswer.name.common, user: 'Skip' });
+            quizMistakes.push({ task: 'Cari di Peta (Skip)', correct: currentCorrectAnswer.name.common, user: '-', flag: currentCorrectAnswer.flags.svg });
             lives--; updateStatsDisplay(); stopTimer(); showToast(false); setTimeout(nextMapFind, 500); 
         }
 
@@ -1381,14 +1371,17 @@
                                 <i class="ph-fill ph-warning-circle text-brand-secondary text-sm"></i>
                                 <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">${m.task}</span>
                             </div>
-                            <div class="flex justify-between items-start gap-2 text-xs">
-                                <div class="flex-1">
-                                    <span class="text-slate-400 block mb-0.5">Jawaban Anda:</span>
-                                    <span class="font-bold text-slate-700 line-through decoration-rose-500">${m.user}</span>
-                                </div>
-                                <div class="flex-1 text-right border-l border-slate-100 pl-2">
-                                    <span class="text-slate-400 block mb-0.5">Seharusnya:</span>
-                                    <span class="font-bold text-brand-success">${m.correct}</span>
+                            <div class="flex items-center gap-3 mt-1">
+                                <img src="${m.flag}" class="w-12 h-8 object-contain rounded shadow-sm border border-slate-100 shrink-0 bg-slate-50">
+                                <div class="flex justify-between items-start gap-2 text-xs flex-1">
+                                    <div class="flex-1">
+                                        <span class="text-slate-400 block mb-0.5 text-[9px] uppercase tracking-wider">Jawaban Anda:</span>
+                                        <span class="font-bold text-slate-700 line-through decoration-rose-500 leading-tight">${m.user}</span>
+                                    </div>
+                                    <div class="flex-1 text-right border-l border-slate-100 pl-2">
+                                        <span class="text-slate-400 block mb-0.5 text-[9px] uppercase tracking-wider">Seharusnya:</span>
+                                        <span class="font-bold text-brand-success leading-tight">${m.correct}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
