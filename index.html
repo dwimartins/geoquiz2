@@ -296,7 +296,7 @@
                 </div>
 
                 <div class="mb-5 bg-white p-4 rounded-3xl shadow-sm border border-slate-100">
-                    <h3 class="font-bold text-slate-700 mb-2 flex items-center gap-2"><i class="ph-fill ph-gauge text-brand-primary"></i> Kesulitan Opsi</h3>
+                    <h3 class="font-bold text-slate-700 mb-2 flex items-center gap-2"><i class="ph-fill ph-gauge text-brand-primary"></i> Kesulitan Opsi (Klasik)</h3>
                     <div class="flex bg-slate-50 p-1 rounded-xl">
                         <button onclick="setDifficulty('easy')" id="btn-diff-easy" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white shadow text-brand-primary transition-all btn-press">Easy</button>
                         <button onclick="setDifficulty('medium')" id="btn-diff-medium" class="flex-1 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-slate-600 transition-all btn-press">Medium</button>
@@ -304,42 +304,51 @@
                     </div>
                 </div>
 
-                <!-- TEBAK PENGETAHUAN -->
-                <h2 class="text-lg font-black mb-3 text-slate-800">Tebak Pengetahuan</h2>
-                <div class="grid grid-cols-3 gap-2 mb-3">
-                    <button onclick="startQuiz('capital')" class="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm text-center btn-press hover:border-brand-primary/30">
-                        <div class="w-8 h-8 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-1"><i class="ph-fill ph-buildings"></i></div>
-                        <h3 class="font-bold text-[10px] text-slate-700 leading-tight">Tebak<br>Ibukota</h3>
+                <!-- TEBAK KLASIK -->
+                <h2 class="text-lg font-black mb-3 text-slate-800">Tebak Klasik</h2>
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <button onclick="startQuiz('capital')" class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm text-center btn-press hover:border-brand-primary/30">
+                        <div class="w-10 h-10 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-2 text-xl"><i class="ph-fill ph-buildings"></i></div>
+                        <h3 class="font-bold text-[11px] text-slate-700 leading-tight">Tebak<br>Ibukota</h3>
                     </button>
-                    <button onclick="startQuiz('flagToCountry')" class="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm text-center btn-press hover:border-brand-primary/30">
-                        <div class="w-8 h-8 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-1"><i class="ph-fill ph-flag"></i></div>
-                        <h3 class="font-bold text-[10px] text-slate-700 leading-tight">Tebak<br>Negara</h3>
+                    <button onclick="startQuiz('capitalToCountry')" class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm text-center btn-press hover:border-brand-primary/30">
+                        <div class="w-10 h-10 bg-purple-50 text-purple-500 rounded-full flex items-center justify-center mx-auto mb-2 text-xl"><i class="ph-fill ph-map-pin"></i></div>
+                        <h3 class="font-bold text-[11px] text-slate-700 leading-tight">Tebak Negara<br><span class="text-[9px] font-medium text-slate-400">(Dari Ibukota)</span></h3>
                     </button>
-                    <button onclick="startQuiz('countryToFlag')" class="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm text-center btn-press hover:border-brand-primary/30">
-                        <div class="w-8 h-8 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-1"><i class="ph-fill ph-images"></i></div>
-                        <h3 class="font-bold text-[10px] text-slate-700 leading-tight">Tebak<br>Bendera</h3>
+                    <button onclick="startQuiz('flagToCountry')" class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm text-center btn-press hover:border-brand-primary/30">
+                        <div class="w-10 h-10 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-2 text-xl"><i class="ph-fill ph-flag"></i></div>
+                        <h3 class="font-bold text-[11px] text-slate-700 leading-tight">Tebak Negara<br><span class="text-[9px] font-medium text-slate-400">(Dari Bendera)</span></h3>
                     </button>
-                    
-                    <button onclick="startQuiz('shape')" class="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm text-center btn-press hover:border-brand-primary/30 relative overflow-hidden">
-                        <div class="absolute -right-2 -top-2 w-8 h-8 bg-amber-400 text-white text-[8px] font-black flex items-center justify-center transform rotate-45 shadow-sm">NEW</div>
-                        <div class="w-8 h-8 bg-slate-800 text-slate-300 rounded-full flex items-center justify-center mx-auto mb-1"><i class="ph-fill ph-shapes"></i></div>
-                        <h3 class="font-bold text-[10px] text-slate-700 leading-tight">Tebak<br>Siluet</h3>
+                    <button onclick="startQuiz('countryToFlag')" class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm text-center btn-press hover:border-brand-primary/30">
+                        <div class="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-2 text-xl"><i class="ph-fill ph-images"></i></div>
+                        <h3 class="font-bold text-[11px] text-slate-700 leading-tight">Tebak<br>Bendera</h3>
                     </button>
-                    <button onclick="startQuiz('border')" class="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm text-center btn-press hover:border-brand-primary/30 relative overflow-hidden">
-                        <div class="absolute -right-2 -top-2 w-8 h-8 bg-amber-400 text-white text-[8px] font-black flex items-center justify-center transform rotate-45 shadow-sm">NEW</div>
-                        <div class="w-8 h-8 bg-orange-50 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-1"><i class="ph-fill ph-puzzle-piece"></i></div>
-                        <h3 class="font-bold text-[10px] text-slate-700 leading-tight">Tebak<br>Tetangga</h3>
-                    </button>
-                    <button onclick="startQuiz('culture')" class="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm text-center btn-press hover:border-brand-primary/30 relative overflow-hidden">
-                        <div class="absolute -right-2 -top-2 w-8 h-8 bg-amber-400 text-white text-[8px] font-black flex items-center justify-center transform rotate-45 shadow-sm">NEW</div>
-                        <div class="w-8 h-8 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mx-auto mb-1"><i class="ph-fill ph-translate"></i></div>
-                        <h3 class="font-bold text-[10px] text-slate-700 leading-tight">Uang &<br>Bahasa</h3>
+                    <button onclick="startQuiz('border')" class="col-span-2 bg-white p-3 rounded-2xl border border-slate-100 shadow-sm text-center btn-press hover:border-brand-primary/30 flex items-center justify-center gap-3">
+                        <div class="w-10 h-10 bg-orange-50 text-orange-500 rounded-full flex items-center justify-center shrink-0"><i class="ph-fill ph-puzzle-piece text-xl"></i></div>
+                        <div class="text-left"><h3 class="font-bold text-sm text-slate-700 leading-tight">Tebak Tetangga</h3><p class="text-[10px] text-slate-400">Batas darat negara</p></div>
                     </button>
                 </div>
                 
                 <button onclick="startQuiz('mixed')" class="w-full bg-gradient-to-br from-indigo-500 to-purple-600 p-3 rounded-2xl shadow-md text-center btn-press text-white mb-6 flex items-center justify-center gap-2">
-                    <i class="ph-bold ph-shuffle text-xl"></i> <h3 class="font-bold text-sm">Semua Acak Pengetahuan</h3>
+                    <i class="ph-bold ph-shuffle text-xl"></i> <h3 class="font-bold text-sm">Semua Acak Klasik</h3>
                 </button>
+
+                <!-- TEBAK SPESIAL (Semua Level) -->
+                <h2 class="text-lg font-black mb-3 text-slate-800 flex items-center justify-between">Tebak Spesial <span class="text-[9px] font-bold text-brand-primary bg-brand-primary/10 px-2 py-1 rounded-full uppercase tracking-wider">Semua Level</span></h2>
+                <div class="grid grid-cols-3 gap-2 mb-6">
+                    <button onclick="startQuiz('shape')" class="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm text-center btn-press hover:border-brand-primary/30">
+                        <div class="w-8 h-8 bg-slate-800 text-slate-300 rounded-full flex items-center justify-center mx-auto mb-1"><i class="ph-fill ph-shapes"></i></div>
+                        <h3 class="font-bold text-[10px] text-slate-700 leading-tight">Tebak<br>Siluet</h3>
+                    </button>
+                    <button onclick="startQuiz('currency')" class="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm text-center btn-press hover:border-brand-primary/30">
+                        <div class="w-8 h-8 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-1"><i class="ph-fill ph-coins"></i></div>
+                        <h3 class="font-bold text-[10px] text-slate-700 leading-tight">Tebak<br>Mata Uang</h3>
+                    </button>
+                    <button onclick="startQuiz('language')" class="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm text-center btn-press hover:border-brand-primary/30">
+                        <div class="w-8 h-8 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mx-auto mb-1"><i class="ph-fill ph-translate"></i></div>
+                        <h3 class="font-bold text-[10px] text-slate-700 leading-tight">Tebak<br>Bahasa</h3>
+                    </button>
+                </div>
 
                 <h2 class="text-lg font-black mb-3 text-slate-800">Kuis Spesifik Kawasan</h2>
                 <div class="grid grid-cols-2 gap-3 mb-5">
@@ -820,7 +829,7 @@
         function showPeekToastByCca3(cca3, type) {
             const cObj = countriesData.find(c => c.cca3 === cca3); if(!cObj) return;
             let html = "";
-            if (type === 'text-capital' || type === 'image-flag' || type === 'shape' || type === 'border' || type === 'culture') html = `Negara: <span class="font-black">${cObj.name.common}</span>`;
+            if (type === 'text-capital' || type === 'image-flag' || type === 'shape' || type === 'border' || type === 'culture' || type === 'language' || type === 'currency') html = `Negara: <span class="font-black">${cObj.name.common}</span>`;
             else if (type === 'text-country') html = `<div class="flex items-center gap-2"><span class="font-bold">Bendera:</span> <img src="${cObj.flags.svg}" class="w-8 h-5 object-cover rounded shadow-sm border border-white/50 bg-white"></div>`;
             const fdbk = document.getElementById('peek-toast');
             document.getElementById('peek-toast-text').innerHTML = html;
@@ -1031,7 +1040,7 @@
 
             if(context === 'classic') {
                 if (activeQuizType === 'us-capital') taskName = 'Ibukota AS'; else if (activeQuizType === 'indo-capital') taskName = 'Ibukota RI'; else if (activeQuizType === 'subregion') taskName = 'Sub-benua';
-                else taskName = 'Tebak ' + currentSpecificQuestionType;
+                else taskName = currentSpecificQuestionType === 'currency' ? 'Tebak Mata Uang' : (currentSpecificQuestionType === 'language' ? 'Tebak Bahasa' : 'Tebak ' + currentSpecificQuestionType);
             } else if(context === 'map-guess') taskName = 'Tebak Lokasi'; else if(context === 'map-find') taskName = 'Cari di Peta';
             
             if (activeQuizType !== 'population' && activeQuizType !== 'area') quizMistakes.push({ task: taskName + ' (Habis)', correct: cName, user: '-', flag: cFlag });
@@ -1094,25 +1103,28 @@
             document.getElementById('quiz-feedback').classList.add('hidden'); 
             const container = document.getElementById('options-container'); container.innerHTML = '';
             
-            let possibleTypes = activeQuizType === 'mixed' ? ['capital', 'flagToCountry', 'countryToFlag', 'capitalToCountry', 'shape', 'border', 'culture'] : [activeQuizType];
+            let possibleTypes = activeQuizType === 'mixed' ? ['capital', 'flagToCountry', 'countryToFlag', 'capitalToCountry', 'border'] : [activeQuizType];
             let qType = possibleTypes[Math.floor(Math.random() * possibleTypes.length)];
             currentSpecificQuestionType = qType; 
             
             let pool = countriesData;
             
-            // Pre-filter berdasarkan tipe kuis baru agar soal masuk akal
-            if(qType === 'shape') pool = countriesData.filter(c => c.cca2 && (c.area || 0) > 500); // Filter micro-islands
+            if(qType === 'shape') pool = countriesData.filter(c => c.cca2 && (c.area || 0) > 500);
             if(qType === 'border') pool = countriesData.filter(c => c.borders && c.borders.length > 0);
-            if(qType === 'culture') pool = countriesData.filter(c => (c.languages && Object.keys(c.languages).length > 0) || (c.currencies && Object.keys(c.currencies).length > 0));
+            if(qType === 'language') pool = countriesData.filter(c => c.languages && Object.keys(c.languages).length > 0);
+            if(qType === 'currency') pool = countriesData.filter(c => c.currencies && Object.keys(c.currencies).length > 0);
 
-            if(currentDifficulty === 'medium') {
-                const anchor = getNextTargetCountry(null, pool);
-                pool = pool.filter(c => c.region === anchor.region);
-            } else if(currentDifficulty === 'hard') {
-                const anchor = getNextTargetCountry(null, pool);
-                pool = pool.filter(c => c.subregion === anchor.subregion);
+            // Terapkan level kesulitan HANYA untuk grup klasik
+            if (['capital', 'flagToCountry', 'countryToFlag', 'capitalToCountry', 'border', 'mixed'].includes(activeQuizType)) {
+                if(currentDifficulty === 'medium') {
+                    const anchor = getNextTargetCountry(null, pool);
+                    pool = pool.filter(c => c.region === anchor.region);
+                } else if(currentDifficulty === 'hard') {
+                    const anchor = getNextTargetCountry(null, pool);
+                    pool = pool.filter(c => c.subregion === anchor.subregion);
+                }
             }
-            if(pool.length < 4) pool = countriesData; // Fallback darurat
+            if(pool.length < 4) pool = countriesData;
 
             currentCorrectAnswer = getNextTargetCountry(null, pool);
             const qHeader = document.getElementById('question-header'); qHeader.innerHTML = '';
@@ -1140,7 +1152,6 @@
                     options.forEach((c, i) => createOptBtn(c, 'image-flag', container, i));
                 }
             }
-            // --- FITUR BARU ---
             else if (qType === 'shape') {
                 options = getRandomItems([currentCorrectAnswer, ...getRandomItems(pool.filter(c=>c!==currentCorrectAnswer), 3)], 4);
                 const cc2 = currentCorrectAnswer.cca2.toLowerCase();
@@ -1149,9 +1160,15 @@
                 options.forEach((c, i) => createOptBtn(c, 'text-country', container, i));
             }
             else if (qType === 'border') {
-                let neighborCode = currentCorrectAnswer.borders[Math.floor(Math.random() * currentCorrectAnswer.borders.length)];
+                let validBordersInPool = currentCorrectAnswer.borders.filter(b => pool.some(p => p.cca3 === b));
+                if (validBordersInPool.length === 0) validBordersInPool = currentCorrectAnswer.borders;
+                let neighborCode = validBordersInPool[Math.floor(Math.random() * validBordersInPool.length)];
+                
                 let correctNeighbor = countriesData.find(c => c.cca3 === neighborCode);
-                let wrongOptions = getRandomItems(countriesData.filter(c => c.cca3 !== neighborCode && !currentCorrectAnswer.borders.includes(c.cca3) && c !== currentCorrectAnswer), 3);
+                let wrongPool = pool.filter(c => c.cca3 !== neighborCode && !currentCorrectAnswer.borders.includes(c.cca3) && c !== currentCorrectAnswer);
+                if (wrongPool.length < 3) wrongPool = countriesData.filter(c => c.cca3 !== neighborCode && !currentCorrectAnswer.borders.includes(c.cca3) && c !== currentCorrectAnswer);
+                
+                let wrongOptions = getRandomItems(wrongPool, 3);
                 options = getRandomItems([correctNeighbor, ...wrongOptions], 4);
                 
                 qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-1 text-center">Manakah yang berbatasan darat dengan</span><span class="text-brand-primary font-black text-2xl leading-tight text-center mb-3">${currentCorrectAnswer.name.common}</span>`;
@@ -1166,21 +1183,18 @@
                     container.appendChild(btn);
                 });
             }
-            else if (qType === 'culture') {
-                let subMode = Math.random() > 0.5 && currentCorrectAnswer.languages ? 'lang' : 'curr';
-                if(subMode === 'curr' && !currentCorrectAnswer.currencies) subMode = 'lang'; // Safety fallback
-                
+            else if (qType === 'language') {
                 options = getRandomItems([currentCorrectAnswer, ...getRandomItems(pool.filter(c=>c!==currentCorrectAnswer), 3)], 4);
-                
-                if (subMode === 'lang') {
-                    let langKeys = Object.keys(currentCorrectAnswer.languages);
-                    let lang = currentCorrectAnswer.languages[langKeys[Math.floor(Math.random() * langKeys.length)]];
-                    qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-1 text-center">Bahasa resmi <span class="text-rose-500 font-black">${lang}</span> digunakan di?</span>`;
-                } else {
-                    let currKeys = Object.keys(currentCorrectAnswer.currencies);
-                    let curr = currentCorrectAnswer.currencies[currKeys[Math.floor(Math.random() * currKeys.length)]];
-                    qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-1 text-center">Negara manakah yang menggunakan mata uang</span><span class="text-amber-500 font-black text-xl leading-tight text-center mb-3">${curr.name} (${curr.symbol || currKeys[0]})</span>`;
-                }
+                let langKeys = Object.keys(currentCorrectAnswer.languages);
+                let lang = currentCorrectAnswer.languages[langKeys[Math.floor(Math.random() * langKeys.length)]];
+                qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-1 text-center">Bahasa resmi <span class="text-rose-500 font-black">${lang}</span> digunakan di?</span>`;
+                options.forEach((c, i) => createOptBtn(c, 'text-country', container, i));
+            }
+            else if (qType === 'currency') {
+                options = getRandomItems([currentCorrectAnswer, ...getRandomItems(pool.filter(c=>c!==currentCorrectAnswer), 3)], 4);
+                let currKeys = Object.keys(currentCorrectAnswer.currencies);
+                let curr = currentCorrectAnswer.currencies[currKeys[Math.floor(Math.random() * currKeys.length)]];
+                qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-1 text-center">Negara manakah yang menggunakan mata uang</span><span class="text-amber-500 font-black text-xl leading-tight text-center mb-3">${curr.name} (${curr.symbol || currKeys[0]})</span>`;
                 options.forEach((c, i) => createOptBtn(c, 'text-country', container, i));
             }
 
@@ -1244,7 +1258,7 @@
             else btn.innerHTML = `<div class="flex flex-col items-center justify-center w-full h-full relative z-10"><img src="${cObj.flags.svg}" class="w-full h-full max-h-[48px] object-contain p-0.5 drop-shadow-sm relative z-0"></div>${peekHtml}`;
             
             btn.onclick = () => {
-                let taskN = type === 'text-capital' ? 'Tebak Ibukota' : (currentSpecificQuestionType === 'shape' ? 'Tebak Siluet' : (currentSpecificQuestionType === 'culture' ? 'Tebak Uang/Bahasa' : 'Tebak Bendera'));
+                let taskN = type === 'text-capital' ? 'Tebak Ibukota' : (currentSpecificQuestionType === 'shape' ? 'Tebak Siluet' : (currentSpecificQuestionType === 'currency' ? 'Tebak Mata Uang' : (currentSpecificQuestionType === 'language' ? 'Tebak Bahasa' : 'Tebak Bendera')));
                 handleDynamicAnswer(btn, isCorrect, taskN, currentCorrectAnswer.name.common, cObj.name.common, currentCorrectAnswer.flags.svg, currentCorrectAnswer.cca3);
             };
             container.appendChild(btn);
@@ -1302,8 +1316,17 @@
                 const validCountries = countriesData.filter(c => c.subregion && c.subregion !== "Antarctica" && c.region !== "Antarctic");
                 if (mode === 'guess-subregion') {
                     const finalTarget = validCountries[Math.floor(Math.random() * validCountries.length)]; currentCorrectAnswer = finalTarget; 
-                    const allSubregions = [...new Set(validCountries.map(c => c.subregion))];
-                    const optionsStr = getRandomItems([finalTarget.subregion, ...getRandomItems(allSubregions.filter(s => s !== finalTarget.subregion), 3)], 4);
+                    
+                    let sameRegionSubregions = [...new Set(validCountries.filter(c => c.region === finalTarget.region).map(c => c.subregion))];
+                    let wrongSubregions = sameRegionSubregions.filter(s => s !== finalTarget.subregion);
+                    
+                    if (wrongSubregions.length < 3) {
+                        const allSubregions = [...new Set(validCountries.map(c => c.subregion))];
+                        const availableExtras = allSubregions.filter(s => s !== finalTarget.subregion && !wrongSubregions.includes(s));
+                        wrongSubregions = [...wrongSubregions, ...getRandomItems(availableExtras, 3 - wrongSubregions.length)];
+                    }
+                    
+                    const optionsStr = getRandomItems([finalTarget.subregion, ...getRandomItems(wrongSubregions, 3)], 4);
 
                     qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-1">Berada di sub-benua manakah</span><span class="text-brand-primary font-black text-2xl leading-tight text-center mb-3">${finalTarget.name.common}</span><img src="${finalTarget.flags.svg}" class="w-32 h-20 object-contain rounded-md shadow-md border border-slate-100 mb-2">`;
                     optionsStr.forEach((sub) => {
@@ -1317,8 +1340,13 @@
                     const subregionMap = {}; validCountries.forEach(c => { if(!subregionMap[c.subregion]) subregionMap[c.subregion] = []; subregionMap[c.subregion].push(c); });
                     const eligibleSub = Object.keys(subregionMap).filter(k => subregionMap[k].length >= 3);
                     const targetSub = eligibleSub[Math.floor(Math.random() * eligibleSub.length)];
+                    const targetRegion = subregionMap[targetSub][0].region;
                     const inside = getRandomItems(subregionMap[targetSub], 3);
-                    const oddCountry = validCountries.filter(c => c.subregion !== targetSub)[Math.floor(Math.random() * validCountries.filter(c => c.subregion !== targetSub).length)];
+                    
+                    let sameRegionOddCountries = validCountries.filter(c => c.region === targetRegion && c.subregion !== targetSub);
+                    if (sameRegionOddCountries.length === 0) sameRegionOddCountries = validCountries.filter(c => c.subregion !== targetSub);
+                    const oddCountry = sameRegionOddCountries[Math.floor(Math.random() * sameRegionOddCountries.length)];
+                    
                     currentCorrectAnswer = oddCountry; 
                     const options = getRandomItems([oddCountry, ...inside], 4);
 
@@ -1505,7 +1533,7 @@
         }
 
         // =======================================================================
-        // EKSPLORASI PETA & GLOBE
+        // EKSPLORASI PETA & GLOBE (DIKEMBALIKAN)
         // =======================================================================
         function initGlobe() {
             if(myGlobe) return;
@@ -1702,9 +1730,10 @@
             if(c){ 
                 if(typeof myLeafletMap !== 'undefined' && myLeafletMap) myLeafletMap.closePopup(); 
                 
+                // Menghindari modal bertumpuk jika dibuka dari Review Game Over
                 if(!document.getElementById('modal-gameover').classList.contains('hidden')) {
                     document.getElementById('modal-gameover').classList.add('hidden');
-                    history.replaceState({ view: 'quiz-menu' }, '');
+                    history.replaceState({ view: 'quiz-menu' }, ''); // Reset history back to quiz menu to avoid logic loop
                     openDetail(c, true); 
                 } else {
                     openDetail(c); 
