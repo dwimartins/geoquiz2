@@ -1082,6 +1082,14 @@
             askedCountries.add(picked.cca3); return picked;
         }
 
+        // TAMBAHAN FIX: Fungsi ini sebelumnya terhapus tidak sengaja
+        function getNextSpecialTarget(dataArray) {
+            let available = dataArray.filter(x => !askedSpecial.has(x.name));
+            if (available.length === 0) { askedSpecial.clear(); available = dataArray; }
+            const picked = available[Math.floor(Math.random() * available.length)];
+            askedSpecial.add(picked.name); return picked;
+        }
+
         function startDailyChallenge() {
             const today = new Date().toDateString();
             if(lastDailyDate === today) return; 
