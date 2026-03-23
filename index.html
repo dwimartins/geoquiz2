@@ -912,17 +912,32 @@
                 return false; 
             }
 
+            // PEMISAHAN FETCH AGAR JIKA 1 GAGAL, YANG LAIN TETAP JALAN
+            let localWarning = false;
+            
             try {
-                const [resHybrid, resUs, resIndo] = await Promise.all([ fetch('hybrid_data.json'), fetch('us_states.json'), fetch('indonesia_provinces.json') ]);
-                if (!resHybrid.ok || !resUs.ok || !resIndo.ok) throw new Error("File JSON Lokal tidak ditemukan (404)");
-                const hybridData = await resHybrid.json();
-                sovereignMap = hybridData.sovereignMap || {}; shapeOverrides = hybridData.shapeOverrides || {};
-                usStatesData = await resUs.json(); indoProvincesData = await resIndo.json();
-            } catch (e) {
-                console.warn("Gagal memuat JSON lokal (CORS / Tidak Ada File):", e);
+                const resUs = await fetch('us_states.json');
+                if(resUs.ok) usStatesData = await resUs.json(); else localWarning = true;
+            } catch(e) { localWarning = true; console.warn("Gagal us_states.json:", e); }
+
+            try {
+                const resIndo = await fetch('indonesia_provinces.json');
+                if(resIndo.ok) indoProvincesData = await resIndo.json(); else localWarning = true;
+            } catch(e) { localWarning = true; console.warn("Gagal indonesia_provinces.json:", e); }
+
+            try {
+                const resHybrid = await fetch('hybrid_data.json');
+                if(resHybrid.ok) {
+                    const hybridData = await resHybrid.json();
+                    sovereignMap = hybridData.sovereignMap || {}; shapeOverrides = hybridData.shapeOverrides || {};
+                } else localWarning = true;
+            } catch(e) { localWarning = true; console.warn("Gagal hybrid_data.json:", e); }
+
+            if(localWarning && (usStatesData.length === 0 || indoProvincesData.length === 0)) {
                 const warningModal = document.getElementById('modal-warning-local');
                 if(warningModal) warningModal.classList.remove('hidden');
             }
+
             return isGlobalSuccess; 
         }
 
@@ -1077,6 +1092,16 @@
         }
 
         function startQuiz(mode) {
+            if ((mode === 'us-capital' && (!usStatesData || usStatesData.length < 4)) || 
+                (mode === 'indo-capital' && (!indoProvincesData || indoProvincesData.length < 4))) {
+                const fdbk = document.getElementById('feedback-toast');
+                fdbk.innerHTML = '<div class="bg-rose-500 text-white px-4 py-3 rounded-2xl shadow-2xl text-sm font-bold flex items-center gap-2 border-2 border-white"><i class="ph-bold ph-warning-circle text-lg"></i> Data JSON belum termuat!</div>';
+                fdbk.className = 'absolute top-10 left-1/2 transform -translate-x-1/2 z-[900] animate-slide-down';
+                fdbk.classList.remove('hidden');
+                setTimeout(() => fdbk.classList.add('hidden'), 3000);
+                return;
+            }
+
             isDailyMode = false; document.getElementById('daily-counter-ui').classList.add('hidden');
             maxLives = quizSettingLives; lives = maxLives; timeLimit = quizSettingTime; score = 0; 
             askedCountries.clear(); askedSpecial.clear(); quizMistakes = []; activeQuizType = mode;
