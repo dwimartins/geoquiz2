@@ -1171,14 +1171,14 @@
                 let wrongOptions = getRandomItems(wrongPool, 3);
                 options = getRandomItems([correctNeighbor, ...wrongOptions], 4);
                 
-                qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-1 text-center">Manakah yang berbatasan darat dengan</span><span class="text-brand-primary font-black text-2xl leading-tight text-center mb-3">${currentCorrectAnswer.name.common}</span>`;
+                qHeader.innerHTML = `<span class="text-sm font-bold text-slate-500 mb-1 text-center">Manakah yang berbatasan darat dengan</span><span class="text-brand-primary font-black text-2xl leading-tight text-center mb-3">${currentCorrectAnswer.name.common}</span><img src="${currentCorrectAnswer.flags.svg}" class="w-32 h-20 object-contain rounded-md shadow-md border border-slate-100 mb-2">`;
                 
                 options.forEach((c, i) => {
                     const btn = document.createElement('button');
                     btn.dataset.correct = (c === correctNeighbor);
                     let styles = ['border-blue-200 border-b-blue-400 text-slate-700', 'border-emerald-200 border-b-emerald-400 text-slate-700', 'border-amber-200 border-b-amber-400 text-slate-700', 'border-violet-200 border-b-violet-400 text-slate-700'];
                     btn.className = `w-full border-2 bg-white font-bold p-2 sm:p-3 rounded-2xl transition-all btn-press flex flex-col items-center justify-center min-h-[90px] shadow-sm border-b-4 hover:bg-slate-50 ${styles[i % 4]}`;
-                    btn.innerHTML = `<span class="text-sm text-center leading-tight font-bold">${c.name.common}</span>`;
+                    btn.innerHTML = `<img src="${c.flags.svg}" class="w-12 h-8 object-contain mb-1.5 shadow-sm border border-slate-100 rounded-sm bg-slate-50"><span class="text-sm text-center leading-tight font-bold">${c.name.common}</span>`;
                     btn.onclick = () => handleDynamicAnswer(btn, c === correctNeighbor, 'Tebak Tetangga', correctNeighbor.name.common, c.name.common, correctNeighbor.flags.svg, correctNeighbor.cca3);
                     container.appendChild(btn);
                 });
