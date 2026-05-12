@@ -8,11 +8,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link id="dynamic-google-fonts" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins&amp;family=Berkshire+Swash&amp;family=Marcellus&amp;family=Lobster+Two&amp;family=Pinyon+Script&amp;display=swap">
     <style id="style-invitation">
-        /* === PANEL KANAN (PREVIEW) & ASLI UNDANGAN === */
+    /* === PANEL KANAN (PREVIEW) & ASLI UNDANGAN === */
         #preview-area { flex-grow: 1; display: flex; justify-content: center; align-items: center; background-color: #e8e4dc; position: relative; overflow: hidden; }
+        
+        /* ==========================================
+           CORE 5 COLOR SYSTEM (GLOBAL VARIABLES)
+           ========================================== */
         :root { 
-            --primary: #a67c52; --primary-light: #cfa880; --bg-nav: #f2efe9; --text-dark: #4a4a4a; --text-light: #ffffff; --inv-border: #a67c52; 
-            --color-alter: #8b5a2b; --color-helper: #d2b48c;
+            --primary: #a67c52; --secondary: #cfa880; --bg-surface: #f2efe9; --text-dark: #4a4a4a; --text-light: #ffffff; 
             /* Variabel Font Dynamic */
             --font-base: 'Poppins', sans-serif;
             --font-accent: 'Berkshire Swash', serif;
@@ -20,44 +23,86 @@
             --font-elegant: 'Lobster Two', cursive;
             --font-cursive: 'Pinyon Script', cursive;
         }
-        /* Terapkan font-base ke seluruh elemen secara default */
-        #app-container * { font-family: var(--font-base); box-sizing: border-box; }
         
+        /* ==========================================
+           KAMUS CLASS UTILITY WARNA
+           ========================================== */
+        .text-dark { color: var(--text-dark) !important; }
+        .text-light { color: var(--text-light) !important; }
+        .color-accent { color: var(--primary) !important; }
+        .bg-tema { background-color: var(--primary) !important; }
+        .bg-surface { background-color: var(--bg-surface) !important; }
+        .border-tema { border: 1px solid var(--secondary) !important; border-style: solid; }
+        
+        /* Terapkan font-base ke seluruh elemen secara default tanpa merusak ikon */
+        #app-container { font-family: var(--font-base); }
+        #app-container * { box-sizing: border-box; }
+        
+        /* ==========================================
+           STRUKTUR DASAR (CLEAN & DYNAMIC)
+           ========================================== */
         #app-container { width: 400px; height: 800px; background-color: white; position: relative; overflow: hidden; box-shadow: 0 0 30px rgba(0,0,0,0.15); border-radius: 20px; transform-origin: center center; }
         .frame { position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 10; } .frame img { position: absolute; max-width: 60%; }
         .frame-tl { top: 0; left: 0; } .frame-tr { top: 0; right: 0; width: 45%; } .frame-bl { bottom: 0; left: 0; width: 45%; transition: bottom 0.6s cubic-bezier(0.25, 1, 0.5, 1); } .frame-br { bottom: 0; right: 0; width: 45%; transition: bottom 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
         #app-container.nav-active .frame-bl, #app-container.nav-active .frame-br { bottom: 80px; }
         #slider-container { position: relative; width: 100%; height: 100%; z-index: 1; }
-        .page { position: absolute; top: 0; left: 0; width: 100%; height: calc(100% - 80px); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; background-color: transparent; background-image: url('https://dwigital.com/themes/blue-watercolor/bg.jpg'); background-size: 100% 100%; background-position: center; background-repeat: no-repeat; opacity: 0; transform: scale(0.95); transition: opacity 0.5s ease, transform 0.5s ease; pointer-events: none; z-index: 1; }
-        .page.cover-page { height: 100%; padding-bottom: 0; background-color: #ffffff; background-image: url('https://assets.satumomen.com/images/invitation/bg-section-80960691763392078.png'); background-size: cover; }
+        
+        /* REVISI: Hapus hardcode background image url() dari .page */
+        .page { position: absolute; top: 0; left: 0; width: 100%; height: calc(100% - 80px); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; background-size: cover; background-position: center; opacity: 0; transform: scale(0.95); transition: opacity 0.5s ease, transform 0.5s ease; pointer-events: none; z-index: 1; }
+        .page.cover-page { height: 100%; padding-bottom: 0; }
         .page.active-page { opacity: 1; transform: scale(1); pointer-events: auto; z-index: 5; }
-        .page h1 { font-size: 28px; color: var(--primary); margin-bottom: 10px; font-family: serif; position: relative; z-index: 20;} .page h2 { font-size: 22px; color: var(--text-dark); margin-bottom: 15px; font-family: serif; position: relative; z-index: 20;} .page p { color: #666; font-size: 14px; line-height: 1.6; max-width: 300px; position: relative; z-index: 20;}
-        .btn-open { margin-top: 30px; padding: 12px 30px; background-color: var(--primary); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(166, 124, 82, 0.4); transition: transform 0.2s; position: relative; z-index: 20; } .btn-open:active { transform: scale(0.95); }
-        #nav-bar { position: absolute; bottom: 0; left: 0; width: 100%; height: 80px; background-color: var(--bg-nav); border-top-left-radius: 20px; border-top-right-radius: 20px; box-shadow: 0 -2px 15px rgba(0,0,0,0.05); transform: translateY(100%); transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); z-index: 100; } #nav-bar.visible { transform: translateY(0); } #nav-track { display: flex; height: 100%; align-items: center; overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth; } #nav-track::-webkit-scrollbar { display: none; } .nav-item { flex: 0 0 20%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; color: #999; transition: color 0.3s; } .nav-box { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 85%; height: 80%; border-radius: 12px; transition: all 0.3s; } .nav-item svg { width: 22px; height: 22px; margin-bottom: 4px; fill: currentColor; } .nav-item span { font-size: 11px; font-weight: 600; } .nav-item.active { color: var(--text-light); } .nav-item.active .nav-box { background-color: var(--primary); box-shadow: 0 4px 8px rgba(166, 124, 82, 0.3); }
+        
+        /* REVISI: Tipografi tidak lagi dikunci dengan color dan font family statis */
+        .page h1 { font-size: 28px; margin-bottom: 10px; font-family: var(--font-accent); position: relative; z-index: 20;} 
+        .page h2 { font-size: 22px; margin-bottom: 15px; font-family: var(--font-latin); position: relative; z-index: 20;} 
+        .page p { font-size: 14px; line-height: 1.6; max-width: 300px; position: relative; z-index: 20;}
+        
+        /* ==========================================
+           KOMPONEN (UI ELEMENTS)
+           ========================================== */
+        .btn-open { margin-top: 30px; padding: 12px 30px; background-color: var(--primary); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: transform 0.2s; position: relative; z-index: 20; } .btn-open:active { transform: scale(0.95); }
+        
+        #nav-bar { position: absolute; bottom: 0; left: 0; width: 100%; height: 80px; background-color: var(--bg-surface); border-top-left-radius: 20px; border-top-right-radius: 20px; box-shadow: 0 -2px 15px rgba(0,0,0,0.05); transform: translateY(100%); transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); z-index: 100; } #nav-bar.visible { transform: translateY(0); } #nav-track { display: flex; height: 100%; align-items: center; overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth; } #nav-track::-webkit-scrollbar { display: none; } .nav-item { flex: 0 0 20%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; color: #999; transition: color 0.3s; } .nav-box { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 85%; height: 80%; border-radius: 12px; transition: all 0.3s; } .nav-item svg { width: 22px; height: 22px; margin-bottom: 4px; fill: currentColor; } .nav-item span { font-size: 11px; font-weight: 600; } .nav-item.active { color: var(--text-light); } 
+        
+        /* REVISI: Hapus hardcode RGB cokelat di bayangan nav-box */
+        .nav-item.active .nav-box { background-color: var(--primary); }
 
         /* Utility Asli */
         .d-flex { display: flex; } .flex-column { flex-direction: column; } .flex-wrap { flex-wrap: wrap; } .justify-content-center { justify-content: center; } .align-items-center { align-items: center; } .text-center { text-align: center; } .text-left { text-align: left; } .mb-0 { margin-bottom: 0; } .mb-1 { margin-bottom: 0.25rem; } .mb-2 { margin-bottom: 0.5rem; } .mb-3 { margin-bottom: 1rem; } .mb-4 { margin-bottom: 1.5rem; } .mb-5 { margin-bottom: 3rem; } .mt-2 { margin-top: 0.5rem; } .mt-3 { margin-top: 1rem; } .mt-5 { margin-top: 3rem; } .pt-5 { padding-top: 3rem; } .p-4 { padding: 1.5rem; } .pl-2 { padding-left: 0.5rem; } .pl-3 { padding-left: 1rem; } .mb-auto { margin-bottom: auto; } .mx-auto { margin-left: auto; margin-right: auto; } .mx-3 { margin-left: 1rem; margin-right: 1rem; }  .my-3 { margin-top: 1rem; margin-bottom: 1rem; } .px-3 { padding-left: 1rem; padding-right: 1rem; }  .px-4 { padding-left: 1.5rem; padding-right: 1.5rem; } .px-5 { padding-left: 2rem; padding-right: 2rem; }  .w-100 { width: 100%; } .h-100 { height: 100%; } .p-2 { padding: 0.5rem; } .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; } .font-weight-bold { font-weight: bold; } .font-italic { font-style: italic; } .rounded { border-radius: 0.25rem !important; } .bg-white { background-color: #fff !important; } .h4 { font-size: 1.5rem; font-weight: 500; line-height: 1.2; } .h5 { font-size: 1.25rem; font-weight: 500; line-height: 1.2; }
-        .btn-copy { background-color: var(--primary-light); color: white; border: none; padding: 4px 10px; border-radius: 4px; font-size: 11px; cursor: pointer; margin-left: 10px; transition: background-color 0.2s, transform 0.2s; } .btn-copy:active { transform: scale(0.95); } .btn-copy:hover { background-color: var(--primary); } .toast-message { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); background-color: rgba(74, 74, 74, 0.9); color: white; padding: 10px 20px; border-radius: 30px; font-size: 13px; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); white-space: nowrap; } .toast-message.show { opacity: 1; }
-        .countdown-wrapper { margin-top: 15px; } .countdown { display: flex; justify-content: center; gap: 10px; } .countdown-item { display: flex; flex-direction: column; align-items: center; background: rgba(166, 124, 82, 0.1); padding: 8px 12px; border-radius: 8px; min-width: 60px; border: 1px solid rgba(166, 124, 82, 0.3);} .countdown-item .number { font-size: 20px; font-weight: bold; color: var(--primary); font-family: 'Playfair Display', serif;} .countdown-item .text { font-size: 11px; color: var(--text-dark); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px;} .quotes { color: #555; line-height: 1.6; } .color-accent { color: var(--primary); } 
+        .btn-copy { background-color: var(--secondary); color: var(--text-light); border: none; padding: 4px 10px; border-radius: 4px; font-size: 11px; cursor: pointer; margin-left: 10px; transition: background-color 0.2s, transform 0.2s; } .btn-copy:active { transform: scale(0.95); } .btn-copy:hover { background-color: var(--primary); } 
+        .toast-message { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); background-color: rgba(74, 74, 74, 0.9); color: white; padding: 10px 20px; border-radius: 30px; font-size: 13px; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); white-space: nowrap; } .toast-message.show { opacity: 1; }
+        
+        /* REVISI: Countdown menggunakan bg-surface dan border secondary, bukan rgba() cokelat */
+        .countdown-wrapper { margin-top: 15px; } .countdown { display: flex; justify-content: center; gap: 10px; } 
+        .countdown-item { display: flex; flex-direction: column; align-items: center; background: var(--bg-surface); padding: 8px 12px; border-radius: 8px; min-width: 60px; border: 1px solid var(--secondary);} 
+        .countdown-item .number { font-size: 22px; color: var(--primary); font-family: var(--font-elegant);} 
+        .countdown-item .text { font-size: 12px; color: var(--text-dark); letter-spacing: 1px; margin-top: 2px;} 
+        
+        /* REVISI: Hapus hardcode warna dari quotes */
+        .quotes { line-height: 1.6; font-style: opacity: 0.85; } .color-accent { color: var(--primary); } 
+        
+        /* REVISI: Class font hanya mengatur font, tidak memaksa warna */
         .font-base { font-family: var(--font-base) !important; }
-	   .font-accent { font-family: var(--font-accent) !important;} 
-	   .font-latin { font-family: var(--font-latin) !important; color: var(--primary); } 
-	   .font-elegant { font-family: var(--font-elegant) !important; color: var(--primary); }
-	   .font-cursive { font-family: var(--font-cursive) !important; color: var(--primary); }
-	   .btn { display: inline-block; font-weight: 400; text-align: center; vertical-align: middle; user-select: none; border: 1px solid transparent; padding: 0.375rem 0.75rem; font-size: 1rem; line-height: 1.5; transition: all 0.2s ease-in-out; text-decoration: none; cursor: pointer; } .btn-sm { padding: 0.25rem 0.75rem; font-size: 0.875rem; } .btn-primary, .btn-tema { color: #fff; background-color: var(--primary); border-color: var(--primary); box-shadow: 0 2px 6px rgba(166, 124, 82, 0.3); } .btn:active { transform: scale(0.95); } .rounded-pill { border-radius: 50rem !important; }
-    /* ANIMASI ROTASI CD TEMA EMAS */
+        .font-accent { font-family: var(--font-accent) !important;} 
+        .font-latin { font-family: var(--font-latin) !important; } 
+        .font-elegant { font-family: var(--font-elegant) !important; }
+        .font-cursive { font-family: var(--font-cursive) !important; }
+        
+        /* REVISI: Hapus hardcode shadow cokelat dari tombol */
+        .btn { display: inline-block; font-weight: 400; text-align: center; vertical-align: middle; user-select: none; border: 1px solid transparent; padding: 0.375rem 0.75rem; font-size: 1rem; line-height: 1.5; transition: all 0.2s ease-in-out; text-decoration: none; cursor: pointer; } .btn-sm { padding: 0.25rem 0.75rem; font-size: 0.875rem; } 
+        .btn-primary, .btn-tema { color: var(--text-light); background-color: var(--primary); border-color: var(--primary); } .btn:active { transform: scale(0.95); } .rounded-pill { border-radius: 50rem !important; }
+        
+        /* ANIMASI ROTASI CD TEMA EMAS */
         @keyframes spin-continuous { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         
         #btn-audio {
-            position: absolute; bottom: 120px; right: 15px; /* Posisinya dinaikkan dan digeser sedikit ke kanan */
-            width: 38px; height: 38px; /* Ukuran diperkecil */
+            position: absolute; bottom: 120px; right: 15px; 
+            width: 38px; height: 38px; 
             background: var(--primary); border: none; border-radius: 50%; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; z-index: 1000; 
             display: none; align-items: center; justify-content: center; transition: all 0.3s ease;
         }
         #btn-audio svg { width: 22px; height: 22px; fill: white; transition: fill 0.3s ease; }
-        
-        /* Ketika class .rotating ditambahkan, putar SVG-nya */
         #btn-audio.rotating svg { animation: spin-continuous 4s linear infinite; }
     </style>
 <style>
@@ -65,9 +110,10 @@
         .maps-scroll-area { -ms-overflow-style: none; scrollbar-width: none; }
 
         .map-card-wrapper {
-            background: #ffffff;
+            background-color: var(--bg-surface);
             padding: 6px; 
-            border-radius: 20px;
+            border-radius: 16px;
+            border: 2px solid var(--secondary);
             box-shadow: 0 8px 25px rgba(0,0,0,0.08); 
             margin: 0 10px 25px 10px;
             aspect-ratio: 4/3; 
@@ -78,11 +124,15 @@
             -webkit-transform: translate3d(0,0,0);
         }
     </style>
+<style>
+        .story-scroll-area::-webkit-scrollbar { display: none; }
+        .story-scroll-area { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 
     <style>
-        :root { --primary: #a67c52; --primary-light: #cfa880; --bg-nav: #f2efe9; --text-dark: #4a4a4a; --text-light: #ffffff; --inv-border: #a67c52; --color-alter: #8b5a2b; --color-helper: #d2b48c; --font-base: 'Poppins', sans-serif; --font-accent: 'Berkshire Swash', serif; --font-latin: 'Marcellus', serif; --font-elegant: 'Lobster Two', sans-serif; --font-cursive: 'Pinyon Script', cursive; }
+        :root { --primary: #a67c52; --secondary: #cfa880; --bg-surface: #f2efe9; --text-dark: #4a4a4a; --text-light: #ffffff; --font-base: 'Poppins', sans-serif; --font-accent: 'Berkshire Swash', serif; --font-latin: 'Marcellus', serif; --font-elegant: 'Lobster Two', sans-serif; --font-cursive: 'Pinyon Script', cursive; }
     </style>
-    <style id="dynamic-bg-style">.page:not(.cover-page) { background-image: url('https://dwigital.com/themes/blue-watercolor/bg.jpg') !important; background-size: 100% 100% !important; background-repeat: no-repeat !important; background-position: center !important; }</style>
+    <style id="dynamic-bg-style">.page:not(.custom-bg) { background-image: url('https://dwigital.com/themes/blue-watercolor/bg.jpg') !important; background-size: 100% 100% !important; background-repeat: undefined !important; background-color: var(--bg-body) !important; background-position: center top !important; background-attachment: fixed !important; }</style>
     <style>
         body { margin: 0; padding: 0; background: #e8e4dc; height: 100vh; height: 100dvh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         * { box-sizing: border-box; } /* Fix layout padding (terutama untuk Grid Galeri) */
@@ -104,7 +154,7 @@
             <img src="https://dwigital.com/themes/blue-watercolor/frame-tl.png" class="frame-tl animate__animated animate__fadeInTopLeft animate__slower" draggable="false" style="width: 55%;"><img src="https://dwigital.com/themes/blue-watercolor/frame-tr.png" class="frame-tr animate__animated animate__fadeInTopRight animate__slower" draggable="false" style="width: 45%;"><img src="https://dwigital.com/themes/blue-watercolor/frame-bl.png" class="frame-bl animate__animated animate__fadeInBottomLeft animate__slower" draggable="false" style="width: 45%;"><img src="https://dwigital.com/themes/blue-watercolor/frame-br.png" class="frame-br animate__animated animate__fadeInBottomRight animate__slower" draggable="false" style="width: 45%;">
         </div>
         <div id="slider-container">
-        <div class="page cover-page active-page" style="padding: 0; background-color: #ffffff; position: relative; overflow: hidden;">
+        <div class="page cover-page custom-bg active-page" style="padding: 0; position: relative; overflow: hidden;">
             
             <img src="https://assets.satumomen.com/images/invitation/bg-section-80960691763392078.png" class="" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;" draggable="false">
 
@@ -118,12 +168,12 @@
                 </div>
                 
                 <div class="w-100 d-flex flex-column align-items-center" style="pointer-events: auto;">
-                    <div class="text-center mb-3 p-2 animate__animated animate__zoomIn animate__slower" style="border-radius: 0.5rem; width: 100%; max-width: 240px; background-color: rgba(255, 255, 255, 0.77); backdrop-filter: blur(2px); animation-delay: 600ms;">
-                        <div class="mb-1 animate__animated animate__fadeInUp animate__slower" style="font-size: 14px; color: var(--text-dark); animation-delay: 800ms;">Kepada Yth.<br>Bapak/Ibu/Saudara/i</div> 
+                    <div class="text-center mb-3 p-2 animate__animated animate__zoomIn animate__slower bg-surface" style="border-radius: 0.5rem; width: 100%; max-width: 240px; opacity: 0.9; backdrop-filter: blur(2px); animation-delay: 600ms;">
+                        <div class="mb-1 text-dark animate__animated animate__fadeInUp animate__slower" style="font-size: 14px; animation-delay: 800ms;">Kepada Yth.<br>Bapak/Ibu/Saudara/i</div> 
                         <div id="guestNameSlot" class="font-elegant color-accent h5 mb-1 animate__animated animate__fadeInUp animate__slower" style="font-size: 20px; animation-delay: 1000ms;">Tamu Undangan</div> 
-                        <div id="groupNameSlot" class="h5 animate__animated animate__fadeInUp animate__slower" style="font-size: 14.4px; color: var(--text-dark); animation-delay: 1200ms;">di Tempat</div>
+                        <div id="groupNameSlot" class="h5 text-dark animate__animated animate__fadeInUp animate__slower" style="font-size: 14.4px; animation-delay: 1200ms;">di Tempat</div>
                     </div>
-                    <button class="btn btn-tema animate__animated animate__fadeInUp animate__slow" style="font-size: 15px; color: rgb(255, 255, 255); padding: 12px 30px; border-radius: 8px; animation-delay: 1500ms;" onclick="openInvitation()">Buka Undangan</button>
+                    <button class="btn-open-invitation btn btn-tema animate__animated animate__fadeInUp animate__slow" style="font-size: 15px; border-radius: 8px; padding: 12px 30px; animation-delay: 1500ms;" onclick="openInvitation()">Buka Undangan</button>
                 </div>
             </div>
         </div>
@@ -131,14 +181,14 @@
         <div class="page" style="padding: 0; background-color: transparent;">
             <div class="d-flex justify-content-center align-items-center" style="height: 100%; position: relative; z-index: 20; padding: 20px;">
                 <div style="width: 100%;">
-                    <div class="mb-4 mx-auto animate__animated animate__zoomIn animate__slower" style="height: auto; aspect-ratio: 3/4; max-height: 45vh; width: 60%; overflow: hidden; margin-top: auto; border: 3px solid var(--inv-border); border-radius: 250px 250px 0px 0px; padding: 8px; background: white;" data-anims="animate__zoomIn animate__slower">
-                        <img src="https://ik.imagekit.io/asetundangan/foto-mempelai/flow-red/galeri-4.jpg?tr=h-1200" class="" style="width: 100%; height: 100%; object-fit: cover; border-radius: 250px 250px 0px 0px;" alt="Quotes Foto" draggable="false">
+                    <div class="mb-4 mx-auto animate__animated animate__zoomIn animate__slower" style="height: auto; aspect-ratio: 3/4; max-height: 45vh; width: 60%; overflow: hidden; margin-top: auto; border: 3px solid var(--secondary); border-radius: 250px 250px 0px 0px; padding: 8px; background: var(--bg-surface);">
+                        <img src="https://ik.imagekit.io/asetundangan/foto-mempelai/flow-red/galeri-4.jpg?tr=h-1200" loading="lazy" class="" style="width: 100%; height: 100%; object-fit: cover; border-radius: 250px 250px 0px 0px;" alt="Quotes Foto" draggable="false">
                     </div> 
                     <div class="text-center px-3">
-                        <div class="quotes mb-3 animate__animated animate__fadeInUp animate__slower" style="font-size: 14.4px; animation-delay: 300ms;" data-anims="animate__fadeInUp animate__slower">
+                        <div class="quotes text-dark mb-3 animate__animated animate__fadeInUp animate__slower" style="font-size: 14.4px; animation-delay: 300ms;">
                             "Dan di antara tanda-tanda kekuasaan-Nya diciptakan-Nya untukmu pasangan hidup dari jenismu sendiri supaya kamu dapat ketenangan hati dan dijadikannya kasih sayang di antara kamu. Sesungguhnya yang demikian menjadi tanda-tanda kebesaran-Nya bagi orang-orang yang berpikir."
                         </div> 
-                        <div class="font-latin color-accent animate__animated animate__fadeInUp animate__slower" style="font-size: 22px; animation-delay: 600ms;" data-anims="animate__fadeInUp animate__slower">
+                        <div class="font-latin color-accent animate__animated animate__fadeInUp animate__slower" style="font-size: 22px; animation-delay: 600ms;">
                             - QS. Ar - Rum 21 -
                         </div>
                     </div>
@@ -150,8 +200,8 @@
         <div class="d-flex justify-content-center align-items-center" style="height: 100%; position: relative; z-index: 20;">
             <div style="width: 100%;">
                 
-                <div class="mb-4 mx-auto animate__animated animate__zoomIn animate__slower" style="height: 320px; width: 230px; overflow: hidden; margin-top: auto; border: 3px solid var(--inv-border); border-radius: 20rem; padding: 8px;">
-                    <img src="https://assets.satumomen.com/images/galleries/727644-gallery-StItzTDVM9.png" class="" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;" draggable="false">
+                <div class="mb-4 mx-auto animate__animated animate__zoomIn animate__slower" style="height: 320px; width: 230px; overflow: hidden; margin-top: auto; border: 3px solid var(--secondary); border-radius: 20rem; padding: 8px;">
+                    <img src="https://assets.satumomen.com/images/galleries/727644-gallery-StItzTDVM9.png" class="" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;" draggable="false">
                 </div> 
                 
                 <div class="text-center mb-4 px-3">
@@ -160,13 +210,13 @@
                         Feliz Felicia Gunawan
                     </div> 
                     
-                    <div class="mb-2 animate__animated animate__fadeInUp animate__slower" style="font-size: 16px; animation-delay: 600ms;">
+                    <div class="text-dark mb-2 animate__animated animate__fadeInUp animate__slower" style="font-size: 16px; animation-delay: 600ms;">
                         Putri Pertama dari<br>Bapak Pep Guardiola <br>&amp; Ibu Happy Guardiola
                     </div>
                     
                     
      <div class="text-center mt-2 animate__animated animate__fadeInUp animate__slower" style="animation-delay: 900ms;">
-         <a href="https://instagram.com/feliz_g" target="_blank" class="link btn btn-tema btn-sm rounded-pill" style="color: rgb(255, 255, 255); display: inline-flex; align-items: center; justify-content: center;">
+         <a href="https://instagram.com/feliz_g" target="_blank" class="link btn btn-tema btn-sm rounded-pill" style="display: inline-flex; align-items: center; justify-content: center;">
              <span class="btn-icon"><svg width="18" height="18" viewBox="0 0 512 512" style="margin-right: 6px; vertical-align: middle;"><defs><linearGradient id="ig-grad-full" x1="0%" x2="100%" y1="100%" y2="0%"><stop offset="0%" stop-color="#f09433"></stop><stop offset="25%" stop-color="#e6683c"></stop><stop offset="50%" stop-color="#dc2743"></stop><stop offset="75%" stop-color="#cc2366"></stop><stop offset="100%" stop-color="#bc1888"></stop></linearGradient></defs><rect width="512" height="512" rx="115" fill="url(#ig-grad-full)"></rect><path fill="#ffffff" d="M256,49.47c67.27,0,75.23.26,101.8,1.47,24.56,1.12,37.9,5.22,46.78,8.67a78.05,78.05,0,0,1,29,18.84,78.05,78.05,0,0,1,18.84,29c3.45,8.88,7.55,22.22,8.67,46.78,1.21,26.56,1.47,34.53,1.47,101.8s-0.26,75.23-1.47,101.8c-1.12,24.56-5.22,37.9-8.67,46.78a83.6,83.6,0,0,1-47.8,47.8c-8.88,3.45-22.22,7.55-46.78,8.67-26.56,1.21-34.53,1.47-101.8,1.47s-75.23-0.26-101.8-1.47c-24.56-1.12-37.9-5.22-46.78-8.67a78.05,78.05,0,0,1-29-18.84,78.05,78.05,0,0,1-18.84-29c-3.45-8.88-7.55-22.22-8.67-46.78-1.21-26.56-1.47-34.53-1.47-101.8s0.26-75.23,1.47-101.8c1.12-24.56,5.22-37.9,8.67-46.78a78.05,78.05,0,0,1,18.84-29,78.05,78.05,0,0,1,29-18.84c8.88-3.45,22.22-7.55,46.78-8.67C180.77,49.73,188.73,49.47,256,49.47ZM256,6.31C188.1,6.31,179.6,6.6,152.6,7.83,125.68,9.06,107.25,13.34,91.31,19.53a121.28,121.28,0,0,0-43.86,28.53A121.28,121.28,0,0,0,18.92,91.93c-6.19,15.94-10.47,34.37-11.7,61.3C6.6,180.19,6.31,188.69,6.31,256.59s0.29,76.4,1.52,103.36c1.23,26.93,5.51,45.36,11.7,61.3a121.28,121.28,0,0,0,28.53,43.86,121.28,121.28,0,0,0,43.86,28.53c15.94,6.19,34.37,10.47,61.3,11.7,27,1.23,35.46,1.52,103.36,1.52s76.4-0.29,103.36-1.52c26.93-1.23,45.36-5.51,61.3-11.7a126.84,126.84,0,0,0,72.39-72.39c6.19-15.94,10.47-34.37,11.7-61.3,1.23-27,1.52-35.46,1.52-103.36s-0.29-76.4-1.52-103.36c-1.23-26.93-5.51-45.36-11.7-61.3a121.28,121.28,0,0,0-28.53-43.86A121.28,121.28,0,0,0,420.4,19.53c-15.94-6.19-34.37-10.47-61.3-11.7C332.4,6.6,323.9,6.31,256,6.31Z"></path><path fill="#ffffff" d="M256,127.67A128.33,128.33,0,1,0,384.33,256,128.33,128.33,0,0,0,256,127.67Zm0,213.51A85.18,85.18,0,1,1,341.18,256,85.18,85.18,0,0,1,256,341.18Z"></path><path fill="#ffffff" d="M423.44,117.27A28.73,28.73,0,1,1,394.71,88.54,28.73,28.73,0,0,1,423.44,117.27Z"></path></svg></span>
              <span class="btn-text">@feliz_g</span>
          </a>
@@ -182,23 +232,23 @@
         <div class="d-flex justify-content-center align-items-center" style="height: 100%; position: relative; z-index: 20;">
             <div style="width: 100%;">
                 
-                <div class="mb-4 mx-auto animate__animated animate__zoomIn animate__slower" style="height: 320px; width: 230px; overflow: hidden; margin-top: auto; border: 3px solid var(--inv-border); border-radius: 20rem; padding: 8px;" data-anims="animate__zoomIn animate__slower">
-                    <img src="https://assets.satumomen.com/images/galleries/727876-gallery-db2VeZGKR1.png" class="" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;" draggable="false">
+                <div class="mb-4 mx-auto animate__animated animate__zoomIn animate__slower" style="height: 320px; width: 230px; overflow: hidden; margin-top: auto; border: 3px solid var(--secondary); border-radius: 20rem; padding: 8px;">
+                    <img src="https://assets.satumomen.com/images/galleries/727876-gallery-db2VeZGKR1.png" class="" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;" draggable="false">
                 </div> 
                 
                 <div class="text-center mb-4 px-3">
                     
-                    <div class="color-accent font-accent mb-2 animate__animated animate__fadeInUp animate__slower" style="font-size: 33px; animation-delay: 300ms;" data-anims="animate__fadeInUp animate__slower">
+                    <div class="color-accent font-accent mb-2 animate__animated animate__fadeInUp animate__slower" style="font-size: 33px; animation-delay: 300ms;">
                         Felix Laurensius
                     </div> 
                     
-                    <div class="mb-2 animate__animated animate__fadeInUp animate__slower" style="font-size: 16px; animation-delay: 600ms;" data-anims="animate__fadeInUp animate__slower">
+                    <div class="text-dark mb-2 animate__animated animate__fadeInUp animate__slower" style="font-size: 16px; animation-delay: 600ms;">
                         Putra Pertama dari<br>Bapak Jose Mourinho <br>&amp; Ibu Happy Mourinho
                     </div>
                     
                     
-     <div class="text-center mt-2 animate__animated animate__fadeInUp animate__slower" style="animation-delay: 900ms;" data-anims="animate__fadeInUp animate__slower">
-         <a href="https://instagram.com/felix_l" target="_blank" class="link btn btn-tema btn-sm rounded-pill" style="color: rgb(255, 255, 255); display: inline-flex; align-items: center; justify-content: center;">
+     <div class="text-center mt-2 animate__animated animate__fadeInUp animate__slower" style="animation-delay: 900ms;">
+         <a href="https://instagram.com/felix_l" target="_blank" class="link btn btn-tema btn-sm rounded-pill" style="display: inline-flex; align-items: center; justify-content: center;">
              <span class="btn-icon"><svg width="18" height="18" viewBox="0 0 512 512" style="margin-right: 6px; vertical-align: middle;"><defs><linearGradient id="ig-grad-full" x1="0%" x2="100%" y1="100%" y2="0%"><stop offset="0%" stop-color="#f09433"></stop><stop offset="25%" stop-color="#e6683c"></stop><stop offset="50%" stop-color="#dc2743"></stop><stop offset="75%" stop-color="#cc2366"></stop><stop offset="100%" stop-color="#bc1888"></stop></linearGradient></defs><rect width="512" height="512" rx="115" fill="url(#ig-grad-full)"></rect><path fill="#ffffff" d="M256,49.47c67.27,0,75.23.26,101.8,1.47,24.56,1.12,37.9,5.22,46.78,8.67a78.05,78.05,0,0,1,29,18.84,78.05,78.05,0,0,1,18.84,29c3.45,8.88,7.55,22.22,8.67,46.78,1.21,26.56,1.47,34.53,1.47,101.8s-0.26,75.23-1.47,101.8c-1.12,24.56-5.22,37.9-8.67,46.78a83.6,83.6,0,0,1-47.8,47.8c-8.88,3.45-22.22,7.55-46.78,8.67-26.56,1.21-34.53,1.47-101.8,1.47s-75.23-0.26-101.8-1.47c-24.56-1.12-37.9-5.22-46.78-8.67a78.05,78.05,0,0,1-29-18.84,78.05,78.05,0,0,1-18.84-29c-3.45-8.88-7.55-22.22-8.67-46.78-1.21-26.56-1.47-34.53-1.47-101.8s0.26-75.23,1.47-101.8c1.12-24.56,5.22-37.9,8.67-46.78a78.05,78.05,0,0,1,18.84-29,78.05,78.05,0,0,1,29-18.84c8.88-3.45,22.22-7.55,46.78-8.67C180.77,49.73,188.73,49.47,256,49.47ZM256,6.31C188.1,6.31,179.6,6.6,152.6,7.83,125.68,9.06,107.25,13.34,91.31,19.53a121.28,121.28,0,0,0-43.86,28.53A121.28,121.28,0,0,0,18.92,91.93c-6.19,15.94-10.47,34.37-11.7,61.3C6.6,180.19,6.31,188.69,6.31,256.59s0.29,76.4,1.52,103.36c1.23,26.93,5.51,45.36,11.7,61.3a121.28,121.28,0,0,0,28.53,43.86,121.28,121.28,0,0,0,43.86,28.53c15.94,6.19,34.37,10.47,61.3,11.7,27,1.23,35.46,1.52,103.36,1.52s76.4-0.29,103.36-1.52c26.93-1.23,45.36-5.51,61.3-11.7a126.84,126.84,0,0,0,72.39-72.39c6.19-15.94,10.47-34.37,11.7-61.3,1.23-27,1.52-35.46,1.52-103.36s-0.29-76.4-1.52-103.36c-1.23-26.93-5.51-45.36-11.7-61.3a121.28,121.28,0,0,0-28.53-43.86A121.28,121.28,0,0,0,420.4,19.53c-15.94-6.19-34.37-10.47-61.3-11.7C332.4,6.6,323.9,6.31,256,6.31Z"></path><path fill="#ffffff" d="M256,127.67A128.33,128.33,0,1,0,384.33,256,128.33,128.33,0,0,0,256,127.67Zm0,213.51A85.18,85.18,0,1,1,341.18,256,85.18,85.18,0,0,1,256,341.18Z"></path><path fill="#ffffff" d="M423.44,117.27A28.73,28.73,0,1,1,394.71,88.54,28.73,28.73,0,0,1,423.44,117.27Z"></path></svg></span>
              <span class="btn-text">@felix_l</span>
          </a>
@@ -214,41 +264,43 @@
         <div class="d-flex flex-column justify-content-center align-items-center" style="height:100%; position: relative; z-index: 20;">
             <div style="width:100%;">
                 
-                <div class="text-center color-accent mb-5 animate__animated font-latin animate__fadeInDown animate__slower" style="font-size:28px;" data-anims="animate__fadeInDown animate__slower">AKAD NIKAH</div>
+                <div class="text-center color-accent mb-5 animate__animated animate__fadeInDown animate__slower font-latin" style="font-size:28px;">AKAD NIKAH</div>
 
                 <div class="mb-2">
-                    <div class="color-accent text-center animate__animated font-accent animate__zoomIn animate__slower" style="font-size:18px;line-height:1.2; animation-delay: 200ms;" data-anims="animate__zoomIn animate__slower">September</div>
+                    <div class="color-accent text-center animate__animated animate__zoomIn animate__slower font-accent" style="font-size:18px;line-height:1.2; animation-delay: 200ms;">September</div>
                     
                     <div class="d-flex justify-content-center align-items-center my-2">
-                        <div class="py-1 text-center color-accent animate__animated font-accent animate__zoomIn animate__slower" style="font-size:16px;line-height:1.2;width:100px;border-top:1px solid var(--primary);border-bottom:1px solid var(--primary); animation-delay: 400ms;" data-anims="animate__zoomIn animate__slower">Kamis</div>
-                        <div class="px-3 color-accent animate__animated font-accent animate__zoomIn animate__slower" style="font-size:80px;line-height:1.2; animation-delay: 400ms;" data-anims="animate__zoomIn animate__slower">17</div>
-                        <div class="py-1 text-center color-accent animate__animated font-elegant font-weight-bold animate__zoomIn animate__slower" style="font-size:18px;line-height:1.2;width:100px;border-top:1px solid var(--primary);border-bottom:1px solid var(--primary); animation-delay: 400ms;" data-anims="animate__zoomIn animate__slower">2026</div>
+                        <div class="py-1 text-center color-accent animate__animated animate__zoomIn animate__slower font-accent" style="font-size:16px;line-height:1.2;width:100px;border-top:1px solid var(--secondary);border-bottom:1px solid var(--secondary); animation-delay: 400ms;">Kamis</div>
+                        
+                        <div class="px-3 color-accent animate__animated animate__zoomIn animate__slower font-accent" style="font-size:80px;line-height:1.2; animation-delay: 400ms;">17</div>
+                        
+                        <div class="py-1 text-center color-accent animate__animated animate__zoomIn animate__slower font-elegant font-weight-bold" style="font-size:18px;line-height:1.2;width:100px;border-top:1px solid var(--secondary);border-bottom:1px solid var(--secondary); animation-delay: 400ms;">2026</div>
                     </div>
                     
-                    <div class="color-accent text-center animate__animated font-latin font-weight-bold mt-2 animate__fadeInUp animate__slower" style="font-size:16px;line-height:1.2; animation-delay: 600ms;" data-anims="animate__fadeInUp animate__slower">Pukul 08.00 WIB</div>
+                    <div class="color-accent text-center animate__animated animate__fadeInUp animate__slower font-latin font-weight-bold mt-2" style="font-size:16px;line-height:1.2; animation-delay: 600ms;">Pukul 08.00 WIB</div>
                 </div>
                 
-                <div class="text-center mb-5">
-                    <div class="font-latin font-weight-bold mb-1 animate__animated animate__fadeInUp animate__slower" style="font-size:18px; color: var(--text-dark); animation-delay: 800ms;" data-anims="animate__fadeInUp animate__slower">✤ Gedung Serbaguna ✤</div>
+                <div class="text-center mb-5 mt-4">
+                    <div class="text-dark font-latin font-weight-bold mb-1 animate__animated animate__fadeInUp animate__slower" style="font-size:18px; animation-delay: 800ms;">✤ Gedung Serbaguna ✤</div>
                     
-                    <div class="px-3 animate__animated animate__fadeInUp animate__slower" style="font-size:14px; color: #666; max-width: 280px; margin: 0 auto; animation-delay: 1000ms;" data-anims="animate__fadeInUp animate__slower">Jl. Gatot Subroto No. 123,<br>Kec. Medan Petisah, Kota Medan</div>
+                    <div class="text-dark px-3 animate__animated animate__fadeInUp animate__slower" style="font-size:14px; max-width: 280px; margin: 0 auto; animation-delay: 1000ms;">Jl. Gatot Subroto No. 123,<br>Kec. Medan Petisah, Kota Medan</div>
                     
                     
-        <div class="mt-3 animate__animated animate__fadeInUp animate__slower" style="animation-delay: 1200ms;" data-anims="animate__fadeInUp animate__slower">
+        <div class="mt-3 animate__animated animate__fadeInUp animate__slower" style="animation-delay: 1200ms;">
             <a href="https://maps.app.goo.gl/27zqMY2G9owUzAY9A" target="_blank" class="btn btn-tema rounded-pill font-base" rel="noreferrer noopener" draggable="false" style="font-size: 15px; padding: 8px 24px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
-             <span class="btn-icon"><i class="fa-solid fa-location-dot" style="margin-right: 6px; font-size: 1.1em; vertical-align: middle;"></i></span>
+             <span class="btn-icon"><i class="fa-solid fa-location-dot" style="margin-right: 9px; font-size: 1.1em; vertical-align: middle;"></i></span>
              <span class="btn-text">Buka Google Maps</span>
          </a>
         </div>
                 </div>
 
                 
-        <div class="mx-auto countdown-wrapper d-flex flex-column animate__animated animate__fadeInUp animate__slower" style="max-width:320px; animation-delay: 1300ms;" data-anims="animate__fadeInUp animate__slower">
+        <div class="mx-auto countdown-wrapper d-flex flex-column animate__animated animate__fadeInUp animate__slower" style="max-width:320px; animation-delay: 1300ms;">
             <div class="countdown text-center">
-                <div class="countdown-item day"><div class="number" id="uid_akad-day">128</div><div class="text">Hari</div></div>
-                <div class="countdown-item hour"><div class="number" id="uid_akad-hour">08</div><div class="text">Jam</div></div>
-                <div class="countdown-item minute"><div class="number" id="uid_akad-minute">42</div><div class="text">Menit</div></div>
-                <div class="countdown-item second"><div class="number" id="uid_akad-second">27</div><div class="text">Detik</div></div>
+                <div class="countdown-item day"><div class="number" id="uid_akad-day">127</div><div class="text">Hari</div></div>
+                <div class="countdown-item hour"><div class="number" id="uid_akad-hour">17</div><div class="text">Jam</div></div>
+                <div class="countdown-item minute"><div class="number" id="uid_akad-minute">46</div><div class="text">Menit</div></div>
+                <div class="countdown-item second"><div class="number" id="uid_akad-second">48</div><div class="text">Detik</div></div>
             </div>
         </div>
                 
@@ -262,42 +314,44 @@
         <div class="d-flex flex-column justify-content-center align-items-center" style="height:100%; position: relative; z-index: 20;">
             <div style="width:100%;">
                 
-                <div class="text-center color-accent mb-5 animate__animated font-latin animate__fadeInDown animate__slower" style="font-size:28px;" data-anims="animate__fadeInDown animate__slower">ACARA RESEPSI</div>
+                <div class="text-center color-accent mb-5 animate__animated animate__fadeInDown animate__slower font-latin" style="font-size:28px;">ACARA RESEPSI</div>
 
                 <div class="mb-2">
-                    <div class="color-accent text-center animate__animated font-accent animate__zoomIn animate__slower" style="font-size:18px;line-height:1.2; animation-delay: 200ms;" data-anims="animate__zoomIn animate__slower">September</div>
+                    <div class="color-accent text-center animate__animated animate__zoomIn animate__slower font-accent" style="font-size:18px;line-height:1.2; animation-delay: 200ms;">September</div>
                     
                     <div class="d-flex justify-content-center align-items-center my-2">
-                        <div class="py-1 text-center color-accent animate__animated font-accent animate__zoomIn animate__slower" style="font-size:16px;line-height:1.2;width:100px;border-top:1px solid var(--primary);border-bottom:1px solid var(--primary); animation-delay: 400ms;" data-anims="animate__zoomIn animate__slower">Kamis</div>
-                        <div class="px-3 color-accent animate__animated font-accent animate__zoomIn animate__slower" style="font-size:80px;line-height:1.2; animation-delay: 400ms;" data-anims="animate__zoomIn animate__slower">17</div>
-                        <div class="py-1 text-center color-accent animate__animated font-elegant font-weight-bold animate__zoomIn animate__slower" style="font-size:18px;line-height:1.2;width:100px;border-top:1px solid var(--primary);border-bottom:1px solid var(--primary); animation-delay: 400ms;" data-anims="animate__zoomIn animate__slower">2026</div>
+                        <div class="py-1 text-center color-accent animate__animated animate__zoomIn animate__slower font-accent" style="font-size:16px;line-height:1.2;width:100px;border-top:1px solid var(--secondary);border-bottom:1px solid var(--secondary); animation-delay: 400ms;">Kamis</div>
+                        
+                        <div class="px-3 color-accent animate__animated animate__zoomIn animate__slower font-accent" style="font-size:80px;line-height:1.2; animation-delay: 400ms;">17</div>
+                        
+                        <div class="py-1 text-center color-accent animate__animated animate__zoomIn animate__slower font-elegant font-weight-bold" style="font-size:18px;line-height:1.2;width:100px;border-top:1px solid var(--secondary);border-bottom:1px solid var(--secondary); animation-delay: 400ms;">2026</div>
                     </div>
                     
-                    <div class="color-accent text-center animate__animated font-latin font-weight-bold mt-2 animate__fadeInUp animate__slower" style="font-size:16px;line-height:1.2; animation-delay: 600ms;" data-anims="animate__fadeInUp animate__slower">Pukul 08.00 WIB</div>
+                    <div class="color-accent text-center animate__animated animate__fadeInUp animate__slower font-latin font-weight-bold mt-2" style="font-size:16px;line-height:1.2; animation-delay: 600ms;">Pukul 08.00 WIB</div>
                 </div>
                 
-                <div class="text-center mb-5">
-                    <div class="font-latin font-weight-bold mb-1 animate__animated animate__fadeInUp animate__slower" style="font-size:18px; color: var(--text-dark); animation-delay: 800ms;" data-anims="animate__fadeInUp animate__slower">✤ Gedung Serbaguna ✤</div>
+                <div class="text-center mb-5 mt-4">
+                    <div class="text-dark font-latin font-weight-bold mb-1 animate__animated animate__fadeInUp animate__slower" style="font-size:18px; animation-delay: 800ms;">✤ Gedung Serbaguna ✤</div>
                     
-                    <div class="px-3 animate__animated animate__fadeInUp animate__slower" style="font-size:14px; color: #666; max-width: 280px; margin: 0 auto; animation-delay: 1000ms;" data-anims="animate__fadeInUp animate__slower">Jl. Gatot Subroto No. 123,<br>Kec. Medan Petisah, Kota Medan</div>
+                    <div class="text-dark px-3 animate__animated animate__fadeInUp animate__slower" style="font-size:14px; max-width: 280px; margin: 0 auto; animation-delay: 1000ms;">Jl. Gatot Subroto No. 123,<br>Kec. Medan Petisah, Kota Medan</div>
                     
                     
                 </div>
 
                 
-        <div class="mx-auto countdown-wrapper d-flex flex-column animate__animated animate__fadeInUp animate__slower" style="max-width:320px; animation-delay: 1300ms;" data-anims="animate__fadeInUp animate__slower">
+        <div class="mx-auto countdown-wrapper d-flex flex-column animate__animated animate__fadeInUp animate__slower" style="max-width:320px; animation-delay: 1300ms;">
             <div class="countdown text-center">
-                <div class="countdown-item day"><div class="number" id="uid_resepsi-day">128</div><div class="text">Hari</div></div>
-                <div class="countdown-item hour"><div class="number" id="uid_resepsi-hour">08</div><div class="text">Jam</div></div>
-                <div class="countdown-item minute"><div class="number" id="uid_resepsi-minute">42</div><div class="text">Menit</div></div>
-                <div class="countdown-item second"><div class="number" id="uid_resepsi-second">27</div><div class="text">Detik</div></div>
+                <div class="countdown-item day"><div class="number" id="uid_resepsi-day">127</div><div class="text">Hari</div></div>
+                <div class="countdown-item hour"><div class="number" id="uid_resepsi-hour">17</div><div class="text">Jam</div></div>
+                <div class="countdown-item minute"><div class="number" id="uid_resepsi-minute">46</div><div class="text">Menit</div></div>
+                <div class="countdown-item second"><div class="number" id="uid_resepsi-second">48</div><div class="text">Detik</div></div>
             </div>
         </div>
                 
                 
-    <div class="text-center mt-3 animate__animated animate__fadeInUp animate__slower" style="animation-delay: 1500ms;" data-anims="animate__fadeInUp animate__slower">
+    <div class="text-center mt-3 animate__animated animate__fadeInUp animate__slower" style="animation-delay: 1500ms;">
         <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Resepsi&amp;dates=20260917T010000Z%2F20260917T030000Z&amp;location=Gedung+Serbaguna&amp;details=Jl.+Gatot+Subroto+No.+123%2C%0AKec.+Medan+Petisah%2C+Kota+Medan" target="_blank" class="btn btn-tema rounded-pill font-base" rel="noreferrer noopener" draggable="false" style="font-size: 14px; padding: 10px 24px; display: inline-flex; align-items: center; justify-content: center;">
-         <span class="btn-icon"><i class="fa-regular fa-calendar-plus" style="margin-right: 6px; font-size: 1.1em; vertical-align: middle;"></i></span>
+         <span class="btn-icon"><i class="fa-regular fa-calendar-alt" style="margin-right: 9px; font-size: 1.1em; vertical-align: middle;"></i></span>
          <span class="btn-text">Add to Calendar</span>
      </a>
     </div>
@@ -311,9 +365,10 @@
         .maps-scroll-area { -ms-overflow-style: none; scrollbar-width: none; }
 
         .map-card-wrapper {
-            background: #ffffff;
+            background-color: var(--bg-surface);
             padding: 6px; 
-            border-radius: 20px;
+            border-radius: 16px;
+            border: 2px solid var(--secondary);
             box-shadow: 0 8px 25px rgba(0,0,0,0.08); 
             margin: 0 10px 25px 10px;
             aspect-ratio: 4/3; 
@@ -328,21 +383,29 @@
     <div class="page">
         <div class="d-flex flex-column justify-content-center align-items-center text-center" style="height:100%; position: relative; z-index: 20;">
             
-            <div class="maps-scroll-area" style="width:100%; max-height: 80vh; overflow-y: auto; padding: 10px 20px 20px 20px;">
+            <div class="maps-scroll-area" style="width:100%; max-height: 80vh; overflow-y: auto; padding: 10px 20px 40px 20px;">
                 
                 <div class="color-accent h4 animate__animated animate__fadeInDown animate__slower font-latin" style="font-size:26px; margin-bottom: 12px;">
                     Maps Acara Resepsi
                 </div>
                 
-                <div class="animate__animated animate__zoomIn animate__slower" style="width: 90px; height: 2px; background-color: var(--primary); margin: 0 auto 20px auto; animation-delay: 400ms;"></div>
+                <div class="bg-tema animate__animated animate__zoomIn animate__slower" style="width: 90px; height: 2px; margin: 0 auto 20px auto; animation-delay: 400ms;"></div>
                 
                 <div class="map-card-wrapper animate__animated animate__fadeInUp animate__slower" style="animation-delay: 600ms;">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63714.608636365636!2d98.6490592!3d3.5498589!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3031304954318df1%3A0xd9cfba5dbd38bae5!2sMasjid%20Raya%20Al-Mashun!5e0!3m2!1sid!2sid!4v1778388345979!5m2!1sid!2sid" width="100%" height="100%" style="border:0; border-radius:14px; display:block; width:100%; height:100%;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63714.608636365636!2d98.6490592!3d3.5498589!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3031304954318df1%3A0xd9cfba5dbd38bae5!2sMasjid%20Raya%20Al-Mashun!5e0!3m2!1sid!2sid!4v1778388345979!5m2!1sid!2sid" width="100%" height="100%" style="border:0; border-radius:12px; display:block; width:100%; height:100%;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
                 
                 <div class="animate__animated animate__fadeInUp animate__slower" style="animation-delay: 900ms;">
-                    <div class="font-latin font-weight-bold mb-2" style="font-size:18px; color: var(--text-dark); letter-spacing: 0.5px;">✤ Gedung Serbaguna ✤</div>
-                    <div class="px-2" style="font-size:14px; color: #555; line-height: 1.6; max-width: 320px; margin: 0 auto;">Jl. Gatot Subroto No. 123,<br>Kec. Medan Petisah, Kota Medan</div>
+                    <div class="font-latin font-weight-bold mb-2 text-dark" style="font-size:18px; letter-spacing: 0.5px;">✤ Gedung Serbaguna ✤</div>
+                    
+                    <div class="px-2 text-dark" style="font-size:14px; line-height: 1.6; max-width: 320px; margin: 0 auto;">Jl. Gatot Subroto No. 123,<br>Kec. Medan Petisah, Kota Medan</div>
+                </div>
+                
+                <div class="mt-3 animate__animated animate__fadeInUp animate__slower" style="animation-delay: 1200ms;">
+                    <a href="https://maps.app.goo.gl/27zqMY2G9owUzAY9A" target="_blank" class="btn btn-tema rounded-pill font-base" rel="noreferrer noopener" draggable="false" style="font-size: 14px; padding: 10px 24px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                        <span class="btn-icon"><i class="fa-solid fa-location-dot" style="margin-right: 9px; font-size: 1.1em; vertical-align: middle;"></i></span>
+                        <span class="btn-text">Buka Google Maps</span>
+                    </a>
                 </div>
                 
             </div>
@@ -350,33 +413,57 @@
         </div>
     </div>
     
+    <style>
+        .story-scroll-area::-webkit-scrollbar { display: none; }
+        .story-scroll-area { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+    
     <div class="page">
         <div class="d-flex flex-column justify-content-center align-items-center" style="height:100%; position: relative; z-index: 20;">
             
-            <div class="text-center color-accent h4 mb-4 animate__animated animate__fadeInDown animate__slower font-latin" style="font-size:32px;">
-                Our Love Story
-            </div>
-            
-            <div class="px-4 w-100">
+            <div class="story-scroll-area" style="width: 100%; max-height: 85vh; overflow-y: auto; padding: 20px 10px 60px 10px;">
                 
-        <div class="text-left pl-3 mb-3 animate__animated animate__fadeInUp animate__slower" style="position:relative; animation-delay: 300ms;">
-            <span class="story-deco" style="height:16px;width:16px;position:absolute;background-color:var(--primary);border-radius:100%;transform:translateX(-24px) translateY(4px);"></span>
-            <span class="story-deco" style="height:100%;width:2px;position:absolute;background-color:var(--primary);transform:translateX(-17px) translateY(20px);"></span>
-            <div class="story-title font-weight-bold mb-2" style="font-size:16px;">First Meet (2018)</div>
-            <div class="quotes" style="font-size:14.4px;">Takdir mempertemukan kami pada sebuah hari yang tak terlupakan. Saat itu, kami hanyalah dua orang asing yang tanpa sadar dipertemukan oleh semesta.</div>
+                <div class="text-center color-accent mb-5 animate__animated animate__fadeInDown animate__slower font-latin" style="font-size:32px;">
+                    Our Love Story
+                </div>
+                
+                <div class="px-4 w-100 mx-auto" style="max-width: 350px;">
+                    
+        <div class="text-left pl-3 mb-4 animate__animated animate__fadeInUp animate__slower" style="position:relative; animation-delay: 300ms;">
+            
+            <span class="story-deco bg-tema" style="height:16px; width:16px; position:absolute; border-radius:100%; transform:translateX(-24px) translateY(4px); box-shadow: 0 0 0 4px var(--bg-surface);"></span>
+            
+            <span class="story-deco" style="height:100%; width:2px; position:absolute; background-color: var(--secondary); opacity: 0.6; transform:translateX(-17px) translateY(20px);"></span>
+            
+            <div class="story-title font-weight-bold mb-2 color-accent font-latin" style="font-size:18px; letter-spacing: 0.5px;">First Meet (2018)</div>
+            
+            <div class="quotes text-dark" style="font-size:13.5px; line-height: 1.6;">Takdir mempertemukan kami pada sebuah hari yang tak terlupakan. Saat itu, kami hanyalah dua orang asing yang tanpa sadar dipertemukan oleh semesta.</div>
+            
         </div>
-        <div class="text-left pl-3 mb-3 animate__animated animate__fadeInUp animate__slower" style="position:relative; animation-delay: 600ms;">
-            <span class="story-deco" style="height:16px;width:16px;position:absolute;background-color:var(--primary);border-radius:100%;transform:translateX(-24px) translateY(4px);"></span>
-            <span class="story-deco" style="height:100%;width:2px;position:absolute;background-color:var(--primary);transform:translateX(-17px) translateY(20px);"></span>
-            <div class="story-title font-weight-bold mb-2" style="font-size:16px;">Relationship (2018)</div>
-            <div class="quotes" style="font-size:14.4px;">Waktu membawa kami lebih dekat, melewati hari-hari dengan cerita penuh tawa, doa, dan harapan. Di tanggal ini, kami mengikrarkan janji untuk saling menjaga, berpegangan erat, dan melangkah bersama.</div>
+        <div class="text-left pl-3 mb-4 animate__animated animate__fadeInUp animate__slower" style="position:relative; animation-delay: 600ms;">
+            
+            <span class="story-deco bg-tema" style="height:16px; width:16px; position:absolute; border-radius:100%; transform:translateX(-24px) translateY(4px); box-shadow: 0 0 0 4px var(--bg-surface);"></span>
+            
+            <span class="story-deco" style="height:100%; width:2px; position:absolute; background-color: var(--secondary); opacity: 0.6; transform:translateX(-17px) translateY(20px);"></span>
+            
+            <div class="story-title font-weight-bold mb-2 color-accent font-latin" style="font-size:18px; letter-spacing: 0.5px;">Relationship (2018)</div>
+            
+            <div class="quotes text-dark" style="font-size:13.5px; line-height: 1.6;">Waktu membawa kami lebih dekat, melewati hari-hari dengan cerita penuh tawa, doa, dan harapan. Di tanggal ini, kami mengikrarkan janji untuk saling menjaga, berpegangan erat, dan melangkah bersama.</div>
+            
         </div>
         <div class="text-left pl-3 mb-1 animate__animated animate__fadeInUp animate__slower" style="position:relative; animation-delay: 900ms;">
-            <span class="story-deco" style="height:16px;width:16px;position:absolute;background-color:var(--primary);border-radius:100%;transform:translateX(-24px) translateY(4px);"></span>
             
-            <div class="story-title font-weight-bold mb-2" style="font-size:16px;">Menikah (2025)</div>
-            <div class="quotes" style="font-size:14.4px;">Kini, tibalah saatnya kami mengukir babak baru dalam perjalanan cinta ini. Dengan penuh rasa syukur, kami siap mengikat janji suci di hadapan keluarga, sahabat, dan orang-orang tercinta.</div>
+            <span class="story-deco bg-tema" style="height:16px; width:16px; position:absolute; border-radius:100%; transform:translateX(-24px) translateY(4px); box-shadow: 0 0 0 4px var(--bg-surface);"></span>
+            
+            
+            
+            <div class="story-title font-weight-bold mb-2 color-accent font-latin" style="font-size:18px; letter-spacing: 0.5px;">Menikah (2025)</div>
+            
+            <div class="quotes text-dark" style="font-size:13.5px; line-height: 1.6;">Kini, tibalah saatnya kami mengukir babak baru dalam perjalanan cinta ini. Dengan penuh rasa syukur, kami siap mengikat janji suci di hadapan keluarga, sahabat, dan orang-orang tercinta.</div>
+            
         </div>
+                </div>
+                
             </div>
             
         </div>
@@ -387,24 +474,39 @@
             <div style="width:100%;">
                 <div class="d-flex flex-wrap px-2 justify-content-center">
                     
-            <div style="width:50%; overflow:hidden; padding:6px; animation-delay: 200ms;" class="animate__animated animate__zoomIn animate__slower">
-                <div style="overflow:hidden; width:100%; aspect-ratio: 3/4; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 2px solid #ffffff;">
-                    <img src="https://ik.imagekit.io/asetundangan/foto-mempelai/flow-red/galeri-10.jpg?tr=h-1200" style="width: 100%; height: 100%; object-fit: cover;" class="lightbox" draggable="false">
+            <div style="width:33%; overflow:hidden; padding:6px; animation-delay: 200ms;" class="animate__animated animate__zoomIn animate__slower">
+                <div style="overflow:hidden; width:100%; aspect-ratio: 3/4; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 2px solid #eee;">
+                    <img src="https://ik.imagekit.io/asetundangan/foto-mempelai/flow-red/galeri-10.jpg?tr=h-1200" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" class="lightbox" draggable="false">
                 </div>
             </div>
-            <div style="width:50%; overflow:hidden; padding:6px; animation-delay: 400ms;" class="animate__animated animate__zoomIn animate__slower">
-                <div style="overflow:hidden; width:100%; aspect-ratio: 3/4; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 2px solid #ffffff;">
-                    <img src="https://ik.imagekit.io/asetundangan/foto-mempelai/flow-red/galeri-10.jpg?tr=h-1200" style="width: 100%; height: 100%; object-fit: cover;" class="lightbox" draggable="false">
+            <div style="width:34%; overflow:hidden; padding:6px; animation-delay: 400ms;" class="animate__animated animate__zoomIn animate__slower">
+                <div style="overflow:hidden; width:100%; aspect-ratio: 3/4; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 2px solid #eee;">
+                    <img src="https://ik.imagekit.io/asetundangan/foto-mempelai/flow-red/galeri-10.jpg?tr=h-1200" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" class="lightbox" draggable="false">
                 </div>
             </div>
-            <div style="width:50%; overflow:hidden; padding:6px; animation-delay: 600ms;" class="animate__animated animate__zoomIn animate__slower">
-                <div style="overflow:hidden; width:100%; aspect-ratio: 3/4; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 2px solid #ffffff;">
-                    <img src="https://ik.imagekit.io/asetundangan/foto-mempelai/flow-red/galeri-10.jpg?tr=h-1200" style="width: 100%; height: 100%; object-fit: cover;" class="lightbox" draggable="false">
+            <div style="width:33%; overflow:hidden; padding:6px; animation-delay: 600ms;" class="animate__animated animate__zoomIn animate__slower">
+                <div style="overflow:hidden; width:100%; aspect-ratio: 3/4; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 2px solid #eee;">
+                    <img src="https://ik.imagekit.io/asetundangan/foto-mempelai/flow-red/galeri-10.jpg?tr=h-1200" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" class="lightbox" draggable="false">
                 </div>
             </div>
-            <div style="width:50%; overflow:hidden; padding:6px; animation-delay: 800ms;" class="animate__animated animate__zoomIn animate__slower">
-                <div style="overflow:hidden; width:100%; aspect-ratio: 3/4; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 2px solid #ffffff;">
-                    <img src="https://ik.imagekit.io/asetundangan/foto-mempelai/flow-red/galeri-10.jpg?tr=h-1200" style="width: 100%; height: 100%; object-fit: cover;" class="lightbox" draggable="false">
+            <div style="width:100%; overflow:hidden; padding:6px; animation-delay: 800ms;" class="animate__animated animate__zoomIn animate__slower">
+                <div style="overflow:hidden; width:100%; aspect-ratio: 16/9; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 2px solid #eee;">
+                    <img src="https://ik.imagekit.io/asetundangan/foto-mempelai/flow-red/galeri-10.jpg?tr=h-1200" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" class="lightbox" draggable="false">
+                </div>
+            </div>
+            <div style="width:33%; overflow:hidden; padding:6px; animation-delay: 1000ms;" class="animate__animated animate__zoomIn animate__slower">
+                <div style="overflow:hidden; width:100%; aspect-ratio: 3/4; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 2px solid #eee;">
+                    <img src="https://ik.imagekit.io/asetundangan/foto-mempelai/flow-red/galeri-10.jpg?tr=h-1200" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" class="lightbox" draggable="false">
+                </div>
+            </div>
+            <div style="width:34%; overflow:hidden; padding:6px; animation-delay: 1200ms;" class="animate__animated animate__zoomIn animate__slower">
+                <div style="overflow:hidden; width:100%; aspect-ratio: 3/4; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 2px solid #eee;">
+                    <img src="https://ik.imagekit.io/asetundangan/foto-mempelai/flow-red/galeri-10.jpg?tr=h-1200" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" class="lightbox" draggable="false">
+                </div>
+            </div>
+            <div style="width:33%; overflow:hidden; padding:6px; animation-delay: 1400ms;" class="animate__animated animate__zoomIn animate__slower">
+                <div style="overflow:hidden; width:100%; aspect-ratio: 3/4; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 2px solid #eee;">
+                    <img src="https://ik.imagekit.io/asetundangan/foto-mempelai/flow-red/galeri-10.jpg?tr=h-1200" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" class="lightbox" draggable="false">
                 </div>
             </div>
                 </div>
@@ -416,77 +518,100 @@
         <div class="d-flex flex-column justify-content-center align-items-center" style="height:100%; position: relative; z-index: 20; padding-top: 10px;">
             
             
-        <div>
-            <div class="animate__animated animate__fadeInRight animate__slower">
-                <div style="width:248px;height:195px;margin:auto;overflow:hidden;transform:translate(15px, 24px) rotate(356deg);border:4px solid var(--inv-border);">
-                    <img src="https://assets.satumomen.com/images/galleries/727644-gallery-9k7a4oe2k4.png" class="" style="width: 100%; height: 100%; object-fit: cover" draggable="false">
+        <div style="width: 100%; max-width: 350px; height: 300px; position: relative; margin-bottom: 20px; margin-top: 15px;">
+            <div class="animate__animated animate__fadeInDown animate__slower" style="position: absolute; top: 25px; left: 0; right: 0; margin: 0 auto; width: 85%; z-index: 1;">
+                <div class="bg-surface" style="padding: 8px 8px 15px 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.12); transform: rotate(-2deg); border: 1px solid var(--secondary);">
+                    <div style="width: 100%; aspect-ratio: 5/3; margin-bottom: 12px; overflow: hidden; border: 1px solid var(--secondary);">
+                        <img src="https://ik.imagekit.io/asetundangan/foto-mempelai/flow-red/galeri-4.jpg" loading="lazy" class="" style="width: 100%; height: 100%; object-fit: cover;" draggable="false">
+                    </div>
+                    <div class="font-cursive color-accent text-center" style="font-size: 27px; line-height: 1;">Wishes &amp; RSVP</div>
                 </div>
             </div>
-            <div class="animate__animated animate__fadeInLeft animate__slower" style="animation-delay: 300ms;">
-                <div style="width:248px;height:195px;margin:auto;overflow:hidden;margin-bottom:20px;transform:translate(-7px, 0px) rotate(2deg);border:4px solid var(--inv-border);">
-                    <img src="https://assets.satumomen.com/images/galleries/727644-gallery-xHtuH4VaqZ.png" class="" style="width: 100%; height: 100%; object-fit: cover" draggable="false">
+            <div class="animate__animated animate__zoomIn animate__slower" style="position: absolute; top: -10px; left: 5px; z-index: 2; animation-delay: 400ms;">
+                <div class="bg-surface" style="width: 115px; aspect-ratio: 1/1; padding: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); transform: rotate(-12deg); border: 1px solid var(--secondary);">
+                    <div style="width: 100%; height: 100%; overflow: hidden; border: 1px solid var(--secondary);">
+                        <img src="https://assets.satumomen.com/images/galleries/727644-gallery-9k7a4oe2k4.png" loading="lazy" class="" style="width: 100%; height: 100%; object-fit: cover;" draggable="false">
+                    </div>
+                </div>
+            </div>
+            <div class="animate__animated animate__zoomIn animate__slower" style="position: absolute; bottom: 10px; right: 2px; z-index: 3; animation-delay: 600ms;">
+                <div class="bg-surface" style="width: 125px; aspect-ratio: 1/1; padding: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); transform: rotate(13deg); border: 1px solid var(--secondary);">
+                    <div style="width: 100%; height: 100%; overflow: hidden; border: 1px solid var(--secondary);">
+                        <img src="https://assets.satumomen.com/images/galleries/727644-gallery-xHtuH4VaqZ.png" loading="lazy" class="" style="width: 100%; height: 100%; object-fit: cover;" draggable="false">
+                    </div>
                 </div>
             </div>
         </div>
 
             <div class="text-center">
-                <div class="mb-3 px-3 animate__animated animate__fadeInUp animate__slower" style="font-size:14px; animation-delay: 800ms; color: var(--text-dark);">
+                <div class="text-dark mb-3 px-3 animate__animated animate__fadeInUp animate__slower" style="font-size:14px; animation-delay: 800ms;">
                     Tekan tombol dibawah untuk mengirim ucapan kepada mempelai &amp; mengonfirmasi kehadiran
                 </div>
                 
-                <button onclick="if(window.bukaModalRSVP) window.bukaModalRSVP()" class="btn btn-tema rounded-pill animate__animated animate__fadeInUp animate__slow" style="font-size:14px; padding: 12px 30px; animation-delay: 1000ms;">
-                    Kirim Ucapan &amp; RSVP
-                </button>
+                <button onclick="if(window.bukaModalRSVP) window.bukaModalRSVP()" class="btn btn-tema rounded-pill animate__animated animate__fadeInUp animate__slow" style="font-size:14px; padding: 12px 30px; animation-delay: 1000ms;"> Kirim Ucapan &amp; RSVP</button>
             </div>
 
         </div>
         
-        <div id="modal-rsvp-overlay" ontouchmove="event.stopPropagation()" onwheel="event.stopPropagation()" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 998; backdrop-filter: blur(3px); opacity: 0; transition: opacity 0.4s ease;">
-            <div id="modal-rsvp-card" style="position: absolute; top: 7.5%; left: 5%; width: 90%; height: 85%; background: white; z-index: 999; display: flex; flex-direction: column; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); overflow: hidden; transform: translateY(30px); transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);">
+        <div id="modal-rsvp-overlay" ontouchmove="event.stopPropagation()" onwheel="event.stopPropagation()" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 998; backdrop-filter: blur(3px); opacity: 0; transition: opacity 0.4s ease;">
+            
+            <div id="modal-rsvp-card" class="bg-surface" style="position: absolute; top: 7.5%; left: 5%; width: 90%; height: 85%; z-index: 999; display: flex; flex-direction: column; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); overflow: hidden; transform: translateY(30px); transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);">
+                
                 <button onclick="if(window.tutupModalRSVP) window.tutupModalRSVP()" style="position: absolute; top: 15px; right: 15px; background: #fff5f5; border: 1px solid #feb2b2; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; color: #c53030; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 1002; font-weight: bold; transition: 0.2s;">×</button>
-                <div style="padding: 25px 20px 10px 20px; text-align: center; background: white; z-index: 1001;">
-                    <h3 style="color: var(--primary); font-family: var(--font-accent); margin: 0; font-size: 26px; font-weight: normal;">Buku Tamu</h3>
-                    <div style="width: 40px; height: 3px; background: var(--primary-light); margin: 10px auto; border-radius: 10px;"></div>
+                
+                <div class="bg-surface" style="padding: 25px 20px 10px 20px; text-align: center; z-index: 1001;">
+                    <h3 class="color-accent font-accent" style="margin: 0; font-size: 26px; font-weight: normal;">Buku Tamu</h3>
+                    <div style="width: 40px; height: 3px; background-color: var(--secondary); margin: 10px auto; border-radius: 10px;"></div>
                 </div>
+                
                 <div style="flex-grow: 1; overflow-y: auto; padding: 10px 20px 30px 20px; text-align: left;" id="scroll-area-rsvp">
-                    <div style="background: #fafafa; padding: 20px; border-radius: 18px; border: 1px solid #f0f0f0; margin-bottom: 25px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);">
+                    
+                    <div style="background: transparent; padding: 20px; border-radius: 18px; border: 1px solid var(--secondary); margin-bottom: 25px;">
+                        
                         <div style="margin-bottom: 12px;">
-                            <label style="font-size: 11px; color: #a67c52; font-weight: bold; margin-left: 5px; letter-spacing: 0.5px;">NAMA LENGKAP</label>
-                            <input type="text" id="rsvp-nama" placeholder="Masukkan nama Anda" style="width: 100%; padding: 12px 15px; border: 1.5px solid #eee; border-radius: 10px; font-family: var(--font-base); font-size: 14px; outline: none; margin-top: 5px; transition: 0.3s;" onfocus="this.style.borderColor='var(--primary)'; this.style.background='white';">
+                            <label class="color-accent" style="font-size: 11px; font-weight: bold; margin-left: 5px; letter-spacing: 0.5px;">NAMA LENGKAP</label>
+                            <input type="text" id="rsvp-nama" placeholder="Masukkan nama Anda" style="width: 100%; padding: 12px 15px; border: 1px solid var(--secondary); border-radius: 10px; font-family: var(--font-base); font-size: 14px; outline: none; margin-top: 5px; background: transparent; color: var(--text-dark); transition: 0.3s;" onfocus="this.style.borderColor='var(--primary)';" onblur="this.style.borderColor='var(--secondary)';">
                         </div>
+                        
                         <div style="margin-bottom: 12px;">
-                            <label style="font-size: 11px; color: #a67c52; font-weight: bold; margin-left: 5px; letter-spacing: 0.5px;">KEHADIRAN</label>
-                            <select id="rsvp-hadir" style="width: 100%; padding: 12px 15px; border: 1.5px solid #eee; border-radius: 10px; font-family: var(--font-base); font-size: 14px; outline: none; margin-top: 5px; background: white; color: #555;">
+                            <label class="color-accent" style="font-size: 11px; font-weight: bold; margin-left: 5px; letter-spacing: 0.5px;">KEHADIRAN</label>
+                            <select id="rsvp-hadir" style="width: 100%; padding: 12px 15px; border: 1px solid var(--secondary); border-radius: 10px; font-family: var(--font-base); font-size: 14px; outline: none; margin-top: 5px; background: transparent; color: var(--text-dark);" onfocus="this.style.borderColor='var(--primary)';" onblur="this.style.borderColor='var(--secondary)';">
                                 <option value="" disabled="" selected="" hidden="">Pilih status kehadiran</option>
-                                <option value="Hadir">Hadir</option>
-                                <option value="Tidak Hadir">Tidak Hadir</option>
-                                <option value="Masih Ragu">Masih Ragu</option>
+                                <option value="Hadir" style="color: #333;">Hadir</option>
+                                <option value="Tidak Hadir" style="color: #333;">Tidak Hadir</option>
+                                <option value="Masih Ragu" style="color: #333;">Masih Ragu</option>
                             </select>
                         </div>
+                        
                         <div style="margin-bottom: 15px;">
-                            <label style="font-size: 11px; color: #a67c52; font-weight: bold; margin-left: 5px; letter-spacing: 0.5px;">UCAPAN &amp; DOA</label>
-                            <textarea id="rsvp-pesan" rows="4" placeholder="Berikan doa terbaik Anda..." style="width: 100%; padding: 12px 15px; border: 1.5px solid #eee; border-radius: 10px; font-family: var(--font-base); font-size: 14px; resize: none; outline: none; margin-top: 5px; transition: 0.3s;" onfocus="this.style.borderColor='var(--primary)'; this.style.background='white';"></textarea>
+                            <label class="color-accent" style="font-size: 11px; font-weight: bold; margin-left: 5px; letter-spacing: 0.5px;">UCAPAN &amp; DOA</label>
+                            <textarea id="rsvp-pesan" rows="4" placeholder="Berikan doa terbaik Anda..." style="width: 100%; padding: 12px 15px; border: 1px solid var(--secondary); border-radius: 10px; font-family: var(--font-base); font-size: 14px; resize: none; outline: none; margin-top: 5px; background: transparent; color: var(--text-dark); transition: 0.3s;" onfocus="this.style.borderColor='var(--primary)';" onblur="this.style.borderColor='var(--secondary)';"></textarea>
                         </div>
-                        <button onclick="if(window.kirimRsvpPreview) window.kirimRsvpPreview()" id="btn-kirim-rsvp" style="width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-family: var(--font-base); font-size: 14px; letter-spacing: 1px; box-shadow: 0 8px 15px rgba(166,124,82,0.2);">KIRIM SEKARANG</button>
+                        
+                        <button onclick="if(window.kirimRsvpPreview) window.kirimRsvpPreview()" id="btn-kirim-rsvp" class="btn-tema" style="width: 100%; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; font-family: var(--font-base); font-size: 14px; letter-spacing: 1px;">KIRIM SEKARANG</button>
                     </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px 10px; border-radius: 15px; margin-bottom: 25px; border: 1px solid #f5f5f5;">
+                    
+                    <div class="bg-surface" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 10px; border-radius: 15px; margin-bottom: 25px; border: 1px solid var(--secondary);">
                         <div style="text-align: center; width: 33%;">
                             <div id="count-hadir" style="font-size: 24px; font-weight: bold; color: #2ecc71;">0</div>
-                            <div style="font-size: 9px; color: #999; font-weight: bold; margin-top: 4px;">HADIR</div>
+                            <div style="font-size: 9px; color: var(--text-dark); font-weight: bold; margin-top: 4px;">HADIR</div>
                         </div>
-                        <div style="text-align: center; width: 33%; border-left: 1px solid #f0f0f0; border-right: 1px solid #f0f0f0;">
+                        <div style="text-align: center; width: 33%; border-left: 1px solid var(--secondary); border-right: 1px solid var(--secondary);">
                             <div id="count-tidak" style="font-size: 24px; font-weight: bold; color: #e74c3c;">0</div>
-                            <div style="font-size: 9px; color: #999; font-weight: bold; margin-top: 4px;">TIDAK</div>
+                            <div style="font-size: 9px; color: var(--text-dark); font-weight: bold; margin-top: 4px;">TIDAK</div>
                         </div>
                         <div style="text-align: center; width: 33%;">
                             <div id="count-ragu" style="font-size: 24px; font-weight: bold; color: #f1c40f;">0</div>
-                            <div style="font-size: 9px; color: #999; font-weight: bold; margin-top: 4px;">RAGU</div>
+                            <div style="font-size: 9px; color: var(--text-dark); font-weight: bold; margin-top: 4px;">RAGU</div>
                         </div>
                     </div>
+                    
                     <div id="daftar-ucapan" style="display: flex; flex-direction: column; gap: 15px;"></div>
+                    
                     <div style="text-align: center; margin-top: 40px;">
-                        <button onclick="if(window.tutupModalRSVP) window.tutupModalRSVP()" style="background: #f8f9fa; border: 1px solid #eee; padding: 10px 25px; border-radius: 30px; font-size: 12px; color: #888; cursor: pointer; font-weight: bold; letter-spacing: 1px; transition: 0.2s;">× TUTUP JENDELA</button>
+                        <button onclick="if(window.tutupModalRSVP) window.tutupModalRSVP()" style="background: transparent; border: 1px solid var(--secondary); padding: 10px 25px; border-radius: 30px; font-size: 12px; color: var(--text-dark); cursor: pointer; font-weight: bold; letter-spacing: 1px; transition: 0.2s;">× TUTUP JENDELA</button>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -495,39 +620,40 @@
     <div class="page">
         <div class="h-100 w-100 d-flex justify-content-center align-items-center" style="position: relative; z-index: 20;">
             <div class="w-100 text-center">
+                
                 <div class="color-accent h4 mb-2 animate__animated animate__fadeInDown animate__slower font-latin" style="font-size:32px;">Tanda Kasih</div>
                 
-                <div class="mb-4 px-3 animate__animated animate__fadeInUp animate__slower" style="font-size:15px; animation-delay: 200ms;">
+                <div class="text-dark mb-4 px-3 animate__animated animate__fadeInUp animate__slower" style="font-size:14.5px; animation-delay: 200ms; line-height: 1.6;">
                     Terima kasih telah menambah semangat kegembiraan pernikahan kami dengan kehadiran dan hadiah indah Anda.
                 </div>
                 
-                <div class="animate__animated animate__zoomIn animate__slower mt-3 p-4 mx-3 rounded" style="border:1px solid var(--inv-border); background-color: rgba(255,255,255,0.7); animation-delay: 400ms;">
+                <div class="animate__animated animate__zoomIn animate__slower mt-3 p-4 mx-3 rounded" style="background-color: color-mix(in srgb, var(--bg-surface), transparent 60%) !important; border: 1px solid color-mix(in srgb, var(--secondary), transparent 60%); box-shadow: 0 10px 25px rgba(0,0,0,0.05); animation-delay: 400ms; backdrop-filter: blur(4px);">
                     <div class="text-center">
                         <div style="width: 100%; text-align: left;">
                             
             <div class="d-flex align-items-center animate__animated animate__fadeInUp mb-4" style="animation-delay: 600ms;">
-                <div style="width: 85px; height: 55px; flex-shrink: 0; overflow: hidden; cursor: default; background-color: rgb(255, 255, 255); border: 1px solid rgb(170, 170, 170); border-radius: 6px; padding: 4px; margin-right: 12px;" class="">
+                <div style="width: 85px; height: 55px; flex-shrink: 0; overflow: hidden; cursor: default; background-color: rgb(255, 255, 255); border: 1px solid color-mix(in srgb, var(--secondary), transparent 60%); border-radius: 8px; padding: 4px; margin-right: 12px;" class="">
                     <img src="https://ik.imagekit.io/asetundangan/aset/icon-bank/Logo-Bank-BCA-1.png" style="width: 100%;height: 100%;object-fit: contain; transition: transform 0.2s;" onmouseover="this.style.transform='scale(0.95)'" onmouseout="this.style.transform='scale(1)'" draggable="false">
                 </div>
                 <div class="text-left" style="width: calc(100% - 97px);">
                     <div class="d-flex align-items-center mb-1">
-                        <div class="account-number font-weight-bold h5 mb-0" style="font-size:18px;">12345678</div>
+                        <div class="text-dark account-number font-weight-bold h5 mb-0" style="font-size:18px; letter-spacing: 1px;">12345678</div>
                         <button class="btn-copy" onclick="copyText('12345678', this)">Salin</button>
                     </div>
-                    <div class="font-weight-bold" style="font-size:14px; color:#555; word-wrap: break-word;">BCA : Feliz Gunawan</div>
+                    <div class="text-dark font-weight-bold" style="font-size:13px; word-wrap: break-word; opacity: 0.85;">BCA : Feliz Gunawan</div>
                 </div>
             </div>
         
             <div class="d-flex align-items-center animate__animated animate__fadeInUp " style="animation-delay: 800ms;">
-                <div style="width: 85px; height: 55px; flex-shrink: 0; overflow: hidden; cursor: default; background-color: rgb(255, 255, 255); border: 1px solid rgb(170, 170, 170); border-radius: 6px; padding: 4px; margin-right: 12px;" class="">
+                <div style="width: 85px; height: 55px; flex-shrink: 0; overflow: hidden; cursor: default; background-color: rgb(255, 255, 255); border: 1px solid color-mix(in srgb, var(--secondary), transparent 60%); border-radius: 8px; padding: 4px; margin-right: 12px;" class="">
                     <img src="https://ik.imagekit.io/asetundangan/aset/icon-bank/logo-BRI.svg" style="width: 100%;height: 100%;object-fit: contain; transition: transform 0.2s;" onmouseover="this.style.transform='scale(0.95)'" onmouseout="this.style.transform='scale(1)'" draggable="false">
                 </div>
                 <div class="text-left" style="width: calc(100% - 97px);">
                     <div class="d-flex align-items-center mb-1">
-                        <div class="account-number font-weight-bold h5 mb-0" style="font-size:18px;">87654321</div>
+                        <div class="text-dark account-number font-weight-bold h5 mb-0" style="font-size:18px; letter-spacing: 1px;">87654321</div>
                         <button class="btn-copy" onclick="copyText('87654321', this)">Salin</button>
                     </div>
-                    <div class="font-weight-bold" style="font-size:14px; color:#555; word-wrap: break-word;">BRI : Felix Laurensius</div>
+                    <div class="text-dark font-weight-bold" style="font-size:13px; word-wrap: break-word; opacity: 0.85;">BRI : Felix Laurensius</div>
                 </div>
             </div>
         
@@ -535,14 +661,15 @@
                     </div>
                 </div>
                 
-                <div class="animate__animated animate__zoomIn animate__slower mt-3 p-4 mx-3 rounded" style="border:1px solid var(--inv-border); background-color: rgba(255,255,255,0.7); animation-delay: 800ms;">
-                    <div class="text-center mb-2">
+                <div class="animate__animated animate__zoomIn animate__slower mt-3 p-4 mx-3 rounded" style="background-color: color-mix(in srgb, var(--bg-surface), transparent 60%) !important; border: 1px solid color-mix(in srgb, var(--secondary), transparent 60%); box-shadow: 0 10px 25px rgba(0,0,0,0.05); animation-delay: 800ms; backdrop-filter: blur(4px);">
+                    <div class="text-center mb-1">
                         <div class="font-weight-bold h5 color-accent mb-2 animate__animated animate__fadeInUp animate__slow" style="font-size:18px; animation-delay: 1000ms;">Kirim Kado/Karangan Bunga:</div>
-                        <div class="font-weight-bold mb-1 animate__animated animate__fadeInUp animate__slow" style="font-size:15px; color: var(--text-dark); animation-delay: 1100ms;">✤ Gedung Serbaguna ✤</div>
-                        <div class="copy-address mb-2 animate__animated animate__fadeInUp animate__slow" style="font-size:14px; animation-delay: 1200ms;">Jl. Gatot Subroto No. 123,<br>Kec. Medan Petisah, Kota Medan</div>
-                        <button class="btn-copy animate__animated animate__fadeInUp animate__slow" style="margin-left: 0; animation-delay: 1300ms;" onclick="copyText('Gedung Serbaguna, Jl. Gatot Subroto No. 123,, Kec. Medan Petisah, Kota Medan', this)">Salin Alamat</button>
+                        <div class="text-dark font-weight-bold mb-1 animate__animated animate__fadeInUp animate__slow" style="font-size:15px; animation-delay: 1100ms;">✤ Gedung Serbaguna ✤</div>
+                        <div class="text-dark copy-address mb-3 animate__animated animate__fadeInUp animate__slow" style="font-size:13px; line-height: 1.6; animation-delay: 1200ms;">Jl. Gatot Subroto No. 123,<br>Kec. Medan Petisah, Kota Medan</div>
+                        <button class="btn-copy animate__animated animate__fadeInUp animate__slow" style="margin-left: 0; padding: 8px 16px; animation-delay: 1300ms;" onclick="copyText('Gedung Serbaguna, Jl. Gatot Subroto No. 123,, Kec. Medan Petisah, Kota Medan', this)">Salin Alamat</button>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -552,23 +679,23 @@
             <div style="width: 100%;">
                 <div class="text-center">
                     
-                    <div class="quotes mb-3 px-3 animate__animated animate__fadeInDown animate__slower" style="font-size:15px;">
+                    <div class="quotes text-dark mb-3 px-3 animate__animated animate__fadeInDown animate__slower" style="font-size:15px;">
                         Merupakan suatu kebahagiaan dan kehormatan bagi kami, apabila Bapak/Ibu/Saudara/i, berkenan hadir dan memberikan do'a restu kepada kedua mempelai.
                     </div>
                     
-                    <div class="font-italic animate__animated animate__fadeInUp animate__slower" style="animation-delay: 200ms;">
+                    <div class="text-dark font-italic animate__animated animate__fadeInUp animate__slower" style="animation-delay: 200ms;">
                         Hormat Kami Yang Mengundang
                     </div>
                     
-                    <div class="h4 color-accent animate__animated animate__zoomIn animate__slower font-italic" style="font-size:35px; margin-top: 15px; margin-bottom: 15px; animation-delay: 400ms;">
-                        FELIZ &amp; FELIX
+                    <div class="h4 color-accent font-accent animate__animated animate__zoomIn animate__slower font-italic" style="font-size:35px; margin-top: 15px; margin-bottom: 15px; animation-delay: 400ms;">
+                        Feliz &amp; Felix
                     </div>
                     
-                    <div class="mt-5 font-italic animate__animated animate__fadeInUp animate__slower font-weight-bold" style="font-size:15px; margin-bottom: 15px; animation-delay: 600ms;">
+                    <div class="mt-5 text-dark font-italic animate__animated animate__fadeInUp animate__slower font-weight-bold" style="font-size:15px; margin-bottom: 15px; animation-delay: 600ms;">
                         Keluarga yang berbahagia
                     </div>
                     
-                    <div class="text-center d-flex align-items-center justify-content-center animate__animated animate__fadeInUp animate__slower" style="gap:14px;line-height:1.2; animation-delay: 800ms;">
+                    <div class="text-center text-dark d-flex align-items-center justify-content-center animate__animated animate__fadeInUp animate__slower" style="gap:14px;line-height:1.2; animation-delay: 800ms;">
                         <div>
                             <div class="font-weight-bold" style="text-decoration:underline;font-size:16px;">Keluarga</div>
                             <div class="" style="font-size:15px;">Bapak Pep Guardiola<br>&amp; Ibu Happy Guardiola</div>
